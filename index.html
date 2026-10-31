@@ -100,7 +100,6 @@
             ]);
             const [newNotice, setNewNotice] = React.useState('');
 
-            // Matches & Fixtures
             const [matches, setMatches] = React.useState([
                 { id: 1, match: 'টিম আলফা বনাম টিম বিটা', stage: 'গ্রুপ পর্ব', time: '২০২৬-০৩-১৫, বিকেল ৪:০০ টা', score: '২-১ (সমাপ্ত)', status: 'recent' },
                 { id: 2, match: 'টিম রয়্যাল বনাম টিম কিং', stage: 'গ্রুপ পর্ব', time: '২০২৬-০৩-১৬, বিকেল ৪:০০ টা', score: 'লাইভ: ১-১', status: 'live' },
@@ -111,7 +110,6 @@
                 match: '', stage: 'গ্রুপ পর্ব', time: '', score: 'আসন্ন', status: 'upcoming'
             });
 
-            // Standings / Points Table
             const [standings, setStandings] = React.useState([
                 { team: 'টিম আলফা', group: 'গ্রুপ এ', played: 1, won: 1, lost: 0, pts: 2 },
                 { team: 'টিম রয়্যাল', group: 'গ্রুপ বি', played: 1, won: 0, lost: 0, pts: 1 },
@@ -228,7 +226,7 @@
                 if (cat === 'HIGH') color = "bg-red-500/20 text-red-400 border-red-500/30";
                 else if (cat === 'MEDIUM') color = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 else if (cat === 'LOW') color = "bg-green-500/20 text-green-400 border-green-500/30";
-                return <span className={`px-2 py-0.5 rounded text-xs border font-semibold ml-1.5 ${color}`}>{cat}</span>;
+                return <span className={`px-2 py-0.5 rounded text-xs border font-semibold ml-1.5 inline-block ${color}`}>{cat}</span>;
             };
 
             return (
@@ -295,7 +293,7 @@
                                         <div className="flex justify-between items-center border-b border-slate-700 pb-3">
                                             <h3 className="text-lg font-bold text-yellow-400">
                                                 {homeSubView === 'all_groups' && '📁 ৪টি গ্রুপের নামসমূহ'}
-                                                {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের তালিকা'}
+                                                {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের তালিকা (সঠিক ক্রমানুসারে সাজানো)'}
                                                 {homeSubView === 'all_players' && '👥 ২৪ জন খেলোয়াড়ের তালিকা'}
                                             </h3>
                                             <button onClick={() => setHomeSubView(null)} className="bg-red-500 text-white text-xs px-3 py-1 rounded">বন্ধ করুন ✕</button>
@@ -320,15 +318,15 @@
                                                             <h4 className="font-bold text-white text-base">{t.teamName}</h4>
                                                             <p className="text-xs text-yellow-300">গ্রুপ: {t.groupName}</p>
                                                         </div>
-                                                        <div className="text-xs text-gray-300 space-y-1.5">
-                                                            <p className="flex items-center">
-                                                                <span>👤 খেলোয়াড় ১: <strong className="text-white">{t.player1}</strong></span>
+                                                        <div className="text-xs text-gray-300 space-y-2">
+                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded">
+                                                                <span>👤 ১. <strong className="text-white">{t.player1}</strong></span>
                                                                 {getCategoryBadge(t.cat1)}
-                                                            </p>
-                                                            <p className="flex items-center">
-                                                                <span>👤 খেলোয়াড় ২: <strong className="text-white">{t.player2}</strong></span>
+                                                            </div>
+                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded">
+                                                                <span>👤 ২. <strong className="text-white">{t.player2}</strong></span>
                                                                 {getCategoryBadge(t.cat2)}
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -366,7 +364,7 @@
 
                         {activeTab === 'groups' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ 🏆</h2>
+                                <h2 className="text-2xl font-bold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ (সঠিক ক্রমানুসারে সাজানো) 🏆</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {Object.keys(groupsData).map((groupName) => (
                                         <div key={groupName} className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
@@ -376,18 +374,18 @@
                                             </h3>
                                             <div className="space-y-4">
                                                 {groupsData[groupName].map((t, idx) => (
-                                                    <div key={idx} className="bg-slate-700/70 p-3.5 rounded-lg border border-slate-600">
-                                                        <h4 className="font-bold text-white text-base border-b border-slate-600 pb-1 mb-2">{t.teamName}</h4>
-                                                        <div className="text-xs text-gray-300 space-y-1.5">
-                                                            <p className="flex items-center">
+                                                    <div key={idx} className="bg-slate-700/70 p-4 rounded-xl border border-slate-600 space-y-2.5">
+                                                        <h4 className="font-bold text-white text-base border-b border-slate-600 pb-1.5">{t.teamName}</h4>
+                                                        <div className="text-xs text-gray-300 space-y-2">
+                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded">
                                                                 <span><strong className="text-gray-400">খেলোয়াড় ১:</strong> <strong className="text-gray-100">{t.player1}</strong></span>
                                                                 {getCategoryBadge(t.cat1)}
-                                                            </p>
-                                                            <p className="flex items-center">
+                                                            </div>
+                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded">
                                                                 <span><strong className="text-gray-400">খেলোয়াড় ২:</strong> <strong className="text-gray-100">{t.player2}</strong></span>
                                                                 {getCategoryBadge(t.cat2)}
-                                                            </p>
-                                                            <p><span className="text-gray-400">ঠিকানা:</span> {t.address || 'N/A'}</p>
+                                                            </div>
+                                                            <p className="pt-0.5"><span className="text-gray-400">ঠিকানা:</span> {t.address || 'N/A'}</p>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -400,7 +398,6 @@
 
                         {activeTab === 'matches' && (
                             <div className="space-y-8">
-                                {/* Live & Recent Matches */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h2 className="text-xl font-bold text-yellow-400">🔴 লাইভ ও সাম্প্রতিক ম্যাচ রেজাল্ট</h2>
                                     <div className="space-y-3">
@@ -422,7 +419,6 @@
                                     </div>
                                 </div>
 
-                                {/* Points Table */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h2 className="text-xl font-bold text-yellow-400">📊 টুর্নামেন্ট পয়েন্ট টেবিল</h2>
                                     <div className="overflow-x-auto">
@@ -477,10 +473,9 @@
                             <div className="space-y-6">
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
                                     <h2 className="text-xl font-bold text-yellow-400 mb-2">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span> (শুধুমাত্র আপনি ম্যাচ রেজাল্ট, লাইভ স্কোর, আপকামিং শিডিউল এবং পয়েন্ট টেবিল আপডেট বা মুছতে পারবেন)</p>
+                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span></p>
                                 </div>
 
-                                {/* Manage Teams & Players */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">গ্রুপে টিম ও খেলোয়াড় যোগ করুন</h3>
                                     <form onSubmit={addTeamToGroup} className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -533,20 +528,21 @@
                                     </form>
 
                                     <div className="mt-6 space-y-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট:</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট (সুন্দর ক্রমানুসারে সাজানো):</h4>
                                         {Object.keys(groupsData).map(gName => (
                                             <div key={gName} className="bg-slate-700/50 p-3 rounded-lg border border-slate-600">
                                                 <h5 className="font-bold text-yellow-400 mb-2">{gName}</h5>
                                                 <div className="space-y-2">
                                                     {groupsData[gName].map((t, idx) => (
-                                                        <div key={idx} className="bg-slate-800 p-3 rounded flex justify-between items-center text-xs">
+                                                        <div key={idx} className="bg-slate-800 p-3 rounded flex flex-col md:flex-row justify-between items-start md:items-center gap-2 text-xs">
                                                             <div>
                                                                 <span className="font-bold text-white text-sm">{t.teamName}</span>
-                                                                <p className="text-gray-300 mt-1">
-                                                                    👤 {t.player1} {getCategoryBadge(t.cat1)} &nbsp;|&nbsp; 👤 {t.player2} {getCategoryBadge(t.cat2)}
-                                                                </p>
+                                                                <div className="flex flex-wrap gap-3 mt-1.5 text-gray-300">
+                                                                    <span className="bg-slate-700 px-2 py-1 rounded">👤 ১. {t.player1} {getCategoryBadge(t.cat1)}</span>
+                                                                    <span className="bg-slate-700 px-2 py-1 rounded">👤 ২. {t.player2} {getCategoryBadge(t.cat2)}</span>
+                                                                </div>
                                                             </div>
-                                                            <button onClick={() => deleteTeamFromGroup(gName, idx)} className="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded transition">ডিলিট</button>
+                                                            <button onClick={() => deleteTeamFromGroup(gName, idx)} className="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded transition">ডিলিট</button>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -555,39 +551,38 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Matches & Live Scores */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">ম্যাচ শিডিউল, লাইভ স্কোর ও রেজাল্ট আপডেট</h3>
                                     <form onSubmit={addMatch} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ (যেমন: টিম আলফা বনাম টিম বিটা)</label>
-                                            <input type="text" placeholder="ম্যাচের বিবরণ" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ</label>
+                                            <input type="text" placeholder="ম্যাচের বিবরণ" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">ধাপ/রাউন্ড</label>
-                                            <input type="text" placeholder="গ্রুপ পর্ব / সেমিফাইনাল" value={matchForm.stage} onChange={e => setMatchForm({ ...matchForm, stage: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="গ্রুপ পর্ব / সেমিফাইনাল" value={matchForm.stage} onChange={e => setMatchForm({ ...matchForm, stage: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">সময় ও তারিখ</label>
-                                            <input type="text" placeholder="তারিখ ও সময়" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="তারিখ ও সময়" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">স্কোর বা রেজাল্ট</label>
-                                            <input type="text" placeholder="যেমন: ২-১ (সমাপ্ত) বা লাইভ: ১-০" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="যেমন: ২-১ বা লাইভ: ১-১" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">স্ট্যাটাস</label>
-                                            <select value={matchForm.status} onChange={e => setMatchForm({ ...matchForm, status: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none">
+                                            <select value={matchForm.status} onChange={e => setMatchForm({ ...matchForm, status: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white">
                                                 <option value="upcoming">আসন্ন (Upcoming)</option>
                                                 <option value="live">লাইভ (Live)</option>
                                                 <option value="recent">সম্পন্ন/রেজাল্ট (Recent)</option>
                                             </select>
                                         </div>
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">ম্যাচ ফিক্সচার বা রেজাল্ট যোগ করুন</button>
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">ফিক্সচার বা রেজাল্ট যোগ করুন</button>
                                     </form>
 
                                     <div className="space-y-2 mt-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান ম্যাচ তালিকা (মুছতে পারবেন):</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান ম্যাচ তালিকা:</h4>
                                         {matches.map(m => (
                                             <div key={m.id} className="bg-slate-700 p-3 rounded flex justify-between items-center text-sm">
                                                 <div>
@@ -599,7 +594,6 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Points Table */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">পয়েন্ট টেবিল সেট ও আপডেট</h3>
                                     <form onSubmit={addStanding} className="grid grid-cols-2 md:grid-cols-6 gap-2">
@@ -613,7 +607,7 @@
                                     </form>
 
                                     <div className="space-y-2 mt-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">পয়েন্ট টেবিল লিস্ট (মুছতে পারবেন):</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">পয়েন্ট টেবিল লিস্ট:</h4>
                                         {standings.map((s, idx) => (
                                             <div key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center text-xs">
                                                 <span><strong>{s.team}</strong> ({s.group}) - খেলা: {s.played}, জয়: {s.won}, হার: {s.lost}, পয়েন্ট: <strong>{s.pts}</strong></span>
@@ -623,7 +617,6 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Notices */}
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">নোটিশ / ঘোষণা আপডেট</h3>
                                     <form onSubmit={addNotice} className="flex gap-2">
