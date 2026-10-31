@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React ও ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function App() {
+            const [activeTab, setActiveTab] = React.useState('home');
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Header */}
+                    <header className="bg-slate-800 shadow-md p-4 text-center border-b border-yellow-500">
+                        <h1 className="text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
+                        <p className="text-sm text-gray-300 mt-1">টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম</p>
+                    </header>
+
+                    {/* Navigation */}
+                    <nav className="flex justify-center bg-slate-700 p-2 gap-4">
+                        <button 
+                            onClick={() => setActiveTab('home')} 
+                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
+                            হোম
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('teams')} 
+                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'teams' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
+                            টিমসমূহ
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('matches')} 
+                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
+                            ম্যাচ ও ফিক্সচার
+                        </button>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="flex-grow p-6 max-w-4xl mx-auto w-full">
+                        {activeTab === 'home' && (
+                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg text-center border border-slate-700">
+                               <h2 className="text-xl font-bold text-yellow-400 mb-3">টুর্নামেন্টে স্বাগতম!</h2>
+                               <p className="text-gray-300">এটি উইন্টার কিংস ক্যারাম ব্যাটল ২০২৬ এর অফিশিয়াল ওয়েব অ্যাপ। ওপরের মেনু থেকে টিম ও ফিক্সচার দেখতে পারবেন।</p>
+                            </div>
+                        )}
+
+                        {activeTab === 'teams' && (
+                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4">অংশগ্রহণকারী টিমসমূহ</h2>
+                                <ul className="space-y-2">
+                                    <li className="bg-slate-700 p-3 rounded">টিম আলফা (Team Alpha)</li>
+                                    <li className="bg-slate-700 p-3 rounded">টিম রয়্যাল (Team Royal)</li>
+                                    <li className="bg-slate-700 p-3 rounded">কিং ফিশার (King Fisher)</li>
+                                </ul>
+                            </div>
+                        )}
+
+                        {activeTab === 'matches' && (
+                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4">ম্যাচ ফিক্সচার</h2>
+                                <p className="text-gray-300">শীঘ্রই ম্যাচের শিডিউল এখানে আপডেট করা হবে।</p>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-800 text-center p-4 text-xs text-gray-400 border-t border-slate-700">
+                        © 2026 Winter Carram Kings Battle. All rights reserved.
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
