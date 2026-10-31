@@ -6,7 +6,7 @@
     <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React ও ReactDOM CDN -->
+    <!-- React & ReactDOM CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <!-- Babel -->
@@ -18,40 +18,76 @@
     <script type="text/babel">
         function App() {
             const [activeTab, setActiveTab] = React.useState('home');
+            const [isAdmin, setIsAdmin] = React.useState(false);
+            const [email, setEmail] = React.useState('');
+            const [password, setPassword] = React.useState('');
+            const [loginError, setLoginError] = React.useState('');
+
+            // Data states
+            const [teams, setTeams] = React.useState(['টিম আলফা', 'টিম রয়্যাল', 'কিং ফিশার']);
+            const [newTeam, setNewTeam] = React.useState('');
+            const [matches, setMatches] = React.useState([
+                { id: 1, match: 'টিম আলফা বনাম টিম রয়্যাল', score: 'আসন্ন', time: '২০২৬-০৩-১০' }
+            ]);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (email === 'efshikhelaghor@gmail.com' && password === 'admin123') {
+                    setIsAdmin(true);
+                    setLoginError('');
+                    setActiveTab('dashboard');
+                } else {
+                    setLoginError('ভুল ইমেইল বা পাসওয়ার্ড!');
+                }
+            };
+
+            const handleLogout = () => {
+                setIsAdmin(false);
+                setEmail('');
+                setPassword('');
+                setActiveTab('home');
+            };
+
+            const addTeam = (e) => {
+                e.preventDefault();
+                if (newTeam.trim()) {
+                    setTeams([...teams, newTeam]);
+                    setNewTeam('');
+                }
+            };
+
+            const deleteTeam = (index) => {
+                setTeams(teams.filter((_, i) => i !== index));
+            };
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    {/* Header */}
-                    <header className="bg-slate-800 shadow-md p-4 text-center border-b border-yellow-500">
-                        <h1 className="text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
-                        <p className="text-sm text-gray-300 mt-1">টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম</p>
+                    <header className="bg-slate-800 shadow-md p-4 text-center border-b border-yellow-500 flex justify-between items-center px-4 md:px-6">
+                        <div className="text-left">
+                            <h1 className="text-lg md:text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
+                            <p className="text-xs md:text-sm text-gray-300 mt-0.5">টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম {isAdmin && <span className="bg-red-600 px-2 py-0.5 rounded text-xs ml-2 text-white">এডমিন মোড</span>}</p>
+                        </div>
+                        <div>
+                            {isAdmin ? (
+                                <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded text-sm font-semibold">লগআউট</button>
+                            ) : (
+                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1.5 rounded text-sm font-semibold">এডমিন লগইন</button>
+                            )}
+                        </div>
                     </header>
 
-                    {/* Navigation */}
-                    <nav className="flex justify-center bg-slate-700 p-2 gap-4">
-                        <button 
-                            onClick={() => setActiveTab('home')} 
-                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
-                            হোম
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('teams')} 
-                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'teams' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
-                            টিমসমূহ
-                        </button>
-                        <button 
-                            onClick={() => setActiveTab('matches')} 
-                            className={`px-4 py-2 rounded font-semibold ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>
-                            ম্যাচ ও ফিক্সচার
-                        </button>
+                    <nav className="flex justify-center bg-slate-700 p-2 gap-2 md:gap-4 flex-wrap">
+                        <button onClick={() => setActiveTab('home')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>হোম</button>
+                        <button onClick={() => setActiveTab('teams')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'teams' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>টিমসমূহ</button>
+                        <button onClick={() => setActiveTab('matches')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>ম্যাচ ও ফিক্সচার</button>
+                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'dashboard' ? 'bg-yellow-500 text-gray-900' : 'bg-red-800 text-white'}`}>এডমিন প্যানেল</button>}
                     </nav>
 
-                    {/* Main Content */}
-                    <main className="flex-grow p-6 max-w-4xl mx-auto w-full">
+                    <main className="flex-grow p-4 md:p-6 max-w-4xl mx-auto w-full">
                         {activeTab === 'home' && (
                             <div className="bg-slate-800 p-6 rounded-xl shadow-lg text-center border border-slate-700">
-                               <h2 className="text-xl font-bold text-yellow-400 mb-3">টুর্নামেন্টে স্বাগতম!</h2>
-                               <p className="text-gray-300">এটি উইন্টার কিংস ক্যারাম ব্যাটল ২০২৬ এর অফিশিয়াল ওয়েব অ্যাপ। ওপরের মেনু থেকে টিম ও ফিক্সচার দেখতে পারবেন।</p>
+                                <h2 className="text-xl font-bold text-yellow-400 mb-3">টুর্নামেন্টে স্বাগতম!</h2>
+                                <p className="text-gray-300">এটি উইন্টার কিংস ক্যারাম ব্যাটল ২০২৬ এর অফিশিয়াল ওয়েব অ্যাপ। ওপরের মেনু থেকে টিম ও ফিক্সচার দেখতে পারবেন।</p>
                             </div>
                         )}
 
@@ -59,22 +95,72 @@
                             <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
                                 <h2 className="text-xl font-bold text-yellow-400 mb-4">অংশগ্রহণকারী টিমসমূহ</h2>
                                 <ul className="space-y-2">
-                                    <li className="bg-slate-700 p-3 rounded">টিম আলফা (Team Alpha)</li>
-                                    <li className="bg-slate-700 p-3 rounded">টিম রয়্যাল (Team Royal)</li>
-                                    <li className="bg-slate-700 p-3 rounded">কিং ফিশার (King Fisher)</li>
+                                    {teams.map((team, idx) => (
+                                        <li key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center">
+                                            <span>{team}</span>
+                                            {isAdmin && <button onClick={() => deleteTeam(idx)} className="bg-red-500 hover:bg-red-600 text-xs px-2 py-1 rounded">ডিলিট</button>}
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         )}
 
                         {activeTab === 'matches' && (
                             <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
-                                <h2 className="text-xl font-bold text-yellow-400 mb-4">ম্যাচ ফিক্সচার</h2>
-                                <p className="text-gray-300">শীঘ্রই ম্যাচের শিডিউল এখানে আপডেট করা হবে।</p>
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4">ম্যাচ ফিক্সচার ও লাইভ স্কোর</h2>
+                                <div className="space-y-3">
+                                    {matches.map((m, idx) => (
+                                        <div key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center">
+                                            <div>
+                                                <p className="font-semibold text-yellow-300">{m.match}</p>
+                                                <p className="text-xs text-gray-400">তারিখ: {m.time}</p>
+                                            </div>
+                                            <span className="bg-yellow-500 text-gray-900 font-bold px-3 py-1 rounded text-sm">{m.score}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'admin' && !isAdmin && (
+                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 max-w-md mx-auto">
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4 text-center">এডমিন লগইন</h2>
+                                {loginError && <p className="bg-red-500/20 text-red-400 p-2 rounded mb-3 text-sm text-center">{loginError}</p>}
+                                <form onSubmit={handleLogin} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-1">ইমেইল ঠিকানা</label>
+                                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="efshikhelaghor@gmail.com" required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white text-sm" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-1">পাসওয়ার্ড</label>
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="পাসওয়ার্ড দিন" required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white text-sm" />
+                                    </div>
+                                    <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded">লগইন করুন</button>
+                                </form>
+                            </div>
+                        )}
+
+                        {activeTab === 'dashboard' && isAdmin && (
+                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 space-y-6">
+                                <h2 className="text-xl font-bold text-yellow-400">এডমিন কন্ট্রোল প্যানেল</h2>
+                                
+                                <div className="bg-slate-700 p-4 rounded-lg">
+                                    <h3 className="font-semibold mb-2 text-yellow-300">নতুন টিম যোগ করুন</h3>
+                                    <form onSubmit={addTeam} className="flex gap-2">
+                                        <input type="text" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} placeholder="টিমের নাম..." className="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white" />
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded font-semibold text-sm">যোগ করুন</button>
+                                    </form>
+                                </div>
+
+                                <div className="bg-slate-700 p-4 rounded-lg">
+                                    <h3 className="font-semibold mb-2 text-yellow-300">টুর্নামেন্ট কন্ট্রোল</h3>
+                                    <p className="text-sm text-gray-300 mb-2">এখান থেকে আপনি যেকোনো টিম ডিলিট করতে পারবেন এবং লাইভ স্কোর আপডেট করতে পারবেন।</p>
+                                    <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">সক্রিয় এডমিন: efshikhelaghor@gmail.com</span>
+                                </div>
                             </div>
                         )}
                     </main>
 
-                    {/* Footer */}
                     <footer className="bg-slate-800 text-center p-4 text-xs text-gray-400 border-t border-slate-700">
                         © 2026 Winter Carram Kings Battle. All rights reserved.
                     </footer>
