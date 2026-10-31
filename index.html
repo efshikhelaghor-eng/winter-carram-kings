@@ -23,13 +23,30 @@
             const [password, setPassword] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
 
-            // Data states
-            const [teams, setTeams] = React.useState(['টিম আলফা', 'টিম রয়্যাল', 'কিং ফিশার']);
-            const [newTeam, setNewTeam] = React.useState('');
-            const [matches, setMatches] = React.useState([
-                { id: 1, match: 'টিম আলফা বনাম টিম রয়্যাল', score: 'আসন্ন', time: '২০২৬-০৩-১০' }
+            // Data States
+            const [notices, setNotices] = React.useState([
+                { id: 1, text: "উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর রেজিষ্ট্রেশন সম্পন্ন হয়েছে। আগামী ১৫ মার্চ থেকে খেলা শুরু হবে!", date: "২০২৬-০৩-০১" }
+            ]);
+            const [newNotice, setNewNotice] = React.useState('');
+
+            const [players, setPlayers] = React.useState([
+                { id: 1, name: 'মোহাম্মদ রফিক', address: 'ঢাকা', phone: '01700000000', category: 'সিনিয়র', group: 'গ্রুপ-এ' },
+                { id: 2, name: 'কাজী সালাউদ্দিন', address: 'চট্টগ্রাম', phone: '01800000000', category: 'জুনিয়র', group: 'গ্রুপ-বি' }
             ]);
 
+            const [playerForm, setPlayerForm] = React.useState({
+                name: '', address: '', phone: '', category: 'সিনিয়র', group: 'গ্রুপ-এ'
+            });
+
+            const [matches, setMatches] = React.useState([
+                { id: 1, match: 'মোহাম্মদ রফিক বনাম কাজী সালাউদ্দিন', stage: 'রাউন্ড-১', time: '২০২৬-০৩-১৫, বিকেল ৪:০০ টা', score: 'আসন্ন' }
+            ]);
+
+            const [matchForm, setMatchForm] = React.useState({
+                match: '', stage: '', time: '', score: 'আসন্ন'
+            });
+
+            // Handlers
             const handleLogin = (e) => {
                 e.preventDefault();
                 if (email === 'efshikhelaghor@gmail.com' && password === 'admin123') {
@@ -48,119 +65,251 @@
                 setActiveTab('home');
             };
 
-            const addTeam = (e) => {
+            const addPlayer = (e) => {
                 e.preventDefault();
-                if (newTeam.trim()) {
-                    setTeams([...teams, newTeam]);
-                    setNewTeam('');
+                if (playerForm.name && playerForm.phone) {
+                    setPlayers([...players, { ...playerForm, id: Date.now() }]);
+                    setPlayerForm({ name: '', address: '', phone: '', category: 'সিনিয়র', group: 'গ্রুপ-এ' });
                 }
             };
 
-            const deleteTeam = (index) => {
-                setTeams(teams.filter((_, i) => i !== index));
+            const deletePlayer = (id) => {
+                setPlayers(players.filter(p => p.id !== id));
+            };
+
+            const addNotice = (e) => {
+                e.preventDefault();
+                if (newNotice.trim()) {
+                    setNotices([{ id: Date.now(), text: newNotice, date: new Date().toISOString().split('T')[0] }, ...notices]);
+                    setNewNotice('');
+                }
+            };
+
+            const deleteNotice = (id) => {
+                setNotices(notices.filter(n => n.id !== id));
+            };
+
+            const addMatch = (e) => {
+                e.preventDefault();
+                if (matchForm.match) {
+                    setMatches([...matches, { ...matchForm, id: Date.now() }]);
+                    setMatchForm({ match: '', stage: '', time: '', score: 'আসন্ন' });
+                }
+            };
+
+            const deleteMatch = (id) => {
+                setMatches(matches.filter(m => m.id !== id));
             };
 
             return (
-                <div className="min-h-screen flex flex-col">
-                    <header className="bg-slate-800 shadow-md p-4 text-center border-b border-yellow-500 flex justify-between items-center px-4 md:px-6">
-                        <div className="text-left">
-                            <h1 className="text-lg md:text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
-                            <p className="text-xs md:text-sm text-gray-300 mt-0.5">টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম {isAdmin && <span className="bg-red-600 px-2 py-0.5 rounded text-xs ml-2 text-white">এডমিন মোড</span>}</p>
+                <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+                    {/* Header */}
+                    <header className="bg-slate-800 shadow-md p-4 border-b border-yellow-500 flex justify-between items-center px-4 md:px-6">
+                        <div>
+                            <h1 className="text-xl md:text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
+                            <p className="text-xs md:text-sm text-gray-300 mt-0.5">
+                                টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম {isAdmin && <span className="bg-red-600 px-2 py-0.5 rounded text-xs ml-2 text-white font-bold">এডমিন মোড</span>}
+                            </p>
                         </div>
                         <div>
                             {isAdmin ? (
-                                <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded text-sm font-semibold">লগআউট</button>
+                                <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm font-semibold transition">লগআউট</button>
                             ) : (
-                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1.5 rounded text-sm font-semibold">এডমিন লগইন</button>
+                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1.5 rounded text-sm font-semibold transition">এডমিন লগইন</button>
                             )}
                         </div>
                     </header>
 
-                    <nav className="flex justify-center bg-slate-700 p-2 gap-2 md:gap-4 flex-wrap">
-                        <button onClick={() => setActiveTab('home')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>হোম</button>
-                        <button onClick={() => setActiveTab('teams')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'teams' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>টিমসমূহ</button>
-                        <button onClick={() => setActiveTab('matches')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-800 text-white'}`}>ম্যাচ ও ফিক্সচার</button>
-                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-3 py-1.5 rounded font-semibold text-sm ${activeTab === 'dashboard' ? 'bg-yellow-500 text-gray-900' : 'bg-red-800 text-white'}`}>এডমিন প্যানেল</button>}
+                    {/* Navigation */}
+                    <nav className="flex justify-center bg-slate-800 p-2 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
+                        <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>হোম</button>
+                        <button onClick={() => setActiveTab('players')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'players' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>খেলোয়াড়বৃন্দ</button>
+                        <button onClick={() => setActiveTab('matches')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>ম্যাচ ও ফিক্সচার</button>
+                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-800 text-white hover:bg-red-700'}`}>এডমিন প্যানেল</button>}
                     </nav>
 
-                    <main className="flex-grow p-4 md:p-6 max-w-4xl mx-auto w-full">
+                    {/* Main Content */}
+                    <main className="flex-grow p-4 md:p-6 max-w-5xl mx-auto w-full space-y-6">
+
+                        {/* HOME TAB */}
                         {activeTab === 'home' && (
-                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg text-center border border-slate-700">
-                                <h2 className="text-xl font-bold text-yellow-400 mb-3">টুর্নামেন্টে স্বাগতম!</h2>
-                                <p className="text-gray-300">এটি উইন্টার কিংস ক্যারাম ব্যাটল ২০২৬ এর অফিশিয়াল ওয়েব অ্যাপ। ওপরের মেনু থেকে টিম ও ফিক্সচার দেখতে পারবেন।</p>
-                            </div>
-                        )}
-
-                        {activeTab === 'teams' && (
-                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
-                                <h2 className="text-xl font-bold text-yellow-400 mb-4">অংশগ্রহণকারী টিমসমূহ</h2>
-                                <ul className="space-y-2">
-                                    {teams.map((team, idx) => (
-                                        <li key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center">
-                                            <span>{team}</span>
-                                            {isAdmin && <button onClick={() => deleteTeam(idx)} className="bg-red-500 hover:bg-red-600 text-xs px-2 py-1 rounded">ডিলিট</button>}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        {activeTab === 'matches' && (
-                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700">
-                                <h2 className="text-xl font-bold text-yellow-400 mb-4">ম্যাচ ফিক্সচার ও লাইভ স্কোর</h2>
-                                <div className="space-y-3">
-                                    {matches.map((m, idx) => (
-                                        <div key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center">
-                                            <div>
-                                                <p className="font-semibold text-yellow-300">{m.match}</p>
-                                                <p className="text-xs text-gray-400">তারিখ: {m.time}</p>
+                            <div className="space-y-6">
+                                {/* Notice Board */}
+                                <div className="bg-slate-800 p-6 rounded-xl border border-yellow-500/30 shadow-lg">
+                                    <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+                                        📢 নোটিশ ও ঘোষণা
+                                    </h2>
+                                    <div className="space-y-3">
+                                        {notices.length === 0 ? <p className="text-gray-400 text-sm">কোনো নতুন নোটিশ নেই।</p> : notices.map(n => (
+                                            <div key={n.id} className="bg-slate-700/60 p-4 rounded-lg border border-slate-600">
+                                                <p className="text-gray-200 text-base">{n.text}</p>
+                                                <span className="text-xs text-gray-400 mt-2 block">তারিখ: {n.date}</span>
                                             </div>
-                                            <span className="bg-yellow-500 text-gray-900 font-bold px-3 py-1 rounded text-sm">{m.score}</span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Overview Cards */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center">
+                                        <h3 className="text-lg font-bold text-yellow-400">মোট খেলোয়াড়</h3>
+                                        <p className="text-3xl font-extrabold text-white mt-2">{players.length}</p>
+                                    </div>
+                                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center">
+                                        <h3 className="text-lg font-bold text-yellow-400">মোট ম্যাচ ফিক্সচার</h3>
+                                        <p className="text-3xl font-extrabold text-white mt-2">{matches.length}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PLAYERS TAB */}
+                        {activeTab === 'players' && (
+                            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4">অংশগ্রহণকারী খেলোয়াড়দের তালিকা</h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left border-collapse min-w-[500px]">
+                                        <thead>
+                                            <tr className="bg-slate-700 text-yellow-400 text-sm border-b border-slate-600">
+                                                <th className="p-3">নাম</th>
+                                                <th className="p-3">ঠিকানা</th>
+                                                <th className="p-3">ক্যাটাগরি</th>
+                                                <th className="p-3">গ্রুপ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-700 text-sm text-gray-200">
+                                            {players.map(p => (
+                                                <tr key={p.id} className="hover:bg-slate-700/40">
+                                                    <td className="p-3 font-semibold text-white">{p.name}</td>
+                                                    <td className="p-3">{p.address || '-'}</td>
+                                                    <td className="p-3"><span className="bg-slate-700 px-2.5 py-1 rounded text-xs border border-slate-600">{p.category}</span></td>
+                                                    <td className="p-3"><span className="bg-yellow-500/10 text-yellow-400 px-2.5 py-1 rounded text-xs border border-yellow-500/20">{p.group}</span></td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* MATCHES TAB */}
+                        {activeTab === 'matches' && (
+                            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                                <h2 className="text-xl font-bold text-yellow-400 mb-4">সম্পূর্ণ ম্যাচ ফিক্সচার ও শিডিউল</h2>
+                                <div className="space-y-4">
+                                    {matches.map(m => (
+                                        <div key={m.id} className="bg-slate-700 p-4 rounded-xl border border-slate-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                                            <div>
+                                                <span className="text-xs bg-slate-800 text-yellow-400 px-2 py-0.5 rounded border border-slate-600 mb-1 inline-block">{m.stage}</span>
+                                                <h3 className="text-lg font-bold text-white">{m.match}</h3>
+                                                <p className="text-xs text-gray-300 mt-1">⏰ সময় ও তারিখ: {m.time}</p>
+                                            </div>
+                                            <span className="bg-yellow-500 text-gray-900 font-bold px-4 py-1.5 rounded-lg text-sm self-start md:self-center">{m.score}</span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
 
+                        {/* ADMIN LOGIN */}
                         {activeTab === 'admin' && !isAdmin && (
-                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 max-w-md mx-auto">
+                            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 max-w-md mx-auto shadow-lg">
                                 <h2 className="text-xl font-bold text-yellow-400 mb-4 text-center">এডমিন লগইন</h2>
-                                {loginError && <p className="bg-red-500/20 text-red-400 p-2 rounded mb-3 text-sm text-center">{loginError}</p>}
+                                {loginError && <p className="bg-red-500/20 text-red-400 p-2 rounded mb-3 text-sm text-center border border-red-500/30">{loginError}</p>}
                                 <form onSubmit={handleLogin} className="space-y-4">
                                     <div>
                                         <label className="block text-sm text-gray-300 mb-1">ইমেইল ঠিকানা</label>
-                                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="efshikhelaghor@gmail.com" required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white text-sm" />
+                                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="efshikhelaghor@gmail.com" required className="w-full bg-slate-700 border border-slate-600 rounded p-2.5 text-white text-sm focus:outline-none focus:border-yellow-500" />
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-300 mb-1">পাসওয়ার্ড</label>
-                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="পাসওয়ার্ড দিন" required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white text-sm" />
+                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="পাসওয়ার্ড দিন" required className="w-full bg-slate-700 border border-slate-600 rounded p-2.5 text-white text-sm focus:outline-none focus:border-yellow-500" />
                                     </div>
-                                    <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded">লগইন করুন</button>
+                                    <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2.5 rounded transition">লগইন করুন</button>
                                 </form>
                             </div>
                         )}
 
+                        {/* ADMIN DASHBOARD */}
                         {activeTab === 'dashboard' && isAdmin && (
-                            <div className="bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-700 space-y-6">
-                                <h2 className="text-xl font-bold text-yellow-400">এডমিন কন্ট্রোল প্যানেল</h2>
-                                
-                                <div className="bg-slate-700 p-4 rounded-lg">
-                                    <h3 className="font-semibold mb-2 text-yellow-300">নতুন টিম যোগ করুন</h3>
-                                    <form onSubmit={addTeam} className="flex gap-2">
-                                        <input type="text" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} placeholder="টিমের নাম..." className="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white" />
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded font-semibold text-sm">যোগ করুন</button>
-                                    </form>
+                            <div className="space-y-6">
+                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                                    <h2 className="text-xl font-bold text-yellow-400 mb-2">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
+                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span></p>
                                 </div>
 
-                                <div className="bg-slate-700 p-4 rounded-lg">
-                                    <h3 className="font-semibold mb-2 text-yellow-300">টুর্নামেন্ট কন্ট্রোল</h3>
-                                    <p className="text-sm text-gray-300 mb-2">এখান থেকে আপনি যেকোনো টিম ডিলিট করতে পারবেন এবং লাইভ স্কোর আপডেট করতে পারবেন।</p>
-                                    <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">সক্রিয় এডমিন: efshikhelaghor@gmail.com</span>
+                                {/* Manage Players */}
+                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">খেলোয়াড় ম্যানেজমেন্ট (যোগ ও মুছুন)</h3>
+                                    <form onSubmit={addPlayer} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <input type="text" placeholder="পূর্ণ নাম *" value={playerForm.name} onChange={e => setPlayerForm({ ...playerForm, name: e.target.value })} required className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="ঠিকানা" value={playerForm.address} onChange={e => setPlayerForm({ ...playerForm, address: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="মোবাইল নাম্বার *" value={playerForm.phone} onChange={e => setPlayerForm({ ...playerForm, phone: e.target.value })} required className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="ক্যাটাগরি (যেমন: সিনিয়র/জুনিয়র)" value={playerForm.category} onChange={e => setPlayerForm({ ...playerForm, category: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="গ্রুপ নাম্বার (যেমন: গ্রুপ-এ)" value={playerForm.group} onChange={e => setPlayerForm({ ...playerForm, group: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500 md:col-span-2" />
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">খেলোয়াড় যোগ করুন</button>
+                                    </form>
+
+                                    {/* Players Admin List */}
+                                    <div className="mt-4">
+                                        <h4 className="text-sm font-semibold text-gray-300 mb-2">বর্তমান খেলোয়াড় তালিকা (এডমিন ভিউ):</h4>
+                                        <div className="space-y-2">
+                                            {players.map(p => (
+                                                <div key={p.id} className="bg-slate-700 p-3 rounded flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                                                    <div>
+                                                        <span className="font-bold text-white">{p.name}</span> <span className="text-xs text-yellow-400">({p.category} | {p.group})</span>
+                                                        <p className="text-xs text-gray-300">📞 মোবাইল: {p.phone} | 📍 ঠিকানা: {p.address || 'N/A'}</p>
+                                                    </div>
+                                                    <button onClick={() => deletePlayer(p.id)} className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded transition">মুছে ফেলুন</button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Manage Notices */}
+                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">নোটিশ / ঘোষণা আপডেট</h3>
+                                    <form onSubmit={addNotice} className="flex gap-2">
+                                        <input type="text" placeholder="নতুন নোটিশ লিখুন..." value={newNotice} onChange={e => setNewNotice(e.target.value)} required className="flex-grow bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded text-sm transition">পাবলিশ</button>
+                                    </form>
+                                    <div className="space-y-2">
+                                        {notices.map(n => (
+                                            <div key={n.id} className="bg-slate-700 p-3 rounded flex justify-between items-center text-sm">
+                                                <span>{n.text}</span>
+                                                <button onClick={() => deleteNotice(n.id)} className="bg-red-500 hover:bg-red-600 text-white text-xs px-2.5 py-1 rounded transition ml-2">ডিলিট</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Manage Matches */}
+                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">ম্যাচ ফিক্সচার ও শিডিউল সেট</h3>
+                                    <form onSubmit={addMatch} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <input type="text" placeholder="ম্যাচ (যেমন: প্লেয়ার ১ বনাম প্লেয়ার ২)" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="ধাপ/রাউন্ড (যেমন: সেমিফাইনাল)" value={matchForm.stage} onChange={e => setMatchForm({ ...matchForm, stage: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="সময় ও তারিখ" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <input type="text" placeholder="স্কোর / স্ট্যাটাস (যেমন: ২-১)" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">ফিক্সচার যোগ করুন</button>
+                                    </form>
+                                    <div className="space-y-2">
+                                        {matches.map(m => (
+                                            <div key={m.id} className="bg-slate-700 p-3 rounded flex justify-between items-center text-sm">
+                                                <div>
+                                                    <span className="font-bold text-white">{m.match}</span> ({m.stage}) - <span className="text-yellow-400">{m.score}</span>
+                                                </div>
+                                                <button onClick={() => deleteMatch(m.id)} className="bg-red-500 hover:bg-red-600 text-white text-xs px-2.5 py-1 rounded transition">ডিলিট</button>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
                     </main>
 
+                    {/* Footer */}
                     <footer className="bg-slate-800 text-center p-4 text-xs text-gray-400 border-t border-slate-700">
                         © 2026 Winter Carram Kings Battle. All rights reserved.
                     </footer>
