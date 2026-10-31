@@ -22,26 +22,75 @@
 
             const [homeSubView, setHomeSubView] = React.useState(null);
 
+            // 4 Groups with 3 Teams each, each Team with 2 Players having individual categories (HIGH, MEDIUM, LOW)
             const initialGroups = {
                 'গ্রুপ এ': [
-                    { teamName: 'টিম আলফা', category: 'HIGH', player1: 'রফিক হোসেন', phone1: '01700000001', player2: 'শফিক আহমেদ', phone2: '01700000002', address: 'ঢাকা' },
-                    { teamName: 'টিম বিটা', category: 'MEDIUM', player1: 'আলমগীর কবির', phone1: '01800000001', player2: 'জহির রায়হান', phone2: '01800000002', address: 'গাজীপুর' },
-                    { teamName: 'টিম গামা', category: 'LOW', player1: 'তানভীর হাসান', phone1: '01900000001', player2: 'সাব্বির খান', phone2: '01900000002', address: 'নারায়ণগঞ্জ' }
+                    { 
+                        teamName: 'টিম আলফা', address: 'ঢাকা',
+                        player1: 'রফিক হোসেন', cat1: 'HIGH', phone1: '01700000001',
+                        player2: 'শফিক আহমেদ', cat2: 'MEDIUM', phone2: '01700000002'
+                    },
+                    { 
+                        teamName: 'টিম বিটা', address: 'গাজীপুর',
+                        player1: 'আলমগীর কবির', cat1: 'MEDIUM', phone1: '01800000001',
+                        player2: 'জহির রায়হান', cat2: 'LOW', phone2: '01800000002'
+                    },
+                    { 
+                        teamName: 'টিম গামা', address: 'নারায়ণগঞ্জ',
+                        player1: 'তানভীর হাসান', cat1: 'HIGH', phone1: '01900000001',
+                        player2: 'সাব্বির খান', cat2: 'LOW', phone2: '01900000002'
+                    }
                 ],
                 'গ্রুপ বি': [
-                    { teamName: 'টিম রয়্যাল', category: 'HIGH', player1: 'কাজী সালাউদ্দিন', phone1: '01711111111', player2: 'এম এ জলিল', phone2: '01711111112', address: 'চট্টগ্রাম' },
-                    { teamName: 'টিম কিং', category: 'MEDIUM', player1: 'সাকিব মেহমুদ', phone1: '01811111111', player2: 'আরিফ রহমান', phone2: '01811111112', address: 'কুমিল্লা' },
-                    { teamName: 'টিম ঈগল', category: 'LOW', player1: 'মেহেদী হাসান', phone1: '01911111111', player2: 'রাকিব শাহ', phone2: '01911111112', address: 'সিলেট' }
+                    { 
+                        teamName: 'টিম রয়্যাল', address: 'চট্টগ্রাম',
+                        player1: 'কাজী সালাউদ্দিন', cat1: 'HIGH', phone1: '01711111111',
+                        player2: 'এম এ জলিল', cat2: 'HIGH', phone2: '01711111112'
+                    },
+                    { 
+                        teamName: 'টিম কিং', address: 'কুমিল্লা',
+                        player1: 'সাকিব মেহমুদ', cat1: 'MEDIUM', phone1: '01811111111',
+                        player2: 'আরিফ রহমান', cat2: 'LOW', phone2: '01811111112'
+                    },
+                    { 
+                        teamName: 'টিম ঈগল', address: 'সিলেট',
+                        player1: 'মেহেদী হাসান', cat1: 'MEDIUM', phone1: '01911111111',
+                        player2: 'রাকিব শাহ', cat2: 'MEDIUM', phone2: '01911111112'
+                    }
                 ],
                 'গ্রুপ সি': [
-                    { teamName: 'টিম থান্ডার', category: 'HIGH', player1: 'শাহিন আলম', phone1: '01722222221', player2: 'ইমরান খান', phone2: '01722222222', address: 'খুলনা' },
-                    { teamName: 'টিম টাইগার', category: 'MEDIUM', player1: 'সোহেল রানা', phone1: '01822222221', player2: 'কামরুল ইসলাম', phone2: '01822222222', address: 'বরিশাল' },
-                    { teamName: 'টিম স্টর্ম', category: 'LOW', player1: 'ফাহিম আহমেদ', phone1: '01922222221', player2: 'নাসিম শেখ', phone2: '01922222222', address: 'যশোর' }
+                    { 
+                        teamName: 'টিম থান্ডার', address: 'খুলনা',
+                        player1: 'শাহিন আলম', cat1: 'HIGH', phone1: '01722222221',
+                        player2: 'ইমরান খান', cat2: 'MEDIUM', phone2: '01722222222'
+                    },
+                    { 
+                        teamName: 'টিম টাইগার', address: 'বরিশাল',
+                        player1: 'সোহেল রানা', cat1: 'LOW', phone1: '01822222221',
+                        player2: 'কামরুল ইসলাম', cat2: 'LOW', phone2: '01822222222'
+                    },
+                    { 
+                        teamName: 'টিম স্টর্ম', address: 'যশোর',
+                        player1: 'ফাহিম আহমেদ', cat1: 'HIGH', phone1: '01922222221',
+                        player2: 'নাসিম শেখ', cat2: 'LOW', phone2: '01922222222'
+                    }
                 ],
                 'গ্রুপ ডি': [
-                    { teamName: 'টিম ফিনিক্স', category: 'HIGH', player1: 'হাবিবুর রহমান', phone1: '01733333331', player2: 'আনোয়ার হোসেন', phone2: '01733333332', address: 'রংপুর' },
-                    { teamName: 'টিম ওয়্যারিয়র্স', category: 'MEDIUM', player1: 'আসিফ ইকবাল', phone1: '01833333331', player2: 'নাইমুল ইসলাম', phone2: '01833333332', address: 'বগুড়া' },
-                    { teamName: 'টিম শাইন', category: 'LOW', player1: 'রিয়াদ হোসেন', phone1: '01933333331', player2: 'তাহসিন মাহমুদ', phone2: '01933333332', address: 'ময়মনসিংহ' }
+                    { 
+                        teamName: 'টিম ফিনিক্স', address: 'রংপুর',
+                        player1: 'হাবিবুর রহমান', cat1: 'HIGH', phone1: '01733333331',
+                        player2: 'আনোয়ার হোসেন', cat2: 'MEDIUM', phone2: '01733333332'
+                    },
+                    { 
+                        teamName: 'টিম ওয়্যারিয়র্স', address: 'বগুড়া',
+                        player1: 'আসিফ ইকবাল', cat1: 'MEDIUM', phone1: '01833333331',
+                        player2: 'নাইমুল ইসলাম', cat2: 'LOW', phone2: '01833333332'
+                    },
+                    { 
+                        teamName: 'টিম শাইন', address: 'ময়মনসিংহ',
+                        player1: 'রিয়াদ হোসেন', cat1: 'HIGH', phone1: '01933333331',
+                        player2: 'তাহসিন মাহমুদ', cat2: 'HIGH', phone2: '01933333332'
+                    }
                 ]
             };
 
@@ -58,7 +107,9 @@
             ]);
 
             const [teamForm, setTeamForm] = React.useState({
-                group: 'গ্রুপ এ', teamName: '', category: 'HIGH', player1: '', phone1: '', player2: '', phone2: '', address: ''
+                group: 'গ্রুপ এ', teamName: '', address: '',
+                player1: '', cat1: 'HIGH', phone1: '',
+                player2: '', cat2: 'MEDIUM', phone2: ''
             });
 
             const [matchForm, setMatchForm] = React.useState({
@@ -90,7 +141,11 @@
                     const group = teamForm.group;
                     const updatedGroup = [...(groupsData[group] || []), teamForm];
                     setGroupsData({ ...groupsData, [group]: updatedGroup });
-                    setTeamForm({ group: 'গ্রুপ এ', teamName: '', category: 'HIGH', player1: '', phone1: '', player2: '', phone2: '', address: '' });
+                    setTeamForm({
+                        group: 'গ্রুপ এ', teamName: '', address: '',
+                        player1: '', cat1: 'HIGH', phone1: '',
+                        player2: '', cat2: 'MEDIUM', phone2: ''
+                    });
                 }
             };
 
@@ -137,8 +192,8 @@
                 let list = [];
                 Object.keys(groupsData).forEach(g => {
                     groupsData[g].forEach(t => {
-                        list.push({ name: t.player1, phone: t.phone1, category: t.category, teamName: t.teamName, groupName: g });
-                        list.push({ name: t.player2, phone: t.phone2, category: t.category, teamName: t.teamName, groupName: g });
+                        list.push({ name: t.player1, phone: t.phone1, category: t.cat1, teamName: t.teamName, groupName: g });
+                        list.push({ name: t.player2, phone: t.phone2, category: t.cat2, teamName: t.teamName, groupName: g });
                     });
                 });
                 return list;
@@ -149,7 +204,7 @@
                 if (cat === 'HIGH') color = "bg-red-500/20 text-red-400 border-red-500/30";
                 else if (cat === 'MEDIUM') color = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                 else if (cat === 'LOW') color = "bg-green-500/20 text-green-400 border-green-500/30";
-                return <span className={`px-2 py-0.5 rounded text-xs border font-semibold ${color}`}>{cat}</span>;
+                return <span className={`px-2 py-0.5 rounded text-xs border font-semibold ml-1.5 ${color}`}>{cat}</span>;
             };
 
             return (
@@ -202,7 +257,7 @@
                                     <div onClick={() => setHomeSubView('all_teams')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
                                         <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট টিম</h3>
                                         <p className="text-3xl font-extrabold text-white mt-2">{getAllTeams().length} টি</p>
-                                        <span className="text-xs text-yellow-300 mt-2 block">👉 ১২টি টিম ও ক্যাটাগরি দেখতে চাপ দিন</span>
+                                        <span className="text-xs text-yellow-300 mt-2 block">👉 ১২টি টিম ও খেলোয়াড় দেখতে চাপ দিন</span>
                                     </div>
                                     <div onClick={() => setHomeSubView('all_players')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
                                         <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট খেলোয়াড়</h3>
@@ -216,7 +271,7 @@
                                         <div className="flex justify-between items-center border-b border-slate-700 pb-3">
                                             <h3 className="text-lg font-bold text-yellow-400">
                                                 {homeSubView === 'all_groups' && '📁 ৪টি গ্রুপের নামসমূহ'}
-                                                {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের তালিকা (HIGH/MEDIUM/LOW ক্যাটাগরি সহ)'}
+                                                {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের তালিকা (খেলোয়াড়দের নিজস্ব ক্যাটাগরি সহ)'}
                                                 {homeSubView === 'all_players' && '👥 ২৪ জন খেলোয়াড়ের তালিকা (ক্যাটাগরি সহ)'}
                                             </h3>
                                             <button onClick={() => setHomeSubView(null)} className="bg-red-500 text-white text-xs px-3 py-1 rounded">বন্ধ করুন ✕</button>
@@ -237,14 +292,19 @@
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {getAllTeams().map((t, i) => (
                                                     <div key={i} className="bg-slate-700 p-4 rounded-xl border border-slate-600 space-y-2">
-                                                        <div className="flex justify-between items-center border-b border-slate-600 pb-1.5">
+                                                        <div className="border-b border-slate-600 pb-1.5">
                                                             <h4 className="font-bold text-white text-base">{t.teamName}</h4>
-                                                            {getCategoryBadge(t.category)}
+                                                            <p className="text-xs text-yellow-300">গ্রুপ: {t.groupName}</p>
                                                         </div>
-                                                        <p className="text-xs text-yellow-300">গ্রুপ: {t.groupName}</p>
-                                                        <div className="text-xs text-gray-300 space-y-0.5">
-                                                            <p>👤 খেলোয়াড় ১: <strong className="text-white">{t.player1}</strong> ({t.phone1 || 'N/A'})</p>
-                                                            <p>👤 খেলোয়াড় ২: <strong className="text-white">{t.player2}</strong> ({t.phone2 || 'N/A'})</p>
+                                                        <div className="text-xs text-gray-300 space-y-1.5">
+                                                            <p className="flex items-center">
+                                                                <span>👤 খেলোয়াড় ১: <strong className="text-white">{t.player1}</strong></span>
+                                                                {getCategoryBadge(t.cat1)}
+                                                            </p>
+                                                            <p className="flex items-center">
+                                                                <span>👤 খেলোয়াড় ২: <strong className="text-white">{t.player2}</strong></span>
+                                                                {getCategoryBadge(t.cat2)}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -257,18 +317,18 @@
                                                     <thead>
                                                         <tr className="bg-slate-700 text-yellow-400 border-b border-slate-600">
                                                             <th className="p-2.5">খেলোয়াড়ের নাম</th>
+                                                            <th className="p-2.5">ক্যাটাগরি</th>
                                                             <th className="p-2.5">টিমের নাম</th>
                                                             <th className="p-2.5">গ্রুপ</th>
-                                                            <th className="p-2.5">ক্যাটাগরি</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-slate-700 text-gray-200">
                                                         {getAllPlayers().map((p, i) => (
                                                             <tr key={i} className="hover:bg-slate-700/50">
                                                                 <td className="p-2.5 font-bold text-white">{p.name}</td>
+                                                                <td className="p-2.5">{getCategoryBadge(p.category)}</td>
                                                                 <td className="p-2.5">{p.teamName}</td>
                                                                 <td className="p-2.5 text-yellow-400">{p.groupName}</td>
-                                                                <td className="p-2.5">{getCategoryBadge(p.category)}</td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
@@ -282,7 +342,7 @@
 
                         {activeTab === 'groups' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ (HIGH, MEDIUM, LOW ক্যাটাগরি) 🏆</h2>
+                                <h2 className="text-2xl font-bold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ 🏆</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {Object.keys(groupsData).map((groupName) => (
                                         <div key={groupName} className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
@@ -293,13 +353,16 @@
                                             <div className="space-y-4">
                                                 {groupsData[groupName].map((t, idx) => (
                                                     <div key={idx} className="bg-slate-700/70 p-3.5 rounded-lg border border-slate-600">
-                                                        <div className="flex justify-between items-center mb-2">
-                                                            <h4 className="font-bold text-white text-base">{t.teamName}</h4>
-                                                            {getCategoryBadge(t.category)}
-                                                        </div>
-                                                        <div className="text-xs text-gray-300 space-y-1">
-                                                            <p><span className="text-gray-400">খেলোয়াড় ১:</span> <strong className="text-gray-100">{t.player1}</strong></p>
-                                                            <p><span className="text-gray-400">খেলোয়াড় ২:</span> <strong className="text-gray-100">{t.player2}</strong></p>
+                                                        <h4 className="font-bold text-white text-base border-b border-slate-600 pb-1 mb-2">{t.teamName}</h4>
+                                                        <div className="text-xs text-gray-300 space-y-1.5">
+                                                            <p className="flex items-center">
+                                                                <span><strong className="text-gray-400">খেলোয়াড় ১:</strong> <strong className="text-gray-100">{t.player1}</strong></span>
+                                                                {getCategoryBadge(t.cat1)}
+                                                            </p>
+                                                            <p className="flex items-center">
+                                                                <span><strong className="text-gray-400">খেলোয়াড় ২:</strong> <strong className="text-gray-100">{t.player2}</strong></span>
+                                                                {getCategoryBadge(t.cat2)}
+                                                            </p>
                                                             <p><span className="text-gray-400">ঠিকানা:</span> {t.address || 'N/A'}</p>
                                                         </div>
                                                     </div>
@@ -351,11 +414,11 @@
                             <div className="space-y-6">
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
                                     <h2 className="text-xl font-bold text-yellow-400 mb-2">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span> (শুধুমাত্র আপনি ক্যাটাগরি ও তথ্য যোগ বা মুছতে পারবেন)</p>
+                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span> (শুধুমাত্র আপনি প্রতিটি খেলোয়াড়ের নিজস্ব ক্যাটাগরি যোগ বা মুছতে পারবেন)</p>
                                 </div>
 
                                 <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">গ্রুপে টিম, ২জন খেলোয়াড় ও ক্যাটাগরি (HIGH/MEDIUM/LOW) যোগ করুন</h3>
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">গ্রুপে টিম ও ২জন খেলোয়াড়ের স্বতন্ত্র ক্যাটাগরি সেট করুন</h3>
                                     <form onSubmit={addTeamToGroup} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">গ্রুপ সিলেক্ট করুন</label>
@@ -370,34 +433,40 @@
                                             <label className="block text-xs text-gray-300 mb-1">টিমের নাম *</label>
                                             <input type="text" placeholder="টিমের নাম" value={teamForm.teamName} onChange={e => setTeamForm({ ...teamForm, teamName: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
                                         </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-300 mb-1">খেলোয়াড় ১ এর নাম *</label>
-                                            <input type="text" placeholder="প্লেয়ার ১" value={teamForm.player1} onChange={e => setTeamForm({ ...teamForm, player1: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                        
+                                        {/* Player 1 Section */}
+                                        <div className="bg-slate-700/50 p-3 rounded border border-slate-600 space-y-2">
+                                            <span className="text-xs font-bold text-yellow-400">খেলোয়াড় ১ এর তথ্য</span>
+                                            <input type="text" placeholder="খেলোয়াড় ১ এর নাম *" value={teamForm.player1} onChange={e => setTeamForm({ ...teamForm, player1: e.target.value })} required className="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <div className="flex gap-2">
+                                                <select value={teamForm.cat1} onChange={e => setTeamForm({ ...teamForm, cat1: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-yellow-400 font-bold focus:outline-none">
+                                                    <option value="HIGH">HIGH</option>
+                                                    <option value="MEDIUM">MEDIUM</option>
+                                                    <option value="LOW">LOW</option>
+                                                </select>
+                                                <input type="text" placeholder="মোবাইল ১" value={teamForm.phone1} onChange={e => setTeamForm({ ...teamForm, phone1: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white focus:outline-none" />
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-300 mb-1">খেলোয়াড় ১ মোবাইল</label>
-                                            <input type="text" placeholder="মোবাইল ১" value={teamForm.phone1} onChange={e => setTeamForm({ ...teamForm, phone1: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+
+                                        {/* Player 2 Section */}
+                                        <div className="bg-slate-700/50 p-3 rounded border border-slate-600 space-y-2">
+                                            <span className="text-xs font-bold text-yellow-400">খেলোয়াড় ২ এর তথ্য</span>
+                                            <input type="text" placeholder="খেলোয়াড় ২ এর নাম *" value={teamForm.player2} onChange={e => setTeamForm({ ...teamForm, player2: e.target.value })} required className="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <div className="flex gap-2">
+                                                <select value={teamForm.cat2} onChange={e => setTeamForm({ ...teamForm, cat2: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-yellow-400 font-bold focus:outline-none">
+                                                    <option value="HIGH">HIGH</option>
+                                                    <option value="MEDIUM">MEDIUM</option>
+                                                    <option value="LOW">LOW</option>
+                                                </select>
+                                                <input type="text" placeholder="মোবাইল ২" value={teamForm.phone2} onChange={e => setTeamForm({ ...teamForm, phone2: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white focus:outline-none" />
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-300 mb-1">খেলোয়াড় ২ এর নাম *</label>
-                                            <input type="text" placeholder="প্লেয়ার ২" value={teamForm.player2} onChange={e => setTeamForm({ ...teamForm, player2: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-300 mb-1">খেলোয়াড় ২ মোবাইল</label>
-                                            <input type="text" placeholder="মোবাইল ২" value={teamForm.phone2} onChange={e => setTeamForm({ ...teamForm, phone2: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-300 mb-1">ক্যাটাগরি সিলেক্ট করুন *</label>
-                                            <select value={teamForm.category} onChange={e => setTeamForm({ ...teamForm, category: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none font-bold text-yellow-400">
-                                                <option value="HIGH">HIGH</option>
-                                                <option value="MEDIUM">MEDIUM</option>
-                                                <option value="LOW">LOW</option>
-                                            </select>
-                                        </div>
-                                        <div>
+
+                                        <div className="md:col-span-2">
                                             <label className="block text-xs text-gray-300 mb-1">ঠিকানা</label>
                                             <input type="text" placeholder="ঠিকানা" value={teamForm.address} onChange={e => setTeamForm({ ...teamForm, address: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
                                         </div>
+
                                         <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">টিম ও খেলোয়াড় যোগ করুন</button>
                                     </form>
 
@@ -410,8 +479,10 @@
                                                     {groupsData[gName].map((t, idx) => (
                                                         <div key={idx} className="bg-slate-800 p-3 rounded flex justify-between items-center text-xs">
                                                             <div>
-                                                                <span className="font-bold text-white text-sm">{t.teamName}</span> {getCategoryBadge(t.category)}
-                                                                <p className="text-gray-300 mt-1">👤 {t.player1} & 👤 {t.player2}</p>
+                                                                <span className="font-bold text-white text-sm">{t.teamName}</span>
+                                                                <p className="text-gray-300 mt-1">
+                                                                    👤 {t.player1} {getCategoryBadge(t.cat1)} &nbsp;|&nbsp; 👤 {t.player2} {getCategoryBadge(t.cat2)}
+                                                                </p>
                                                             </div>
                                                             <button onClick={() => deleteTeamFromGroup(gName, idx)} className="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded transition">ডিলিট</button>
                                                         </div>
