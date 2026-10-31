@@ -23,11 +23,14 @@
             const [password, setPassword] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
 
+            // Sub-tabs for Home/Dashboard interactive cards ('all_groups', 'all_teams', 'all_players', null)
+            const [homeSubView, setHomeSubView] = React.useState(null);
+
             // 4 Groups with 3 Teams each, each Team with 2 Players
             const initialGroups = {
                 'গ্রুপ এ': [
                     { teamName: 'টিম আলফা', category: 'সিনিয়র', player1: 'রফিক হোসেন', phone1: '01700000001', player2: 'শফিক আহমেদ', phone2: '01700000002', address: 'ঢাকা' },
-                    { teamName: 'টিમ বিটা', category: 'সিনিয়র', player1: 'আলমগীর কবির', phone1: '01800000001', player2: 'জহির রায়হান', phone2: '01800000002', address: 'গাজীপুর' },
+                    { teamName: 'টিম বিটা', category: 'সিনিয়র', player1: 'আলমগীর কবির', phone1: '01800000001', player2: 'জহির রায়হান', phone2: '01800000002', address: 'গাজীপুর' },
                     { teamName: 'টিম গামা', category: 'জুনিয়র', player1: 'তানভীর হাসান', phone1: '01900000001', player2: 'সাব্বির খান', phone2: '01900000002', address: 'নারায়ণগঞ্জ' }
                 ],
                 'গ্রুপ বি': [
@@ -67,7 +70,6 @@
                 match: '', stage: 'গ্রুপ পর্ব', time: '', score: 'আসন্ন'
             });
 
-            // Handlers
             const handleLogin = (e) => {
                 e.preventDefault();
                 if (email === 'efshikhelaghor@gmail.com' && password === 'admin123') {
@@ -84,6 +86,7 @@
                 setEmail('');
                 setPassword('');
                 setActiveTab('home');
+                setHomeSubView(null);
             };
 
             const addTeamToGroup = (e) => {
@@ -125,6 +128,28 @@
                 setMatches(matches.filter(m => m.id !== id));
             };
 
+            // Helper to get flat lists
+            const getAllTeams = () => {
+                let list = [];
+                Object.keys(groupsData).forEach(g => {
+                    groupsData[g].forEach(t => {
+                        list.push({ ...t, groupName: g });
+                    });
+                });
+                return list;
+            };
+
+            const getAllPlayers = () => {
+                let list = [];
+                Object.keys(groupsData).forEach(g => {
+                    groupsData[g].forEach(t => {
+                        list.push({ name: t.player1, phone: t.phone1, category: t.category, teamName: t.teamName, groupName: g });
+                        list.push({ name: t.player2, phone: t.phone2, category: t.category, teamName: t.teamName, groupName: g });
+                    });
+                });
+                return list;
+            };
+
             return (
                 <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100 font-sans">
                     {/* Header */}
@@ -146,16 +171,16 @@
 
                     {/* Navigation */}
                     <nav className="flex justify-center bg-slate-800 p-2 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
-                        <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>হোম ও নোটিশ</button>
+                        <button onClick={() => { setActiveTab('home'); setHomeSubView(null); }} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>হোম ও নোটিশ</button>
                         <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
                         <button onClick={() => setActiveTab('matches')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>ম্যাচ ফিক্সচার</button>
-                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-800 text-white hover:bg-red-700'}`}>এডমিন প্যানেল</button>}
+                        {isAdmin && <button onClick={() => { setActiveTab('dashboard'); setHomeSubView(null); }} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-800 text-white hover:bg-red-700'}`}>এডমিন প্যানেল</button>}
                     </nav>
 
                     {/* Main Content */}
                     <main className="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-6">
 
-                        {/* HOME TAB */}
+                        {/* HOME TAB / DASHBOARD */}
                         {activeTab === 'home' && (
                             <div className="space-y-6">
                                 <div className="bg-slate-800 p-6 rounded-xl border border-yellow-500/30 shadow-lg">
@@ -170,20 +195,85 @@
                                     </div>
                                 </div>
 
+                                {/* Interactive Summary Cards */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center">
-                                        <h3 className="text-lg font-bold text-yellow-400">মোট গ্রুপ</h3>
+                                    <div onClick={() => setHomeSubView('all_groups')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                        <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট গ্রুপ</h3>
                                         <p className="text-3xl font-extrabold text-white mt-2">৪ টি</p>
+                                        <span className="text-xs text-yellow-300 mt-2 block">👉 দেখতে চাপ দিন</span>
                                     </div>
-                                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center">
-                                        <h3 className="text-lg font-bold text-yellow-400">মোট টিম</h3>
-                                        <p className="text-3xl font-extrabold text-white mt-2">১২ টি (প্রতি গ্রুপে ৩টি)</p>
+                                    <div onClick={() => setHomeSubView('all_teams')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                        <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট টিম</h3>
+                                        <p className="text-3xl font-extrabold text-white mt-2">১২ টি</p>
+                                        <span className="text-xs text-yellow-300 mt-2 block">👉 দেখতে চাপ দিন</span>
                                     </div>
-                                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center">
-                                        <h3 className="text-lg font-bold text-yellow-400">মোট খেলোয়াড়</h3>
-                                        <p className="text-3xl font-extrabold text-white mt-2">২৪ জন (প্রতি টিমে ২জন)</p>
+                                    <div onClick={() => setHomeSubView('all_players')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                        <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট খেলোয়াড়</h3>
+                                        <p className="text-3xl font-extrabold text-white mt-2">২৪ জন</p>
+                                        <span className="text-xs text-yellow-300 mt-2 block">👉 দেখতে চাপ দিন</span>
                                     </div>
                                 </div>
+
+                                {/* Modal / Accordion for Sub-Views */}
+                                {homeSubView && (
+                                    <div className="bg-slate-800 p-6 rounded-xl border border-yellow-500 shadow-2xl space-y-4">
+                                        <div className="flex justify-between items-center border-b border-slate-700 pb-3">
+                                            <h3 className="text-lg font-bold text-yellow-400">
+                                                {homeSubView === 'all_groups' && '📁 ৪টি গ্রুপের নামসমূহ'}
+                                                {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের নামসমূহ'}
+                                                {homeSubView === 'all_players' && '👥 ২৪ জন খেলোয়াড়ের তালিকা'}
+                                            </h3>
+                                            <button onClick={() => setHomeSubView(null)} className="bg-red-500 text-white text-xs px-3 py-1 rounded">বন্ধ করুন ✕</button>
+                                        </div>
+
+                                        {homeSubView === 'all_groups' && (
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                {Object.keys(groupsData).map((g, i) => (
+                                                    <div key={i} className="bg-slate-700 p-4 rounded-lg text-center border border-slate-600">
+                                                        <h4 className="font-bold text-yellow-400 text-lg">{g}</h4>
+                                                        <p className="text-xs text-gray-300 mt-1">৩টি টিম অন্তর্ভুক্ত</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {homeSubView === 'all_teams' && (
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                {getAllTeams().map((t, i) => (
+                                                    <div key={i} className="bg-slate-700 p-3 rounded-lg border border-slate-600">
+                                                        <h4 className="font-bold text-white">{t.teamName}</h4>
+                                                        <p className="text-xs text-yellow-400 mt-0.5">গ্রুপ: {t.groupName} | ক্যাটাগরি: {t.category}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {homeSubView === 'all_players' && (
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-left text-sm border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-slate-700 text-yellow-400 border-b border-slate-600">
+                                                            <th className="p-2.5">খেলোয়াড়ের নাম</th>
+                                                            <th className="p-2.5">টিমের নাম</th>
+                                                            <th className="p-2.5">গ্রুপ</th>
+                                                            <th className="p-2.5">ক্যাটাগরি</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-700 text-gray-200">
+                                                        {getAllPlayers().map((p, i) => (
+                                                            <tr key={i} className="hover:bg-slate-700/50">
+                                                                <td className="p-2.5 font-bold text-white">{p.name}</td>
+                                                                <td className="p-2.5">{p.teamName}</td>
+                                                                <td className="p-2.5 text-yellow-400">{p.groupName}</td>
+                                                                <td className="p-2.5"><span className="bg-slate-700 px-2 py-0.5 rounded text-xs border border-slate-600">{p.category}</span></td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )}
 
