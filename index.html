@@ -9,84 +9,93 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 text-white font-sans min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
         function App() {
             const [activeTab, setActiveTab] = React.useState('home');
             const [isAdmin, setIsAdmin] = React.useState(false);
-            const [email, setEmail] = React.useState('');
-            const [password, setPassword] = React.useState('');
+            
+            // Admin Credentials State (Changeable)
+            const [adminEmail, setAdminEmail] = React.useState('efshikhelaghor@gmail.com');
+            const [adminPassword, setAdminPassword] = React.useState('admin123');
+
+            const [emailInput, setEmailInput] = React.useState('');
+            const [passInput, setPassInput] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
+
+            // Password Change State inside Admin Dashboard
+            const [newPass, setNewPass] = React.useState('');
+            const [passSuccess, setPassSuccess] = React.useState('');
 
             const [homeSubView, setHomeSubView] = React.useState(null);
 
             const initialGroups = {
                 'গ্রুপ এ': [
                     { 
-                        teamName: 'টিম আলফা', address: 'ঢাকা',
+                        id: 1, teamName: 'টিম আলফা', address: 'ঢাকা',
                         player1: 'রফিক হোসেন', cat1: 'HIGH', phone1: '01700000001',
                         player2: 'শফিক আহমেদ', cat2: 'MEDIUM', phone2: '01700000002'
                     },
                     { 
-                        teamName: 'টিম বিটা', address: 'গাজীপুর',
+                        id: 2, teamName: 'টিম বিটা', address: 'গাজীপুর',
                         player1: 'আলমগীর কবির', cat1: 'MEDIUM', phone1: '01800000001',
                         player2: 'জহির রায়হান', cat2: 'LOW', phone2: '01800000002'
                     },
                     { 
-                        teamName: 'টিম গামা', address: 'নারায়ণগঞ্জ',
+                        id: 3, teamName: 'টিম গামা', address: 'নারায়ণগঞ্জ',
                         player1: 'তানভীর হাসান', cat1: 'HIGH', phone1: '01900000001',
                         player2: 'সাব্বির খান', cat2: 'LOW', phone2: '01900000002'
                     }
                 ],
                 'গ্রুপ বি': [
                     { 
-                        teamName: 'টিম রয়্যাল', address: 'চট্টগ্রাম',
+                        id: 4, teamName: 'টিম রয়্যাল', address: 'চট্টগ্রাম',
                         player1: 'কাজী সালাউদ্দিন', cat1: 'HIGH', phone1: '01711111111',
                         player2: 'এম এ জলিল', cat2: 'HIGH', phone2: '01711111112'
                     },
                     { 
-                        teamName: 'টিম কিং', address: 'কুমিল্লা',
+                        id: 5, teamName: 'টিম কিং', address: 'কুমিল্লা',
                         player1: 'সাকিব মেহমুদ', cat1: 'MEDIUM', phone1: '01811111111',
                         player2: 'আরিফ রহমান', cat2: 'LOW', phone2: '01811111112'
                     },
                     { 
-                        teamName: 'টিম ঈগল', address: 'সিলেট',
+                        id: 6, teamName: 'টিম ঈগল', address: 'সিলেট',
                         player1: 'মেহেদী হাসান', cat1: 'MEDIUM', phone1: '01911111111',
                         player2: 'রাকিব শাহ', cat2: 'MEDIUM', phone2: '01911111112'
                     }
                 ],
                 'গ্রুপ সি': [
                     { 
-                        teamName: 'টিম থান্ডার', address: 'খুলনা',
+                        id: 7, teamName: 'টিম থান্ডার', address: 'খুলনা',
                         player1: 'শাহিন আলম', cat1: 'HIGH', phone1: '01722222221',
                         player2: 'ইমরান খান', cat2: 'MEDIUM', phone2: '01722222222'
                     },
                     { 
-                        teamName: 'টিম টাইগার', address: 'বরিশাল',
+                        id: 8, teamName: 'টিম টাইগার', address: 'বরিশাল',
                         player1: 'সোহেল রানা', cat1: 'LOW', phone1: '01822222221',
                         player2: 'কামরুল ইসলাম', cat2: 'LOW', phone2: '01822222222'
                     },
                     { 
-                        teamName: 'টিম স্টর্ম', address: 'যশোর',
+                        id: 9, teamName: 'টিম স্টর্ম', address: 'যশোর',
                         player1: 'ফাহিম আহমেদ', cat1: 'HIGH', phone1: '01922222221',
                         player2: 'নাসিম শেখ', cat2: 'LOW', phone2: '01922222222'
                     }
                 ],
                 'গ্রুপ ডি': [
                     { 
-                        teamName: 'টিম ফিনিক্স', address: 'রংপুর',
+                        id: 10, teamName: 'টিম ফিনিক্স', address: 'রংপুর',
                         player1: 'হাবিবুর রহমান', cat1: 'HIGH', phone1: '01733333331',
                         player2: 'আনোয়ার হোসেন', cat2: 'MEDIUM', phone2: '01733333332'
                     },
                     { 
-                        teamName: 'টিম ওয়্যারিয়র্স', address: 'বগুড়া',
+                        id: 11, teamName: 'টিম ওয়্যারিয়র্স', address: 'বগুড়া',
                         player1: 'আসিফ ইকবাল', cat1: 'MEDIUM', phone1: '01833333331',
                         player2: 'নাইমুল ইসলাম', cat2: 'LOW', phone2: '01833333332'
                     },
                     { 
-                        teamName: 'টিম শাইন', address: 'ময়মনসিংহ',
+                        id: 12, teamName: 'টিম শাইন', address: 'ময়মনসিংহ',
                         player1: 'রিয়াদ হোসেন', cat1: 'HIGH', phone1: '01933333331',
                         player2: 'তাহসিন মাহমুদ', cat2: 'HIGH', phone2: '01933333332'
                     }
@@ -94,30 +103,25 @@
             };
 
             const [groupsData, setGroupsData] = React.useState(initialGroups);
+            const [editingTeam, setEditingTeam] = React.useState(null); // {groupName, index}
 
             const [notices, setNotices] = React.useState([
-                { id: 1, text: "উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর রেজিষ্ট্রেশন ও গ্রুপ পর্বের ফরম্যাট প্রকাশ করা হয়েছে!", date: "২০২৬-০৩-০১" }
+                { id: 1, text: "উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর রেজিষ্ট্রেশন ও টুর্নামেন্ট ফরম্যাট প্রকাশ করা হয়েছে!", date: "২০২৬-০3-০১" }
             ]);
             const [newNotice, setNewNotice] = React.useState('');
+            const [editingNoticeId, setEditingNoticeId] = React.useState(null);
+            const [editNoticeText, setEditNoticeText] = React.useState('');
 
-            // Tournament stages structured matching user requirements
             const [tournamentMatches, setTournamentMatches] = React.useState({
                 'গ্রুপ পর্ব (Group Stage)': [
                     { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', score: '২-১ (বিজয়ী: টিম আলফা)' },
-                    { id: 102, group: 'গ্রুপ এ', match: 'টিম বিটা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', score: 'আসন্ন' },
-                    { id: 103, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম কিং', time: '২০২৬-০৩-১৬, ৪:০০ PM', score: '০-২ (বিজয়ী: টিম কিং)' },
-                    { id: 104, group: 'গ্রুপ সি', match: 'টিম থান্ডার বনাম টিম টাইগার', time: '২০২৬-০৩-১৭, ৪:০০ PM', score: 'আসন্ন' },
-                    { id: 105, group: 'গ্রুপ ডি', match: 'টিম ফিনিক্স বনাম টিম ওয়্যারিয়র্স', time: '২০২৬-০৩-১৮, ৪:০০ PM', score: 'আসন্ন' }
+                    { id: 102, group: 'গ্রুপ এ', match: 'টিম বিটা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', score: 'আসন্ন' }
                 ],
                 'কোয়ার্টার ফাইনাল (Quarter-Finals)': [
-                    { id: 201, match: 'কোয়ার্টার ১: গ্রুপ এ (১ম) বনাম গ্রুপ বি (২য়)', time: '২০২৬-০৩-২০, ৪:০০ PM', score: 'আসন্ন' },
-                    { id: 202, match: 'কোয়ার্টার ২: গ্রুপ বি (১ম) বনাম গ্রুপ এ (২য়)', time: '২০২৬-০৩-২০, ৬:০০ PM', score: 'আসন্ন' },
-                    { id: 203, match: 'কোয়ার্টার ৩: গ্রুপ সি (১ম) বনাম গ্রুপ ডি (২য়)', time: '২০২৬-০৩-২১, ৪:০০ PM', score: 'আসন্ন' },
-                    { id: 204, match: 'কোয়ার্টার ৪: গ্রুপ ডি (১ম) বনাম গ্রুপ সি (২য়)', time: '২০২৬-০৩-২১, ৬:০০ PM', score: 'আসন্ন' }
+                    { id: 201, match: 'কোয়ার্টার ১: গ্রুপ এ (১ম) বনাম গ্রুপ বি (২য়)', time: '২০২৬-০৩-২০, ৪:০০ PM', score: 'আসন্ন' }
                 ],
                 'সেমিফাইনাল (Semi-Finals)': [
-                    { id: 301, match: 'সেমিফাইনাল ১: বিজয়ী (কোয়ার্টার ১) বনাম বিজয়ী (কোয়ার্টার ৩)', time: '২০২৬-০৩-২৩, ৪:০০ PM', score: 'আসন্ন' },
-                    { id: 302, match: 'সেমিফাইনাল ২: বিজয়ী (কোয়ার্টার ২) বনাম বিজয়ী (কোয়ার্টার ৪)', time: '২০২৬-০৩-২৩, ৬:০০ PM', score: 'আসন্ন' }
+                    { id: 301, match: 'সেমিফাইনাল ১: বিজয়ী (কোয়ার্টার ১) বনাম বিজয়ী (কোয়ার্টার ৩)', time: '২০২৬-০৩-২৩, ৪:০০ PM', score: 'আসন্ন' }
                 ],
                 'তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place Match)': [
                     { id: 401, match: 'পরাজিত (সেমিফাইনাল ১) বনাম পরাজিত (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৩:০০ PM', score: 'আসন্ন' }
@@ -130,16 +134,16 @@
             const [matchForm, setMatchForm] = React.useState({
                 stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন'
             });
+            const [editingMatch, setEditingMatch] = React.useState(null); // {stage, id}
 
             const [standings, setStandings] = React.useState([
                 { team: 'টিম আলফা', group: 'গ্রুপ এ', played: 1, won: 1, lost: 0, pts: 2 },
-                { team: 'টিম রয়্যাল', group: 'গ্রুপ বি', played: 1, won: 0, lost: 1, pts: 0 },
-                { team: 'টিম কিং', group: 'গ্রুপ বি', played: 1, won: 1, lost: 0, pts: 2 }
+                { team: 'টিম রয়্যাল', group: 'গ্রুপ বি', played: 1, won: 0, lost: 1, pts: 0 }
             ]);
-
             const [standingForm, setStandingForm] = React.useState({
                 team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0
             });
+            const [editingStandingIndex, setEditingStandingIndex] = React.useState(null);
 
             const [teamForm, setTeamForm] = React.useState({
                 group: 'গ্রুপ এ', teamName: '', address: '',
@@ -149,7 +153,7 @@
 
             const handleLogin = (e) => {
                 e.preventDefault();
-                if (email === 'efshikhelaghor@gmail.com' && password === 'admin123') {
+                if (emailInput.trim() === adminEmail && passInput === adminPassword) {
                     setIsAdmin(true);
                     setLoginError('');
                     setActiveTab('dashboard');
@@ -160,18 +164,47 @@
 
             const handleLogout = () => {
                 setIsAdmin(false);
-                setEmail('');
-                setPassword('');
+                setEmailInput('');
+                setPassInput('');
                 setActiveTab('home');
                 setHomeSubView(null);
             };
 
-            const addTeamToGroup = (e) => {
+            const handlePasswordChange = (e) => {
+                e.preventDefault();
+                if (newPass.trim().length >= 4) {
+                    setAdminPassword(newPass);
+                    setNewPass('');
+                    setPassSuccess('পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
+                    setTimeout(() => setPassSuccess(''), 4000);
+                } else {
+                    setPassSuccess('কমপক্ষে ৪ অক্ষরের শক্তিশালী পাসওয়ার্ড দিন!');
+                }
+            };
+
+            // Team Add / Edit Handlers
+            const saveTeam = (e) => {
                 e.preventDefault();
                 if (teamForm.teamName && teamForm.player1 && teamForm.player2) {
                     const group = teamForm.group;
-                    const updatedGroup = [...(groupsData[group] || []), teamForm];
-                    setGroupsData({ ...groupsData, [group]: updatedGroup });
+                    if (editingTeam !== null) {
+                        // Edit existing
+                        const updatedGroup = [...groupsData[editingTeam.groupName]];
+                        if (editingTeam.groupName === group) {
+                            updatedGroup[editingTeam.index] = teamForm;
+                            setGroupsData({ ...groupsData, [group]: updatedGroup });
+                        } else {
+                            // Moved to another group
+                            updatedGroup.splice(editingTeam.index, 1);
+                            const targetGroup = [...(groupsData[group] || []), teamForm];
+                            setGroupsData({ ...groupsData, [editingTeam.groupName]: updatedGroup, [group]: targetGroup });
+                        }
+                        setEditingTeam(null);
+                    } else {
+                        // Add new
+                        const updatedGroup = [...(groupsData[group] || []), teamForm];
+                        setGroupsData({ ...groupsData, [group]: updatedGroup });
+                    }
                     setTeamForm({
                         group: 'গ্রুপ এ', teamName: '', address: '',
                         player1: '', cat1: 'HIGH', phone1: '',
@@ -180,34 +213,61 @@
                 }
             };
 
+            const startEditTeam = (groupName, index, tData) => {
+                setEditingTeam({ groupName, index });
+                setTeamForm({ group: groupName, ...tData });
+            };
+
             const deleteTeamFromGroup = (group, index) => {
                 const updatedGroup = groupsData[group].filter((_, i) => i !== index);
                 setGroupsData({ ...groupsData, [group]: updatedGroup });
             };
 
+            // Notice Handlers
             const addNotice = (e) => {
                 e.preventDefault();
-                if (newNotice.trim()) {
+                if (editingNoticeId !== null) {
+                    setNotices(notices.map(n => n.id === editingNoticeId ? { ...n, text: editNoticeText } : n));
+                    setEditingNoticeId(null);
+                    setEditNoticeText('');
+                } else if (newNotice.trim()) {
                     setNotices([{ id: Date.now(), text: newNotice, date: new Date().toISOString().split('T')[0] }, ...notices]);
                     setNewNotice('');
                 }
+            };
+
+            const startEditNotice = (n) => {
+                setEditingNoticeId(n.id);
+                setEditNoticeText(n.text);
             };
 
             const deleteNotice = (id) => {
                 setNotices(notices.filter(n => n.id !== id));
             };
 
-            const addTournamentMatch = (e) => {
+            // Match Handlers
+            const saveMatch = (e) => {
                 e.preventDefault();
                 if (matchForm.match) {
                     const stage = matchForm.stage;
-                    const newEntry = { ...matchForm, id: Date.now() };
-                    setTournamentMatches({
-                        ...tournamentMatches,
-                        [stage]: [...(tournamentMatches[stage] || []), newEntry]
-                    });
+                    if (editingMatch !== null) {
+                        const updatedStageMatches = tournamentMatches[editingMatch.stage].map(m => m.id === editingMatch.id ? { ...matchForm, id: m.id } : m);
+                        setTournamentMatches({ ...tournamentMatches, [editingMatch.stage]: updatedStageMatches });
+                        setEditingMatch(null);
+                    } else {
+                        const newEntry = { ...matchForm, id: Date.now() };
+                        setTournamentMatches({
+                            ...tournamentMatches,
+                            [stage]: [...(tournamentMatches[stage] || []), newEntry]
+                        });
+                    }
                     setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন' });
                 }
+            };
+
+            const startEditMatch = (stage, m) => {
+                setEditingMatch({ stage, id: m.id });
+                setMatchForm({ stage, group: m.group || 'গ্রুপ এ', match: m.match, time: m.time, score: m.score });
             };
 
             const deleteTournamentMatch = (stage, id) => {
@@ -215,12 +275,25 @@
                 setTournamentMatches({ ...tournamentMatches, [stage]: updatedStageMatches });
             };
 
-            const addStanding = (e) => {
+            // Standings Handlers
+            const saveStanding = (e) => {
                 e.preventDefault();
                 if (standingForm.team) {
-                    setStandings([...standings, { ...standingForm }]);
+                    if (editingStandingIndex !== null) {
+                        const updated = [...standings];
+                        updated[editingStandingIndex] = standingForm;
+                        setStandings(updated);
+                        setEditingStandingIndex(null);
+                    } else {
+                        setStandings([...standings, { ...standingForm }]);
+                    }
                     setStandingForm({ team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 });
                 }
+            };
+
+            const startEditStanding = (idx, s) => {
+                setEditingStandingIndex(idx);
+                setStandingForm(s);
             };
 
             const deleteStanding = (index) => {
@@ -258,39 +331,51 @@
 
             return (
                 <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100 font-sans">
-                    <header className="bg-slate-800 shadow-md p-4 border-b border-yellow-500 flex justify-between items-center px-4 md:px-6">
-                        <div>
-                            <h1 className="text-xl md:text-2xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং 👑</h1>
-                            <p className="text-xs md:text-sm text-gray-300 mt-0.5">
-                                টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম {isAdmin && <span className="bg-red-600 px-2 py-0.5 rounded text-xs ml-2 text-white font-bold">এডমিন মোড</span>}
-                            </p>
+                    {/* Premium Header */}
+                    <header className="bg-slate-900/90 backdrop-blur-md shadow-lg p-4 border-b border-yellow-500/40 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
+                        <div className="flex items-center space-x-3">
+                            <span className="text-2xl md:text-3xl">👑</span>
+                            <div>
+                                <h1 className="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
+                                <p className="text-[11px] md:text-xs text-gray-400 tracking-wide">
+                                    টুর্নামেন্ট ম্যানেজমেন্ট সিস্টেম {isAdmin && <span className="bg-red-600/90 text-white px-2 py-0.5 rounded-full text-[10px] ml-2 font-bold shadow-sm border border-red-400">এডমিন মোড সক্রিয়</span>}
+                                </p>
+                            </div>
                         </div>
                         <div>
                             {isAdmin ? (
-                                <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm font-semibold transition">লগআউট</button>
+                                <button onClick={handleLogout} className="bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-red-900/30 transition transform active:scale-95 flex items-center gap-1.5 border border-red-400/30">
+                                    <span>🔒</span> লগআউট করুন
+                                </button>
                             ) : (
-                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1.5 rounded text-sm font-semibold transition">এডমিন লগইন</button>
+                                <button onClick={() => setActiveTab('admin')} className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-gray-950 px-4 py-2 rounded-xl text-sm font-extrabold shadow-md shadow-yellow-500/20 transition transform active:scale-95 flex items-center gap-1.5 border border-yellow-300/50">
+                                    <span>🔑</span> এডমিন লগইন
+                                </button>
                             )}
                         </div>
                     </header>
 
-                    <nav className="flex justify-center bg-slate-800 p-2 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
-                        <button onClick={() => { setActiveTab('home'); setHomeSubView(null); }} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'home' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>হোম ও নোটিশ</button>
-                        <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
-                        <button onClick={() => setActiveTab('matches')} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-900' : 'bg-slate-700 text-white hover:bg-slate-600'}`}>টুর্নামেন্ট ফরম্যাট ও ফিক্সচার</button>
-                        {isAdmin && <button onClick={() => { setActiveTab('dashboard'); setHomeSubView(null); }} className={`px-4 py-2 rounded font-semibold text-sm transition ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-800 text-white hover:bg-red-700'}`}>এডমিন প্যানেল</button>}
+                    {/* Navigation Bar */}
+                    <nav className="flex justify-center bg-slate-800/80 backdrop-blur p-2.5 gap-2 md:gap-4 flex-wrap border-b border-slate-700 shadow-inner">
+                        <button onClick={() => { setActiveTab('home'); setHomeSubView(null); }} className={`px-4 py-2 rounded-xl font-bold text-sm transition shadow-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950 shadow-yellow-500/20' : 'bg-slate-700/80 text-gray-200 hover:bg-slate-700'}`}>হোম ও নোটিশ</button>
+                        <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded-xl font-bold text-sm transition shadow-sm ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950 shadow-yellow-500/20' : 'bg-slate-700/80 text-gray-200 hover:bg-slate-700'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
+                        <button onClick={() => setActiveTab('matches')} className={`px-4 py-2 rounded-xl font-bold text-sm transition shadow-sm ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-950 shadow-yellow-500/20' : 'bg-slate-700/80 text-gray-200 hover:bg-slate-700'}`}>টুর্নামেন্ট ফরম্যাট ও ফিক্সচার</button>
+                        {isAdmin && <button onClick={() => { setActiveTab('dashboard'); setHomeSubView(null); }} className={`px-4 py-2 rounded-xl font-bold text-sm transition shadow-sm ${activeTab === 'dashboard' ? 'bg-red-600 text-white shadow-red-600/30' : 'bg-red-900/80 text-red-200 hover:bg-red-900'}`}>⚙️ এডমিন প্যানেল</button>}
                     </nav>
 
                     <main className="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-6">
 
+                        {/* HOME TAB */}
                         {activeTab === 'home' && (
                             <div className="space-y-6">
-                                <div className="bg-slate-800 p-6 rounded-xl border border-yellow-500/30 shadow-lg">
-                                    <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">📢 নোটিশ ও ঘোষণা</h2>
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-yellow-500/30 shadow-xl backdrop-blur">
+                                    <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+                                        <span>📢</span> নোটিশ ও ঘোষণা
+                                    </h2>
                                     <div className="space-y-3">
                                         {notices.map(n => (
-                                            <div key={n.id} className="bg-slate-700/60 p-4 rounded-lg border border-slate-600">
-                                                <p className="text-gray-200 text-base">{n.text}</p>
+                                            <div key={n.id} className="bg-slate-700/60 p-4 rounded-xl border border-slate-600/80 shadow">
+                                                <p className="text-gray-100 text-base">{n.text}</p>
                                                 <span className="text-xs text-gray-400 mt-2 block">তারিখ: {n.date}</span>
                                             </div>
                                         ))}
@@ -298,17 +383,17 @@
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div onClick={() => setHomeSubView('all_groups')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                    <div onClick={() => setHomeSubView('all_groups')} className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-xl group">
                                         <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট গ্রুপ</h3>
                                         <p className="text-3xl font-extrabold text-white mt-2">{Object.keys(groupsData).length} টি</p>
                                         <span className="text-xs text-yellow-300 mt-2 block">👉 ৪টি গ্রুপ দেখতে চাপ দিন</span>
                                     </div>
-                                    <div onClick={() => setHomeSubView('all_teams')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                    <div onClick={() => setHomeSubView('all_teams')} className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-xl group">
                                         <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট টিম</h3>
                                         <p className="text-3xl font-extrabold text-white mt-2">{getAllTeams().length} টি</p>
                                         <span className="text-xs text-yellow-300 mt-2 block">👉 ১২টি টিম ও খেলোয়াড় দেখতে চাপ দিন</span>
                                     </div>
-                                    <div onClick={() => setHomeSubView('all_players')} className="bg-slate-800 p-6 rounded-xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-lg group">
+                                    <div onClick={() => setHomeSubView('all_players')} className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 text-center cursor-pointer hover:border-yellow-500 transition shadow-xl group">
                                         <h3 className="text-lg font-bold text-yellow-400 group-hover:underline">মোট খেলোয়াড়</h3>
                                         <p className="text-3xl font-extrabold text-white mt-2">{getAllPlayers().length} জন</p>
                                         <span className="text-xs text-yellow-300 mt-2 block">👉 ২৪ জন খেলোয়াড় দেখতে চাপ দিন</span>
@@ -316,20 +401,20 @@
                                 </div>
 
                                 {homeSubView && (
-                                    <div className="bg-slate-800 p-6 rounded-xl border border-yellow-500 shadow-2xl space-y-4">
+                                    <div className="bg-slate-800 p-6 rounded-2xl border border-yellow-500 shadow-2xl space-y-4 animate-fadeIn">
                                         <div className="flex justify-between items-center border-b border-slate-700 pb-3">
                                             <h3 className="text-lg font-bold text-yellow-400">
                                                 {homeSubView === 'all_groups' && '📁 ৪টি গ্রুপের নামসমূহ'}
                                                 {homeSubView === 'all_teams' && '🛡️ ১২টি টিমের তালিকা'}
                                                 {homeSubView === 'all_players' && '👥 ২৪ জন খেলোয়াড়ের তালিকা'}
                                             </h3>
-                                            <button onClick={() => setHomeSubView(null)} className="bg-red-500 text-white text-xs px-3 py-1 rounded">বন্ধ করুন ✕</button>
+                                            <button onClick={() => setHomeSubView(null)} className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition">বন্ধ করুন ✕</button>
                                         </div>
 
                                         {homeSubView === 'all_groups' && (
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                                 {Object.keys(groupsData).map((g, i) => (
-                                                    <div key={i} className="bg-slate-700 p-4 rounded-lg text-center border border-slate-600">
+                                                    <div key={i} className="bg-slate-700/80 p-4 rounded-xl text-center border border-slate-600 shadow">
                                                         <h4 className="font-bold text-yellow-400 text-lg">{g}</h4>
                                                         <p className="text-xs text-gray-300 mt-1">{groupsData[g].length}টি টিম অন্তর্ভুক্ত</p>
                                                     </div>
@@ -340,17 +425,17 @@
                                         {homeSubView === 'all_teams' && (
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {getAllTeams().map((t, i) => (
-                                                    <div key={i} className="bg-slate-700 p-4 rounded-xl border border-slate-600 space-y-2">
+                                                    <div key={i} className="bg-slate-700/70 p-4 rounded-xl border border-slate-600 space-y-2 shadow">
                                                         <div className="border-b border-slate-600 pb-1.5">
                                                             <h4 className="font-bold text-white text-base">{t.teamName}</h4>
                                                             <p className="text-xs text-yellow-300">গ্রুপ: {t.groupName}</p>
                                                         </div>
                                                         <div className="text-xs text-gray-300 space-y-2">
-                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded">
+                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded-lg">
                                                                 <span>👤 ১. <strong className="text-white">{t.player1}</strong></span>
                                                                 {getCategoryBadge(t.cat1)}
                                                             </div>
-                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded">
+                                                            <div className="flex items-center justify-between bg-slate-800 p-2 rounded-lg">
                                                                 <span>👤 ২. <strong className="text-white">{t.player2}</strong></span>
                                                                 {getCategoryBadge(t.cat2)}
                                                             </div>
@@ -365,19 +450,19 @@
                                                 <table className="w-full text-left text-sm border-collapse">
                                                     <thead>
                                                         <tr className="bg-slate-700 text-yellow-400 border-b border-slate-600">
-                                                            <th className="p-2.5">খেলোয়াড়ের নাম</th>
-                                                            <th className="p-2.5">ক্যাটাগরি</th>
-                                                            <th className="p-2.5">টিমের নাম</th>
-                                                            <th className="p-2.5">গ্রুপ</th>
+                                                            <th className="p-3">খেলোয়াড়ের নাম</th>
+                                                            <th className="p-3">ক্যাটাগরি</th>
+                                                            <th className="p-3">টিমের নাম</th>
+                                                            <th className="p-3">গ্রুপ</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-slate-700 text-gray-200">
                                                         {getAllPlayers().map((p, i) => (
                                                             <tr key={i} className="hover:bg-slate-700/50">
-                                                                <td className="p-2.5 font-bold text-white">{p.name}</td>
-                                                                <td className="p-2.5">{getCategoryBadge(p.category)}</td>
-                                                                <td className="p-2.5">{p.teamName}</td>
-                                                                <td className="p-2.5 text-yellow-400">{p.groupName}</td>
+                                                                <td className="p-3 font-bold text-white">{p.name}</td>
+                                                                <td className="p-3">{getCategoryBadge(p.category)}</td>
+                                                                <td className="p-3">{p.teamName}</td>
+                                                                <td className="p-3 text-yellow-400">{p.groupName}</td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
@@ -389,26 +474,27 @@
                             </div>
                         )}
 
+                        {/* GROUPS TAB */}
                         {activeTab === 'groups' && (
                             <div className="space-y-6">
-                                <h2 className="text-2xl font-bold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ 🏆</h2>
+                                <h2 className="text-2xl font-extrabold text-yellow-400 text-center mb-2">🏆 গ্রুপ পর্বের টিম ও খেলোয়াড়বৃন্দ 🏆</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {Object.keys(groupsData).map((groupName) => (
-                                        <div key={groupName} className="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg">
+                                        <div key={groupName} className="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 shadow-xl backdrop-blur">
                                             <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 mb-4 flex justify-between items-center">
                                                 <span>{groupName}</span>
-                                                <span className="text-xs bg-slate-700 px-2.5 py-1 rounded text-gray-300 font-normal">টিম সংখ্যা: {groupsData[groupName].length}</span>
+                                                <span className="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-gray-300 font-normal">টিম সংখ্যা: {groupsData[groupName].length}</span>
                                             </h3>
                                             <div className="space-y-4">
                                                 {groupsData[groupName].map((t, idx) => (
-                                                    <div key={idx} className="bg-slate-700/70 p-4 rounded-xl border border-slate-600 space-y-2.5">
+                                                    <div key={idx} className="bg-slate-700/70 p-4 rounded-xl border border-slate-600 shadow space-y-2.5">
                                                         <h4 className="font-bold text-white text-base border-b border-slate-600 pb-1.5">{t.teamName}</h4>
                                                         <div className="text-xs text-gray-300 space-y-2">
-                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded">
+                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded-lg">
                                                                 <span><strong className="text-gray-400">খেলোয়াড় ১:</strong> <strong className="text-gray-100">{t.player1}</strong></span>
                                                                 {getCategoryBadge(t.cat1)}
                                                             </div>
-                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded">
+                                                            <div className="flex items-center justify-between bg-slate-800/80 p-2 rounded-lg">
                                                                 <span><strong className="text-gray-400">খেলোয়াড় ২:</strong> <strong className="text-gray-100">{t.player2}</strong></span>
                                                                 {getCategoryBadge(t.cat2)}
                                                             </div>
@@ -423,11 +509,11 @@
                             </div>
                         )}
 
+                        {/* MATCHES TAB */}
                         {activeTab === 'matches' && (
                             <div className="space-y-8">
-                                {/* Tournament Stages Format Display */}
                                 {Object.keys(tournamentMatches).map((stageName) => (
-                                    <div key={stageName} className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+                                    <div key={stageName} className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                         <h2 className="text-xl font-bold text-yellow-400 border-b border-slate-700 pb-2 flex items-center gap-2">
                                             <span>🏆</span> {stageName}
                                         </h2>
@@ -436,7 +522,7 @@
                                                 <p className="text-xs text-gray-400">এই পর্বে এখনো কোনো ম্যাচ যোগ করা হয়নি।</p>
                                             ) : (
                                                 tournamentMatches[stageName].map(m => (
-                                                    <div key={m.id} className="bg-slate-700 p-4 rounded-xl border border-slate-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                                                    <div key={m.id} className="bg-slate-700/80 p-4 rounded-xl border border-slate-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow">
                                                         <div>
                                                             <div className="flex items-center gap-2 mb-1">
                                                                 {m.group && <span className="text-xs bg-slate-800 text-yellow-400 px-2 py-0.5 rounded border border-slate-600">{m.group}</span>}
@@ -444,7 +530,7 @@
                                                             </div>
                                                             <h3 className="text-lg font-bold text-white">{m.match}</h3>
                                                         </div>
-                                                        <span className="bg-yellow-500 text-gray-900 font-bold px-4 py-1.5 rounded-lg text-sm self-start md:self-center shadow">
+                                                        <span className="bg-yellow-500 text-gray-950 font-extrabold px-4 py-1.5 rounded-xl text-sm self-start md:self-center shadow">
                                                             রেজাল্ট: {m.score}
                                                         </span>
                                                     </div>
@@ -454,8 +540,7 @@
                                     </div>
                                 ))}
 
-                                {/* Points Table */}
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                     <h2 className="text-xl font-bold text-yellow-400">📊 গ্রুপ পর্ব পয়েন্ট টেবিল</h2>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-left text-sm border-collapse">
@@ -487,37 +572,110 @@
                             </div>
                         )}
 
+                        {/* PREMIUM ADMIN LOGIN TAB */}
                         {activeTab === 'admin' && !isAdmin && (
-                            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 max-w-md mx-auto shadow-lg">
-                                <h2 className="text-xl font-bold text-yellow-400 mb-4 text-center">এডমিন লগইন</h2>
-                                {loginError && <p className="bg-red-500/20 text-red-400 p-2 rounded mb-3 text-sm text-center border border-red-500/30">{loginError}</p>}
-                                <form onSubmit={handleLogin} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm text-gray-300 mb-1">ইমেইল ঠিকানা</label>
-                                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="efshikhelaghor@gmail.com" required className="w-full bg-slate-700 border border-slate-600 rounded p-2.5 text-white text-sm focus:outline-none focus:border-yellow-500" />
+                            <div className="flex justify-center items-center py-10">
+                                <div className="bg-gradient-to-b from-slate-800 to-slate-900 p-8 rounded-3xl border border-yellow-500/40 w-full max-w-md shadow-2xl space-y-6 relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600"></div>
+                                    <div className="text-center space-y-2">
+                                        <div className="w-16 h-16 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-inner">
+                                            🔐
+                                        </div>
+                                        <h2 className="text-2xl font-black text-yellow-400">নিরাপদ এডমিন পোর্টাল</h2>
+                                        <p className="text-xs text-gray-400">টুর্নামেন্ট নিয়ন্ত্রণের জন্য আপনার অনুমোদিত এডমিন ইমেইল ও পাসওয়ার্ড প্রদান করুন।</p>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-300 mb-1">পাসওয়ার্ড</label>
-                                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="পাসওয়ার্ড দিন" required className="w-full bg-slate-700 border border-slate-600 rounded p-2.5 text-white text-sm focus:outline-none focus:border-yellow-500" />
+
+                                    {loginError && (
+                                        <div className="bg-red-500/20 border border-red-500/40 text-red-300 p-3 rounded-xl text-xs text-center font-bold animate-shake">
+                                            ⚠️ {loginError}
+                                        </div>
+                                    )}
+
+                                    <form onSubmit={handleLogin} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-300 mb-1">এডমিন ইমেইল ঠিকানা</label>
+                                            <div className="relative">
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">✉️</span>
+                                                <input 
+                                                    type="email" 
+                                                    value={emailInput} 
+                                                    onChange={(e) => setEmailInput(e.target.value)} 
+                                                    placeholder="efshikhelaghor@gmail.com" 
+                                                    required 
+                                                    className="w-full bg-slate-950/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-yellow-500 transition shadow-inner" 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-300 mb-1">গোপন পাসওয়ার্ড</label>
+                                            <div className="relative">
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">🔑</span>
+                                                <input 
+                                                    type="password" 
+                                                    value={passInput} 
+                                                    onChange={(e) => setPassInput(e.target.value)} 
+                                                    placeholder="পাসওয়ার্ড দিন" 
+                                                    required 
+                                                    className="w-full bg-slate-950/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-yellow-500 transition shadow-inner" 
+                                                />
+                                            </div>
+                                        </div>
+                                        <button type="submit" className="w-full bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-gray-950 font-black py-3.5 rounded-xl text-sm shadow-lg shadow-yellow-500/20 transition transform active:scale-95">
+                                            নিরাপদ লগইন সম্পন্ন করুন
+                                        </button>
+                                    </form>
+                                    <div className="text-center pt-2">
+                                        <p className="text-[11px] text-gray-500">ডিফল্ট পাসওয়ার্ড: admin123 (লগইন করে পাসওয়ার্ড পরিবর্তন করতে পারবেন)</p>
                                     </div>
-                                    <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2.5 rounded transition">লগইন করুন</button>
-                                </form>
+                                </div>
                             </div>
                         )}
 
+                        {/* ADMIN DASHBOARD */}
                         {activeTab === 'dashboard' && isAdmin && (
-                            <div className="space-y-6">
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-                                    <h2 className="text-xl font-bold text-yellow-400 mb-2">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                    <p className="text-sm text-gray-300">লগইনকৃত এডমিন: <span className="text-green-400 font-semibold">efshikhelaghor@gmail.com</span> (গ্রুপ পর্ব, কোয়ার্টার ফাইনাল, সেমিফাইনাল, ফাইনাল ও তৃতীয় স্থান নির্ধারনী ম্যাচ এবং পয়েন্ট টেবিল একমাত্র আপনিই আপডেট করতে পারবেন)</p>
+                            <div className="space-y-8 animate-fadeIn">
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <div>
+                                        <h2 className="text-xl font-extrabold text-yellow-400 mb-1">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
+                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span></p>
+                                    </div>
+                                    <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center gap-2">
+                                        <span className="text-xs text-yellow-400 font-bold">🔒 দ্রুত লগআউট:</span>
+                                        <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold transition">লগআউট</button>
+                                    </div>
                                 </div>
 
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">গ্রুপে টিম ও খেলোয়াড় যোগ করুন</h3>
-                                    <form onSubmit={addTeamToGroup} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {/* Password Change Card */}
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-yellow-500/30 shadow-xl backdrop-blur space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">🔑 এডমিন পাসওয়ার্ড পরিবর্তন করুন</h3>
+                                    {passSuccess && <p className="bg-green-500/20 border border-green-500/40 text-green-300 p-2.5 rounded-xl text-xs font-bold text-center">{passSuccess}</p>}
+                                    <form onSubmit={handlePasswordChange} className="flex flex-col md:flex-row gap-3">
+                                        <input 
+                                            type="password" 
+                                            placeholder="নতুন শক্তিশালী পাসওয়ার্ড দিন..." 
+                                            value={newPass} 
+                                            onChange={e => setNewPass(e.target.value)} 
+                                            required 
+                                            className="flex-grow bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-yellow-500" 
+                                        />
+                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-6 py-3 rounded-xl text-sm transition shadow">
+                                            পাসওয়ার্ড আপডেট করুন
+                                        </button>
+                                    </form>
+                                </div>
+
+                                {/* Manage Teams & Players with EDIT & DELETE */}
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
+                                        <span>{editingTeam !== null ? '✏️ টিম ও খেলোয়াড় এডিট মোড' : '➕ গ্রুপে নতুন টিম ও খেলোয়াড় যোগ করুন'}</span>
+                                        {editingTeam !== null && (
+                                            <button onClick={() => { setEditingTeam(null); setTeamForm({ group: 'গ্রুপ এ', teamName: '', address: '', player1: '', cat1: 'HIGH', phone1: '', player2: '', cat2: 'MEDIUM', phone2: '' }); }} className="text-xs bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg">এডিট বাতিল করুন</button>
+                                        )}
+                                    </h3>
+                                    <form onSubmit={saveTeam} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">গ্রুপ সিলেক্ট করুন</label>
-                                            <select value={teamForm.group} onChange={e => setTeamForm({ ...teamForm, group: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none">
+                                            <select value={teamForm.group} onChange={e => setTeamForm({ ...teamForm, group: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none">
                                                 <option value="গ্রুপ এ">গ্রুপ এ</option>
                                                 <option value="গ্রুপ বি">গ্রুপ বি</option>
                                                 <option value="গ্রুপ সি">গ্রুপ সি</option>
@@ -526,59 +684,64 @@
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">টিমের নাম *</label>
-                                            <input type="text" placeholder="টিমের নাম" value={teamForm.teamName} onChange={e => setTeamForm({ ...teamForm, teamName: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="টিমের নাম" value={teamForm.teamName} onChange={e => setTeamForm({ ...teamForm, teamName: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
                                         </div>
                                         
-                                        <div className="bg-slate-700/50 p-3 rounded border border-slate-600 space-y-2">
+                                        <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-2">
                                             <span className="text-xs font-bold text-yellow-400">খেলোয়াড় ১ এর তথ্য</span>
-                                            <input type="text" placeholder="খেলোয়াড় ১ এর নাম *" value={teamForm.player1} onChange={e => setTeamForm({ ...teamForm, player1: e.target.value })} required className="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="খেলোয়াড় ১ এর নাম *" value={teamForm.player1} onChange={e => setTeamForm({ ...teamForm, player1: e.target.value })} required className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none" />
                                             <div className="flex gap-2">
-                                                <select value={teamForm.cat1} onChange={e => setTeamForm({ ...teamForm, cat1: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-yellow-400 font-bold focus:outline-none">
+                                                <select value={teamForm.cat1} onChange={e => setTeamForm({ ...teamForm, cat1: e.target.value })} className="w-1/2 bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-yellow-400 font-bold focus:outline-none">
                                                     <option value="HIGH">HIGH</option>
                                                     <option value="MEDIUM">MEDIUM</option>
                                                     <option value="LOW">LOW</option>
                                                 </select>
-                                                <input type="text" placeholder="মোবাইল ১" value={teamForm.phone1} onChange={e => setTeamForm({ ...teamForm, phone1: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white focus:outline-none" />
+                                                <input type="text" placeholder="মোবাইল ১" value={teamForm.phone1} onChange={e => setTeamForm({ ...teamForm, phone1: e.target.value })} className="w-1/2 bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none" />
                                             </div>
                                         </div>
 
-                                        <div className="bg-slate-700/50 p-3 rounded border border-slate-600 space-y-2">
+                                        <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-2">
                                             <span className="text-xs font-bold text-yellow-400">খেলোয়াড় ২ এর তথ্য</span>
-                                            <input type="text" placeholder="খেলোয়াড় ২ এর নাম *" value={teamForm.player2} onChange={e => setTeamForm({ ...teamForm, player2: e.target.value })} required className="w-full bg-slate-800 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="খেলোয়াড় ২ এর নাম *" value={teamForm.player2} onChange={e => setTeamForm({ ...teamForm, player2: e.target.value })} required className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none" />
                                             <div className="flex gap-2">
-                                                <select value={teamForm.cat2} onChange={e => setTeamForm({ ...teamForm, cat2: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-yellow-400 font-bold focus:outline-none">
+                                                <select value={teamForm.cat2} onChange={e => setTeamForm({ ...teamForm, cat2: e.target.value })} className="w-1/2 bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-yellow-400 font-bold focus:outline-none">
                                                     <option value="HIGH">HIGH</option>
                                                     <option value="MEDIUM">MEDIUM</option>
                                                     <option value="LOW">LOW</option>
                                                 </select>
-                                                <input type="text" placeholder="মোবাইল ২" value={teamForm.phone2} onChange={e => setTeamForm({ ...teamForm, phone2: e.target.value })} className="w-1/2 bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white focus:outline-none" />
+                                                <input type="text" placeholder="মোবাইল ২" value={teamForm.phone2} onChange={e => setTeamForm({ ...teamForm, phone2: e.target.value })} className="w-1/2 bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none" />
                                             </div>
                                         </div>
 
                                         <div className="md:col-span-2">
                                             <label className="block text-xs text-gray-300 mb-1">ঠিকানা</label>
-                                            <input type="text" placeholder="ঠিকানা" value={teamForm.address} onChange={e => setTeamForm({ ...teamForm, address: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none" />
+                                            <input type="text" placeholder="ঠিকানা" value={teamForm.address} onChange={e => setTeamForm({ ...teamForm, address: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
                                         </div>
 
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">টিম ও খেলোয়াড় যোগ করুন</button>
+                                        <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-2 transition shadow">
+                                            {editingTeam !== null ? 'টিমের তথ্য আপডেট করুন (Save Changes)' : 'নতুন টিম ও খেলোয়াড় যোগ করুন'}
+                                        </button>
                                     </form>
 
                                     <div className="mt-6 space-y-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট:</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট (এডিট ও ডিলিট অপশনসহ):</h4>
                                         {Object.keys(groupsData).map(gName => (
-                                            <div key={gName} className="bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                                                <h5 className="font-bold text-yellow-400 mb-2">{gName}</h5>
-                                                <div className="space-y-2">
+                                            <div key={gName} className="bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                                                <h5 className="font-bold text-yellow-400 mb-3">{gName}</h5>
+                                                <div className="space-y-2.5">
                                                     {groupsData[gName].map((t, idx) => (
-                                                        <div key={idx} className="bg-slate-800 p-3 rounded flex flex-col md:flex-row justify-between items-start md:items-center gap-2 text-xs">
+                                                        <div key={idx} className="bg-slate-800 p-3.5 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-xs shadow-inner">
                                                             <div>
-                                                                <span className="font-bold text-white text-sm">{t.teamName}</span>
-                                                                <div className="flex flex-wrap gap-3 mt-1.5 text-gray-300">
-                                                                    <span className="bg-slate-700 px-2 py-1 rounded">👤 ১. {t.player1} {getCategoryBadge(t.cat1)}</span>
-                                                                    <span className="bg-slate-700 px-2 py-1 rounded">👤 ২. {t.player2} {getCategoryBadge(t.cat2)}</span>
+                                                                <span className="font-extrabold text-white text-sm">{t.teamName}</span>
+                                                                <div className="flex flex-wrap gap-2 mt-1.5 text-gray-300">
+                                                                    <span className="bg-slate-900 px-2.5 py-1 rounded-lg">👤 ১. {t.player1} {getCategoryBadge(t.cat1)}</span>
+                                                                    <span className="bg-slate-900 px-2.5 py-1 rounded-lg">👤 ২. {t.player2} {getCategoryBadge(t.cat2)}</span>
                                                                 </div>
                                                             </div>
-                                                            <button onClick={() => deleteTeamFromGroup(gName, idx)} className="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1.5 rounded transition">ডিলিট</button>
+                                                            <div className="flex gap-2 self-end md:self-center">
+                                                                <button onClick={() => startEditTeam(gName, idx, t)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold transition shadow">✏️ এডিট</button>
+                                                                <button onClick={() => deleteTeamFromGroup(gName, idx)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-bold transition shadow">🗑️ ডিলিট</button>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -587,13 +750,18 @@
                                     </div>
                                 </div>
 
-                                {/* Tournament Stage Match / Result Form */}
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">টুর্নামেন্ট পর্বভিত্তিক ম্যাচ ও রেজাল্ট যোগ করুন</h3>
-                                    <form onSubmit={addTournamentMatch} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {/* Manage Matches & Results with EDIT & DELETE */}
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
+                                        <span>{editingMatch !== null ? '✏️ ম্যাচ শিডিউল ও রেজাল্ট এডিট মোড' : '➕ টুর্নামেন্ট ম্যাচ ও রেজাল্ট যোগ করুন'}</span>
+                                        {editingMatch !== null && (
+                                            <button onClick={() => { setEditingMatch(null); setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন' }); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
+                                        )}
+                                    </h3>
+                                    <form onSubmit={saveMatch} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">টুর্নামেন্টের পর্ব (Stage)</label>
-                                            <select value={matchForm.stage} onChange={e => setMatchForm({ ...matchForm, stage: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white">
+                                            <select value={matchForm.stage} onChange={e => setMatchForm({ ...matchForm, stage: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
                                                 <option value="গ্রুপ পর্ব (Group Stage)">গ্রুপ পর্ব (Group Stage)</option>
                                                 <option value="কোয়ার্টার ফাইনাল (Quarter-Finals)">কোয়ার্টার ফাইনাল (Quarter-Finals)</option>
                                                 <option value="সেমিফাইনাল (Semi-Finals)">সেমিফাইনাল (Semi-Finals)</option>
@@ -603,7 +771,7 @@
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">গ্রুপ (যদি গ্রুপ পর্ব হয়)</label>
-                                            <select value={matchForm.group} onChange={e => setMatchForm({ ...matchForm, group: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white">
+                                            <select value={matchForm.group} onChange={e => setMatchForm({ ...matchForm, group: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
                                                 <option value="গ্রুপ এ">গ্রুপ এ</option>
                                                 <option value="গ্রুপ বি">গ্রুপ বি</option>
                                                 <option value="গ্রুপ সি">গ্রুপ সি</option>
@@ -612,31 +780,36 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ বিবরণ (যেমন: টিম আলফা বনাম টিম বিটা)</label>
-                                            <input type="text" placeholder="ম্যাচের নাম" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
+                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ বিবরণ</label>
+                                            <input type="text" placeholder="ম্যাচের নাম" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">সময় ও তারিখ</label>
-                                            <input type="text" placeholder="তারিখ ও সময়" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
+                                            <input type="text" placeholder="তারিখ ও সময়" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ রেজাল্ট (যেমন: ২-১ বা আসন্ন)</label>
-                                            <input type="text" placeholder="রেজাল্ট লিখুন" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="w-full bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white" />
+                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ রেজাল্ট / স্কোর</label>
+                                            <input type="text" placeholder="যেমন: ২-১ (বিজয়ী: টিম আলফা) বা আসন্ন" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-sm md:col-span-2 transition">ম্যাচ ও রেজাল্ট যুক্ত করুন</button>
+                                        <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-2 transition shadow">
+                                            {editingMatch !== null ? 'ম্যাচ রেজাল্ট আপডেট করুন' : 'ম্যাচ বা ফিক্সচার যোগ করুন'}
+                                        </button>
                                     </form>
 
                                     <div className="space-y-4 mt-6">
-                                        <h4 className="text-sm font-semibold text-yellow-300">পর্বভিত্তিক ম্যাচ ও রেজাল্ট ডিলিট প্যানেল:</h4>
+                                        <h4 className="text-sm font-semibold text-yellow-300">পর্বভিত্তিক ম্যাচ ও রেজাল্ট ম্যানেজমেন্ট:</h4>
                                         {Object.keys(tournamentMatches).map(stageName => (
-                                            <div key={stageName} className="bg-slate-700/60 p-3 rounded-lg border border-slate-600 space-y-2">
-                                                <h5 className="font-bold text-white text-xs bg-slate-800 p-1.5 rounded">{stageName}</h5>
+                                            <div key={stageName} className="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-2">
+                                                <h5 className="font-bold text-white text-xs bg-slate-800 p-2 rounded-lg border border-slate-700">{stageName}</h5>
                                                 {tournamentMatches[stageName].map(m => (
-                                                    <div key={m.id} className="bg-slate-800 p-2.5 rounded flex justify-between items-center text-xs">
+                                                    <div key={m.id} className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs">
                                                         <div>
-                                                            <strong className="text-yellow-400">{m.match}</strong> — রেজাল্ট: {m.score} ({m.time})
+                                                            <strong className="text-yellow-400 text-sm">{m.match}</strong> — রেজাল্ট: <span className="text-green-400 font-bold">{m.score}</span> ({m.time})
                                                         </div>
-                                                        <button onClick={() => deleteTournamentMatch(stageName, m.id)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded transition">ডিলিট</button>
+                                                        <div className="flex gap-2">
+                                                            <button onClick={() => startEditMatch(stageName, m)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-bold">✏️ এডিট</button>
+                                                            <button onClick={() => deleteTournamentMatch(stageName, m.id)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold">🗑️ ডিলিট</button>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -644,41 +817,69 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Points Table */}
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">গ্রুপ পর্ব পয়েন্ট টেবিল সেট ও আপডেট</h3>
-                                    <form onSubmit={addStanding} className="grid grid-cols-2 md:grid-cols-6 gap-2">
-                                        <input type="text" placeholder="টিমের নাম" value={standingForm.team} onChange={e => setStandingForm({ ...standingForm, team: e.target.value })} required className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <input type="text" placeholder="গ্রুপ" value={standingForm.group} onChange={e => setStandingForm({ ...standingForm, group: e.target.value })} className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <input type="number" placeholder="খেলা" value={standingForm.played} onChange={e => setStandingForm({ ...standingForm, played: parseInt(e.target.value) || 0 })} className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <input type="number" placeholder="জয়" value={standingForm.won} onChange={e => setStandingForm({ ...standingForm, won: parseInt(e.target.value) || 0 })} className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <input type="number" placeholder="হার" value={standingForm.lost} onChange={e => setStandingForm({ ...standingForm, lost: parseInt(e.target.value) || 0 })} className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <input type="number" placeholder="পয়েন্ট" value={standingForm.pts} onChange={e => setStandingForm({ ...standingForm, pts: parseInt(e.target.value) || 0 })} className="bg-slate-700 border border-slate-600 rounded p-2 text-xs text-white" />
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded text-xs col-span-2 md:col-span-6 transition">পয়েন্ট টেবিলে টিম যোগ করুন</button>
+                                {/* Manage Points Table with EDIT & DELETE */}
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
+                                        <span>{editingStandingIndex !== null ? '✏️ পয়েন্ট টেবিল এডিট মোড' : '➕ পয়েন্ট টেবিল এন্ট্রি যোগ করুন'}</span>
+                                        {editingStandingIndex !== null && (
+                                            <button onClick={() => { setEditingStandingIndex(null); setStandingForm({ team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 }); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
+                                        )}
+                                    </h3>
+                                    <form onSubmit={saveStanding} className="grid grid-cols-2 md:grid-cols-6 gap-2">
+                                        <input type="text" placeholder="টিমের নাম" value={standingForm.team} onChange={e => setStandingForm({ ...standingForm, team: e.target.value })} required className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <input type="text" placeholder="গ্রুপ" value={standingForm.group} onChange={e => setStandingForm({ ...standingForm, group: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <input type="number" placeholder="খেলা" value={standingForm.played} onChange={e => setStandingForm({ ...standingForm, played: parseInt(e.target.value) || 0 })} className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <input type="number" placeholder="জয়" value={standingForm.won} onChange={e => setStandingForm({ ...standingForm, won: parseInt(e.target.value) || 0 })} className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <input type="number" placeholder="হার" value={standingForm.lost} onChange={e => setStandingForm({ ...standingForm, lost: parseInt(e.target.value) || 0 })} className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <input type="number" placeholder="পয়েন্ট" value={standingForm.pts} onChange={e => setStandingForm({ ...standingForm, pts: parseInt(e.target.value) || 0 })} className="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white" />
+                                        <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-xs col-span-2 md:col-span-6 transition shadow">
+                                            {editingStandingIndex !== null ? 'পয়েন্ট টেবিল আপডেট করুন' : 'পয়েন্ট টেবিলে টিম যোগ করুন'}
+                                        </button>
                                     </form>
 
                                     <div className="space-y-2 mt-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">পয়েন্ট টেবিল লিস্ট:</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">পয়েন্ট টেবিল ম্যানেজমেন্ট:</h4>
                                         {standings.map((s, idx) => (
-                                            <div key={idx} className="bg-slate-700 p-3 rounded flex justify-between items-center text-xs">
-                                                <span><strong>{s.team}</strong> ({s.group}) - খেলা: {s.played}, জয়: {s.won}, হার: {s.lost}, পয়েন্ট: <strong>{s.pts}</strong></span>
-                                                <button onClick={() => deleteStanding(idx)} className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded transition">ডিলিট</button>
+                                            <div key={idx} className="bg-slate-900/60 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs shadow-inner">
+                                                <span><strong>{s.team}</strong> ({s.group}) — খেলা: {s.played}, জয়: {s.won}, হার: {s.lost}, পয়েন্ট: <strong className="text-yellow-400">{s.pts}</strong></span>
+                                                <div className="flex gap-2">
+                                                    <button onClick={() => startEditStanding(idx, s)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-bold">✏️ এডিট</button>
+                                                    <button onClick={() => deleteStanding(idx)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold">🗑️ ডিলিট</button>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
-                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">নোটিশ / ঘোষণা আপডেট</h3>
+                                {/* Manage Notices with EDIT & DELETE */}
+                                <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
+                                    <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
+                                        <span>{editingNoticeId !== null ? '✏️ নোটিশ এডিট মোড' : '📢 নোটিশ বা ঘোষণা আপডেট'}</span>
+                                        {editingNoticeId !== null && (
+                                            <button onClick={() => { setEditingNoticeId(null); setEditNoticeText(''); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
+                                        )}
+                                    </h3>
                                     <form onSubmit={addNotice} className="flex gap-2">
-                                        <input type="text" placeholder="নতুন নোটিশ লিখুন..." value={newNotice} onChange={e => setNewNotice(e.target.value)} required className="flex-grow bg-slate-700 border border-slate-600 rounded p-2 text-sm text-white focus:outline-none focus:border-yellow-500" />
-                                        <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded text-sm transition">পাবলিশ</button>
+                                        {editingNoticeId !== null ? (
+                                            <>
+                                                <input type="text" placeholder="নোটিশ সংশোধন করুন..." value={editNoticeText} onChange={e => setEditNoticeText(e.target.value)} required className="flex-grow bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
+                                                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition">আপডেট</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <input type="text" placeholder="নতুন নোটিশ লিখুন..." value={newNotice} onChange={e => setNewNotice(e.target.value)} required className="flex-grow bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
+                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-6 py-3 rounded-xl text-sm transition">পাবলিশ</button>
+                                            </>
+                                        )}
                                     </form>
                                     <div className="space-y-2">
                                         {notices.map(n => (
-                                            <div key={n.id} className="bg-slate-700 p-3 rounded flex justify-between items-center text-sm">
+                                            <div key={n.id} className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-700 flex justify-between items-center text-sm shadow-inner">
                                                 <span>{n.text}</span>
-                                                <button onClick={() => deleteNotice(n.id)} className="bg-red-500 hover:bg-red-600 text-white text-xs px-2.5 py-1 rounded transition ml-2">ডিলিট</button>
+                                                <div className="flex gap-2 ml-2">
+                                                    <button onClick={() => startEditNotice(n)} className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-lg font-bold">✏️ এডিট</button>
+                                                    <button onClick={() => deleteNotice(n.id)} className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg font-bold">🗑️ ডিলিট</button>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -687,7 +888,8 @@
                         )}
                     </main>
 
-                    <footer className="bg-slate-800 text-center p-4 text-xs text-gray-400 border-t border-slate-700">
+                    {/* Footer */}
+                    <footer className="bg-slate-900/90 text-center p-4 text-xs text-gray-400 border-t border-slate-800">
                         © 2026 Winter Carram Kings Battle. All rights reserved.
                     </footer>
                 </div>
