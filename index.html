@@ -17,7 +17,7 @@
             const [activeTab, setActiveTab] = React.useState('home');
             const [isAdmin, setIsAdmin] = React.useState(false);
             
-            // Admin Credentials State
+            // Admin Credentials
             const [adminEmail, setAdminEmail] = React.useState('efshikhelaghor@gmail.com');
             const [adminPassword, setAdminPassword] = React.useState('admin123');
 
@@ -25,11 +25,9 @@
             const [passInput, setPassInput] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
 
-            // Password Change State
             const [newPass, setNewPass] = React.useState('');
             const [passSuccess, setPassSuccess] = React.useState('');
 
-            // Home Sub-View for Groups Modal
             const [selectedGroupModal, setSelectedGroupModal] = React.useState(null);
 
             const initialGroups = {
@@ -113,27 +111,46 @@
             const [editingNoticeId, setEditingNoticeId] = React.useState(null);
             const [editNoticeText, setEditNoticeText] = React.useState('');
 
+            // Detailed structured matches according to user prompt
             const [tournamentMatches, setTournamentMatches] = React.useState({
                 'গ্রুপ পর্ব (Group Stage)': [
-                    { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', score: '২-১ (বিজয়ী: টিম আলফা)' },
-                    { id: 102, group: 'গ্রুপ এ', match: 'টিম বিটা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', score: 'আসন্ন' }
+                    // Group A
+                    { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', scoreStatus: 'আসন্ন', score: '২ - ১ (পয়েন্ট: আলফা ২, বিটা ০)' },
+                    { id: 102, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 103, group: 'গ্রুপ এ', match: 'টিম বিটা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    // Group B
+                    { id: 104, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম কিং', time: '২০২৬-০৩-১৬, ৪:০০ PM', scoreStatus: 'আসন্ন', score: '১ - ২ (পয়েন্ট: রয়্যাল ০, কিং ২)' },
+                    { id: 105, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম ঈগল', time: '২০২৬-০৩-১৬, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 106, group: 'গ্রুপ বি', match: 'টিম কিং বনাম টিম ঈগল', time: '২০২৬-০৩-১৬, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    // Group C
+                    { id: 107, group: 'গ্রুপ সি', match: 'টিম থান্ডার বনাম টিম টাইগার', time: '২০২৬-০৩-১৭, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 108, group: 'গ্রুপ সি', match: 'টিম থান্ডার বনাম টিম স্টর্ম', time: '২০২৬-০৩-১৭, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 109, group: 'গ্রুপ সি', match: 'টিম টাইগার বনাম টিম স্টর্ম', time: '২০২৬-০৩-১৭, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    // Group D
+                    { id: 110, group: 'গ্রুপ ডি', match: 'টিম ফিনিক্স বনাম টিম ওয়্যারিয়র্স', time: '২০২৬-০৩-১৮, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 111, group: 'গ্রুপ ডি', match: 'টিম ফিনিক্স বনাম টিম শাইন', time: '২০২৬-০৩-১৮, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 112, group: 'গ্রুপ ডি', match: 'টিম ওয়্যারিয়র্স বনাম টিম শাইন', time: '২০২৬-০৩-১৮, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ],
                 'কোয়ার্টার ফাইনাল (Quarter-Finals)': [
-                    { id: 201, match: 'কোয়ার্টার ১: গ্রুপ এ (১ম) বনাম গ্রুপ বি (২য়)', time: '২০২৬-০৩-২০, ৪:০০ PM', score: 'আসন্ন' }
+                    { id: 201, group: 'কোয়ার্টার ১', match: 'গ্রুপ এ (১ম) বনাম গ্রুপ বি (২য়)', time: '২০২৬-০৩-২০, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 202, group: 'কোয়ার্টার ২', match: 'গ্রুপ বি (১ম) বনাম গ্রুপ এ (২য়)', time: '২০২৬-০৩-২০, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 203, group: 'কোয়ার্টার ৩', match: 'গ্রুপ সি (১ম) বনাম গ্রুপ ডি (২য়)', time: '২০২৬-০৩-২১, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 204, group: 'কোয়ার্টার ৪', match: 'গ্রুপ ডি (১ম) বনাম গ্রুপ সি (২য়)', time: '২০২৬-০৩-২১, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ],
                 'সেমিফাইনাল (Semi-Finals)': [
-                    { id: 301, match: 'সেমিফাইনাল ১: বিজয়ী (কোয়ার্টার ১) বনাম বিজয়ী (কোয়ার্টার ৩)', time: '২০২৬-০৩-২৩, ৪:০০ PM', score: 'আসন্ন' }
+                    { id: 301, group: 'সেমি ১', match: 'বিজয়ী (কোয়ার্টার ১) বনাম বিজয়ী (কোয়ার্টার ৩)', time: '২০২৬-০৩-২৩, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
+                    { id: 302, group: 'সেমি ২', match: 'বিজয়ী (কোয়ার্টার ২) বনাম বিজয়ী (কোয়ার্টার ৪)', time: '২০২৬-০৩-২৩, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ],
                 'তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place Match)': [
-                    { id: 401, match: 'পরাজিত (সেমিফাইনাল ১) বনাম পরাজিত (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৩:০০ PM', score: 'আসন্ন' }
+                    { id: 401, group: '৩য় স্থান', match: 'পরাজিত (সেমিফাইনাল ১) বনাম পরাজিত (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৩:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ],
                 'ফাইনাল (Grand Final)': [
-                    { id: 501, match: 'বিজয়ী (সেমিফাইনাল ১) বনাম বিজয়ী (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৫:০০ PM', score: 'আসন্ন' }
+                    { id: 501, group: 'ফাইনাল', match: 'বিজয়ী (সেমিফাইনাল ১) বনাম বিজয়ী (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ]
             });
 
             const [matchForm, setMatchForm] = React.useState({
-                stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন'
+                stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', scoreStatus: 'আসন্ন', score: 'আসন্ন'
             });
             const [editingMatch, setEditingMatch] = React.useState(null);
 
@@ -255,13 +272,13 @@
                             [stage]: [...(tournamentMatches[stage] || []), newEntry]
                         });
                     }
-                    setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন' });
+                    setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', scoreStatus: 'আসন্ন', score: 'আসন্ন' });
                 }
             };
 
             const startEditMatch = (stage, m) => {
                 setEditingMatch({ stage, id: m.id });
-                setMatchForm({ stage, group: m.group || 'গ্রুপ এ', match: m.match, time: m.time, score: m.score });
+                setMatchForm({ stage, group: m.group || 'গ্রুপ এ', match: m.match, time: m.time, scoreStatus: m.scoreStatus || 'আসন্ন', score: m.score });
             };
 
             const deleteTournamentMatch = (stage, id) => {
@@ -293,7 +310,6 @@
                 setStandings(standings.filter((_, i) => i !== index));
             };
 
-            // Generating Flattened Registered Players List automatically synchronized with groupsData
             const getAllRegisteredPlayers = () => {
                 let list = [];
                 let globalSerial = 1;
@@ -513,7 +529,7 @@
                             </div>
                         )}
 
-                        {/* MATCHES TAB */}
+                        {/* MATCHES & TOURNAMENT STAGES TAB */}
                         {activeTab === 'matches' && (
                             <div className="space-y-8">
                                 {Object.keys(tournamentMatches).map((stageName) => (
@@ -534,9 +550,14 @@
                                                             </div>
                                                             <h3 className="text-lg font-bold text-white">{m.match}</h3>
                                                         </div>
-                                                        <span className="bg-yellow-500 text-gray-950 font-extrabold px-4 py-1.5 rounded-xl text-sm self-start md:self-center shadow">
-                                                            রেজাল্ট: {m.score}
-                                                        </span>
+                                                        <div className="flex items-center gap-2 self-start md:self-center">
+                                                            <span className={`text-xs px-2.5 py-1 rounded-lg font-extrabold ${m.scoreStatus === 'লাইভ' ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-800 text-yellow-400 border border-slate-600'}`}>
+                                                                {m.scoreStatus || 'আসন্ন'}
+                                                            </span>
+                                                            <span className="bg-yellow-500 text-gray-950 font-extrabold px-3 py-1 rounded-lg text-xs shadow">
+                                                                রেজাল্ট: {m.score}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 ))
                                             )}
@@ -638,7 +659,7 @@
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
                                         <h2 className="text-xl font-extrabold text-yellow-400 mb-1">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (এখানে টিম, খেলোয়াড়ের নাম, সিরিয়াল, মোবাইল, ক্যাটাগরি আপডেট করলে সব জায়গায় অটোমেটিক আপডেট হয়ে যাবে)</p>
+                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (গ্রুপ পর্ব, কোয়ার্টার, সেমি, ফাইনাল ও ৩য় স্থান ম্যাচের স্ট্যাটাস "আসন্ন" বা রেজাল্ট এবং দুই দলের পয়েন্ট একমাত্র আপনিই আপডেট করতে পারবেন)</p>
                                     </div>
                                     <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center gap-2">
                                         <span className="text-xs text-yellow-400 font-bold">🔒 দ্রুত লগআউট:</span>
@@ -665,10 +686,10 @@
                                     </form>
                                 </div>
 
-                                {/* Manage Teams & Players with Serial Number Field */}
+                                {/* Manage Teams & Players */}
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
-                                        <span>{editingTeam !== null ? '✏️ টিম ও খেলোয়াড় এডিট মোড' : '➕ গ্রুপে নতুন টিম ও খেলোয়াড় যোগ করুন (সিরিয়ালসহ)'}</span>
+                                        <span>{editingTeam !== null ? '✏️ টিম ও খেলোয়াড় এডিট মোড' : '➕ গ্রুপে নতুন টিম ও খেলোয়াড় যোগ করুন'}</span>
                                         {editingTeam !== null && (
                                             <button onClick={() => { setEditingTeam(null); setTeamForm({ group: 'গ্রুপ এ', serial: '০১', teamName: '', address: '', player1: '', cat1: 'HIGH', phone1: '', player2: '', cat2: 'MEDIUM', phone2: '' }); }} className="text-xs bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg">এডিট বাতিল করুন</button>
                                         )}
@@ -684,7 +705,7 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">সিরিয়াল নম্বর (যেমন: ০১)</label>
+                                            <label className="block text-xs text-gray-300 mb-1">সিরিয়াল নম্বর</label>
                                             <input type="text" placeholder="সিরিয়াল নম্বর" value={teamForm.serial} onChange={e => setTeamForm({ ...teamForm, serial: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
                                         </div>
                                         <div>
@@ -723,13 +744,13 @@
                                             <input type="text" placeholder="ঠিকানা" value={teamForm.address} onChange={e => setTeamForm({ ...teamForm, address: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
                                         </div>
 
-                                        <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-3 transition shadow">
-                                            {editingTeam !== null ? 'টিমের তথ্য আপডেট করুন (অটো সিঙ্ক)' : 'নতুন টিম ও খেলোয়াড় যোগ করুন'}
+                                        <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-3 transition shadow">
+                                            {editingTeam !== null ? 'টিমের তথ্য আপডেট করুন' : 'নতুন টিম ও খেলোয়াড় যোগ করুন'}
                                         </button>
                                     </form>
 
                                     <div className="mt-6 space-y-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট (লাইভ অটো-আপডেট):</h4>
+                                        <h4 className="text-sm font-semibold text-gray-300">বর্তমান টিম ম্যানেজমেন্ট:</h4>
                                         {Object.keys(groupsData).map(gName => (
                                             <div key={gName} className="bg-slate-900/60 p-4 rounded-xl border border-slate-700">
                                                 <h5 className="font-bold text-yellow-400 mb-3">{gName}</h5>
@@ -758,12 +779,12 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Matches & Results */}
+                                {/* Manage Matches & Results with Stage, Status (আসন্ন/লাইভ/সম্পন্ন) and Point-wise Results */}
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
-                                        <span>{editingMatch !== null ? '✏️ ম্যাচ শিডিউল ও রেজাল্ট এডিট মোড' : '➕ টুর্নামেন্ট ম্যাচ ও রেজাল্ট যোগ করুন'}</span>
+                                        <span>{editingMatch !== null ? '✏️ ম্যাচ ও রেজাল্ট এডিট মোড' : '➕ পর্বভিত্তিক ম্যাচ ও রেজাল্ট যোগ করুন'}</span>
                                         {editingMatch !== null && (
-                                            <button onClick={() => { setEditingMatch(null); setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', score: 'আসন্ন' }); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
+                                            <button onClick={() => { setEditingMatch(null); setMatchForm({ stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', scoreStatus: 'আসন্ন', score: 'আসন্ন' }); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
                                         )}
                                     </h3>
                                     <form onSubmit={saveMatch} className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -773,34 +794,49 @@
                                                 <option value="গ্রুপ পর্ব (Group Stage)">গ্রুপ পর্ব (Group Stage)</option>
                                                 <option value="কোয়ার্টার ফাইনাল (Quarter-Finals)">কোয়ার্টার ফাইনাল (Quarter-Finals)</option>
                                                 <option value="সেমিফাইনাল (Semi-Finals)">সেমিফাইনাল (Semi-Finals)</option>
-                                                <option value="তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place Match)">তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place)</option>
+                                                <option value="তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place Match)">তৃতীয় স্থান নির্ধারণী ম্যাচ (3rd Place Match)</option>
                                                 <option value="ফাইনাল (Grand Final)">ফাইনাল (Grand Final)</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">গ্রুপ (যদি গ্রুপ পর্ব হয়)</label>
+                                            <label className="block text-xs text-gray-300 mb-1">গ্রুপ / পর্বের নাম</label>
                                             <select value={matchForm.group} onChange={e => setMatchForm({ ...matchForm, group: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
                                                 <option value="গ্রুপ এ">গ্রুপ এ</option>
                                                 <option value="গ্রুপ বি">গ্রুপ বি</option>
                                                 <option value="গ্রুপ সি">গ্রুপ সি</option>
                                                 <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                                                <option value="অন্যান্য">প্রযোজ্য নয় / নকআউট</option>
+                                                <option value="কোয়ার্টার ১">কোয়ার্টার ১</option>
+                                                <option value="কোয়ার্টার ২">কোয়ার্টার ২</option>
+                                                <option value="কোয়ার্টার ৩">কোয়ার্টার ৩</option>
+                                                <option value="কোয়ার্টার ৪">কোয়ার্টার ৪</option>
+                                                <option value="সেমি ১">সেমি ১</option>
+                                                <option value="সেমি ২">সেমি ২</option>
+                                                <option value="৩য় স্থান">৩য় স্থান ম্যাচ</option>
+                                                <option value="ফাইনাল">ফাইনাল ম্যাচ</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ বিবরণ</label>
+                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ বিবরণ (যেমন: টিম আলফা বনাম টিম বিটা)</label>
                                             <input type="text" placeholder="ম্যাচের নাম" value={matchForm.match} onChange={e => setMatchForm({ ...matchForm, match: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-300 mb-1">সময় ও তারিখ</label>
                                             <input type="text" placeholder="তারিখ ও সময়" value={matchForm.time} onChange={e => setMatchForm({ ...matchForm, time: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ রেজাল্ট / স্কোর</label>
-                                            <input type="text" placeholder="যেমন: ২-১ (বিজয়ী: টিম আলফা) বা আসন্ন" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
+                                        <div>
+                                            <label className="block text-xs text-gray-300 mb-1">ম্যাচ স্ট্যাটাস (ম্যাচের আগে 'আসন্ন')</label>
+                                            <select value={matchForm.scoreStatus} onChange={e => setMatchForm({ ...matchForm, scoreStatus: e.target.value })} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+                                                <option value="আসন্ন">আসন্ন</option>
+                                                <option value="লাইভ">লাইভ</option>
+                                                <option value="সম্পন্ন">সম্পন্ন</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs text-gray-300 mb-1">রেজাল্ট (দুই দলের পয়েন্টসহ)</label>
+                                            <input type="text" placeholder="যেমন: ২-১ (পয়েন্ট: আলফা ২, বিটা ০) অথবা আসন্ন" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
                                         <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-2 transition shadow">
-                                            {editingMatch !== null ? 'ম্যাচ রেজাল্ট আপডেট করুন' : 'ম্যাচ বা ফিক্সচার যোগ করুন'}
+                                            {editingMatch !== null ? 'ম্যাচ ও রেজাল্ট আপডেট করুন' : 'ম্যাচ ও রেজাল্ট যুক্ত করুন'}
                                         </button>
                                     </form>
 
@@ -810,13 +846,20 @@
                                             <div key={stageName} className="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-2">
                                                 <h5 className="font-bold text-white text-xs bg-slate-800 p-2 rounded-lg border border-slate-700">{stageName}</h5>
                                                 {tournamentMatches[stageName].map(m => (
-                                                    <div key={m.id} className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs">
+                                                    <div key={m.id} className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-xs">
                                                         <div>
-                                                            <strong className="text-yellow-400 text-sm">{m.match}</strong> — রেজাল্ট: <span className="text-green-400 font-bold">{m.score}</span> ({m.time})
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <span className="bg-slate-900 text-yellow-400 px-2 py-0.5 rounded border border-slate-700">{m.group}</span>
+                                                                <span className="text-gray-400">⏰ {m.time}</span>
+                                                            </div>
+                                                            <strong className="text-white text-sm">{m.match}</strong>
+                                                            <p className="text-gray-300 mt-1">
+                                                                স্ট্যাটাস: <strong className="text-yellow-400">{m.scoreStatus || 'আসন্ন'}</strong> | রেজাল্ট: <span className="text-green-400 font-bold">{m.score}</span>
+                                                            </p>
                                                         </div>
-                                                        <div className="flex gap-2">
-                                                            <button onClick={() => startEditMatch(stageName, m)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-bold">✏️ এডিট</button>
-                                                            <button onClick={() => deleteTournamentMatch(stageName, m.id)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold">🗑️ ডিলিট</button>
+                                                        <div className="flex gap-2 self-end md:self-center">
+                                                            <button onClick={() => startEditMatch(stageName, m)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold">✏️ এডিট</button>
+                                                            <button onClick={() => deleteTournamentMatch(stageName, m.id)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-bold">🗑️ ডিলিট</button>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -876,7 +919,7 @@
                                         ) : (
                                             <>
                                                 <input type="text" placeholder="নতুন নোটিশ লিখুন..." value={newNotice} onChange={e => setNewNotice(e.target.value)} required className="flex-grow bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
-                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-6 py-3 rounded-xl text-sm transition">পাবলিশ</button>
+                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-4 py-3 rounded-xl text-sm transition">পাবলিশ</button>
                                             </>
                                         )}
                                     </form>
