@@ -111,15 +111,15 @@
             const [editingNoticeId, setEditingNoticeId] = React.useState(null);
             const [editNoticeText, setEditNoticeText] = React.useState('');
 
-            // Detailed structured matches according to user prompt
+            // Cleaned score fields for "টিম আলফা বনাম টিম বিটা" & "টিম রয়্যাল বনাম টিম কিং" to match 'রেজাল্ট: আসন্ন' exactly like other matches
             const [tournamentMatches, setTournamentMatches] = React.useState({
                 'গ্রুপ পর্ব (Group Stage)': [
                     // Group A
-                    { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', scoreStatus: 'আসন্ন', score: '২ - ১ (পয়েন্ট: আলফা ২, বিটা ০)' },
+                    { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     { id: 102, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     { id: 103, group: 'গ্রুপ এ', match: 'টিম বিটা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     // Group B
-                    { id: 104, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম কিং', time: '২০২৬-০৩-১৬, ৪:০০ PM', scoreStatus: 'আসন্ন', score: '১ - ২ (পয়েন্ট: রয়্যাল ০, কিং ২)' },
+                    { id: 104, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম কিং', time: '২০২৬-০৩-১৬, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     { id: 105, group: 'গ্রুপ বি', match: 'টিম রয়্যাল বনাম টিম ঈগল', time: '২০২৬-০৩-১৬, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     { id: 106, group: 'গ্রুপ বি', match: 'টিম কিং বনাম টিম ঈগল', time: '২০২৬-০৩-১৬, ৬:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     // Group C
@@ -154,10 +154,27 @@
             });
             const [editingMatch, setEditingMatch] = React.useState(null);
 
-            const [standings, setStandings] = React.useState([
-                { team: 'টিম আলফা', group: 'গ্রুপ এ', played: 1, won: 1, lost: 0, pts: 2 },
-                { team: 'টিম রয়্যাল', group: 'গ্রুপ বি', played: 1, won: 0, lost: 1, pts: 0 }
-            ]);
+            // Full All 12 Teams Points Table Initial State for all Groups (A, B, C, D)
+            const initialCompleteStandings = [
+                // Group A
+                { team: 'টিম আলফা', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম বিটা', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম গামা', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 },
+                // Group B
+                { team: 'টিম রয়্যাল', group: 'গ্রুপ বি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম কিং', group: 'গ্রুপ বি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম ঈগল', group: 'গ্রুপ বি', played: 0, won: 0, lost: 0, pts: 0 },
+                // Group C
+                { team: 'টিম থান্ডার', group: 'গ্রুপ সি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম টাইগার', group: 'গ্রুপ সি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম স্টর্ম', group: 'গ্রুপ সি', played: 0, won: 0, lost: 0, pts: 0 },
+                // Group D
+                { team: 'টিম ফিনিক্স', group: 'গ্রুপ ডি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম ওয়্যারিয়র্স', group: 'গ্রুপ ডি', played: 0, won: 0, lost: 0, pts: 0 },
+                { team: 'টিম শাইন', group: 'গ্রুপ ডি', played: 0, won: 0, lost: 0, pts: 0 }
+            ];
+
+            const [standings, setStandings] = React.useState(initialCompleteStandings);
             const [standingForm, setStandingForm] = React.useState({
                 team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0
             });
@@ -565,8 +582,14 @@
                                     </div>
                                 ))}
 
+                                {/* Complete 12 Teams Group Stage Points Table */}
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
-                                    <h2 className="text-xl font-bold text-yellow-400">📊 গ্রুপ পর্ব পয়েন্ট টেবিল</h2>
+                                    <div className="flex justify-between items-center border-b border-slate-700 pb-3">
+                                        <h2 className="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                                            <span>📊</span> গ্রুপ পর্ব পয়েন্ট টেবিল (সকল টিম)
+                                        </h2>
+                                        <span className="text-xs bg-slate-700 px-3 py-1 rounded-full text-yellow-300 font-bold">মোট টিম: {standings.length}টি</span>
+                                    </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-left text-sm border-collapse">
                                             <thead>
@@ -581,13 +604,13 @@
                                             </thead>
                                             <tbody className="divide-y divide-slate-700 text-gray-200">
                                                 {standings.map((s, idx) => (
-                                                    <tr key={idx} className="hover:bg-slate-700/50">
+                                                    <tr key={idx} className="hover:bg-slate-700/50 transition">
                                                         <td className="p-3 font-bold text-white">{s.team}</td>
-                                                        <td className="p-3 text-yellow-400">{s.group}</td>
+                                                        <td className="p-3 text-yellow-400 font-semibold">{s.group}</td>
                                                         <td className="p-3 text-center">{s.played}</td>
-                                                        <td className="p-3 text-center text-green-400">{s.won}</td>
-                                                        <td className="p-3 text-center text-red-400">{s.lost}</td>
-                                                        <td className="p-3 text-center font-extrabold text-yellow-400">{s.pts}</td>
+                                                        <td className="p-3 text-center text-green-400 font-bold">{s.won}</td>
+                                                        <td className="p-3 text-center text-red-400 font-bold">{s.lost}</td>
+                                                        <td className="p-3 text-center font-extrabold text-yellow-400 bg-slate-800/40 rounded-lg">{s.pts}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -659,7 +682,7 @@
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
                                         <h2 className="text-xl font-extrabold text-yellow-400 mb-1">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (গ্রুপ পর্ব, কোয়ার্টার, সেমি, ফাইনাল ও ৩য় স্থান ম্যাচের স্ট্যাটাস "আসন্ন" বা রেজাল্ট এবং দুই দলের পয়েন্ট একমাত্র আপনিই আপডেট করতে পারবেন)</p>
+                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (এখানে পয়েন্ট টেবিল, ম্যাচ রেজাল্ট ও টিমের যেকোনো তথ্য আপডেট করা হলে সাথে সাথে সর্বত্র অটোমেটিক আপডেট হয়ে যাবে)</p>
                                     </div>
                                     <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center gap-2">
                                         <span className="text-xs text-yellow-400 font-bold">🔒 দ্রুত লগআউট:</span>
@@ -779,7 +802,7 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Matches & Results with Stage, Status (আসন্ন/লাইভ/সম্পন্ন) and Point-wise Results */}
+                                {/* Manage Matches & Results */}
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
                                         <span>{editingMatch !== null ? '✏️ ম্যাচ ও রেজাল্ট এডিট মোড' : '➕ পর্বভিত্তিক ম্যাচ ও রেজাল্ট যোগ করুন'}</span>
@@ -832,8 +855,8 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-300 mb-1">রেজাল্ট (দুই দলের পয়েন্টসহ)</label>
-                                            <input type="text" placeholder="যেমন: ২-১ (পয়েন্ট: আলফা ২, বিটা ০) অথবা আসন্ন" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
+                                            <label className="block text-xs text-gray-300 mb-1">রেজাল্ট</label>
+                                            <input type="text" placeholder="যেমন: আসন্ন অথবা ২-১ (পয়েন্ট: আলফা ২, বিটা ০)" value={matchForm.score} onChange={e => setMatchForm({ ...matchForm, score: e.target.value })} required className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
                                         </div>
                                         <button type="submit" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-2 transition shadow">
                                             {editingMatch !== null ? 'ম্যাচ ও রেজাল্ট আপডেট করুন' : 'ম্যাচ ও রেজাল্ট যুক্ত করুন'}
@@ -868,10 +891,10 @@
                                     </div>
                                 </div>
 
-                                {/* Manage Points Table */}
+                                {/* Manage Complete Points Table (Admin view matched with Home View) */}
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur space-y-4">
                                     <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 flex justify-between items-center">
-                                        <span>{editingStandingIndex !== null ? '✏️ পয়েন্ট টেবিল এডিট মোড' : '➕ পয়েন্ট টেবিল এন্ট্রি যোগ করুন'}</span>
+                                        <span>{editingStandingIndex !== null ? '✏️ পয়েন্ট টেবিল এডিট মোড' : '➕ পয়েন্ট টেবিলে নতুন টিম যোগ / এডিট'}</span>
                                         {editingStandingIndex !== null && (
                                             <button onClick={() => { setEditingStandingIndex(null); setStandingForm({ team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 }); }} className="text-xs bg-gray-600 text-white px-3 py-1 rounded-lg">এডিট বাতিল</button>
                                         )}
@@ -889,10 +912,10 @@
                                     </form>
 
                                     <div className="space-y-2 mt-4">
-                                        <h4 className="text-sm font-semibold text-gray-300">পয়েন্ট টেবিল ম্যানেজমেন্ট:</h4>
+                                        <h4 className="text-sm font-semibold text-yellow-300">সকল ১২টি টিমের পয়েন্ট টেবিল ম্যানেজমেন্ট (অটো-সিঙ্ক):</h4>
                                         {standings.map((s, idx) => (
                                             <div key={idx} className="bg-slate-900/60 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs shadow-inner">
-                                                <span><strong>{s.team}</strong> ({s.group}) — খেলা: {s.played}, জয়: {s.won}, হার: {s.lost}, পয়েন্ট: <strong className="text-yellow-400">{s.pts}</strong></span>
+                                                <span><strong className="text-white">{s.team}</strong> (<span className="text-yellow-400">{s.group}</span>) — খেলা: {s.played}, জয়: {s.won}, হার: {s.lost}, পয়েন্ট: <strong className="text-yellow-400">{s.pts}</strong></span>
                                                 <div className="flex gap-2">
                                                     <button onClick={() => startEditStanding(idx, s)} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-bold">✏️ এডিট</button>
                                                     <button onClick={() => deleteStanding(idx)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg font-bold">🗑️ ডিলিট</button>
@@ -919,7 +942,7 @@
                                         ) : (
                                             <>
                                                 <input type="text" placeholder="নতুন নোটিশ লিখুন..." value={newNotice} onChange={e => setNewNotice(e.target.value)} required className="flex-grow bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none" />
-                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-4 py-3 rounded-xl text-sm transition">পাবলিশ</button>
+                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-bold px-6 py-3 rounded-xl text-sm transition">পাবলিশ</button>
                                             </>
                                         )}
                                     </form>
