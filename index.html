@@ -101,17 +101,28 @@
                 ]
             };
 
-            const [groupsData, setGroupsData] = React.useState(initialGroups);
-            const [editingTeam, setEditingTeam] = React.useState(null);
+            // LocalStorage Implementation for Persistent Data
+            const [groupsData, setGroupsData] = React.useState(() => {
+                const saved = localStorage.getItem('carram_groupsData');
+                return saved ? JSON.parse(saved) : initialGroups;
+            });
 
-            const [notices, setNotices] = React.useState([
-                { id: 1, text: "উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর রেজিষ্ট্রেশন ও টুর্নামেন্ট ফরম্যাট প্রকাশ করা হয়েছে!", date: "২০২৬-০৩-০১" }
-            ]);
-            const [newNotice, setNewNotice] = React.useState('');
-            const [editingNoticeId, setEditingNoticeId] = React.useState(null);
-            const [editNoticeText, setEditNoticeText] = React.useState('');
+            React.useEffect(() => {
+                localStorage.setItem('carram_groupsData', JSON.stringify(groupsData));
+            }, [groupsData]);
 
-            const [tournamentMatches, setTournamentMatches] = React.useState({
+            const [notices, setNotices] = React.useState(() => {
+                const saved = localStorage.getItem('carram_notices');
+                return saved ? JSON.parse(saved) : [
+                    { id: 1, text: "উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর রেজিষ্ট্রেশন ও টুর্নামেন্ট ফরম্যাট প্রকাশ করা হয়েছে!", date: "২০২৬-০৩-০১" }
+                ];
+            });
+
+            React.useEffect(() => {
+                localStorage.setItem('carram_notices', JSON.stringify(notices));
+            }, [notices]);
+
+            const initialTournamentMatches = {
                 'গ্রুপ পর্ব (Group Stage)': [
                     { id: 101, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম বিটা', time: '২০২৬-০৩-১৫, ৪:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
                     { id: 102, group: 'গ্রুপ এ', match: 'টিম আলফা বনাম টিম গামা', time: '২০২৬-০৩-১৫, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' },
@@ -142,12 +153,16 @@
                 'ফাইনাল (Grand Final)': [
                     { id: 501, group: 'ফাইনাল', match: 'বিজয়ী (সেমিফাইনাল ১) বনাম বিজয়ী (সেমিফাইনাল ২)', time: '২০২৬-০৩-২৫, ৫:০০ PM', scoreStatus: 'আসন্ন', score: 'আসন্ন' }
                 ]
+            };
+
+            const [tournamentMatches, setTournamentMatches] = React.useState(() => {
+                const saved = localStorage.getItem('carram_tournamentMatches');
+                return saved ? JSON.parse(saved) : initialTournamentMatches;
             });
 
-            const [matchForm, setMatchForm] = React.useState({
-                stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', scoreStatus: 'আসন্ন', score: 'আসন্ন'
-            });
-            const [editingMatch, setEditingMatch] = React.useState(null);
+            React.useEffect(() => {
+                localStorage.setItem('carram_tournamentMatches', JSON.stringify(tournamentMatches));
+            }, [tournamentMatches]);
 
             const initialCompleteStandings = [
                 { team: 'টিম আলফা', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0 },
@@ -164,17 +179,24 @@
                 { team: 'টিম শাইন', group: 'গ্রুপ ডি', played: 0, won: 0, lost: 0, pts: 0 }
             ];
 
-            const [standings, setStandings] = React.useState(initialCompleteStandings);
+            const [standings, setStandings] = React.useState(() => {
+                const saved = localStorage.getItem('carram_standings');
+                return saved ? JSON.parse(saved) : initialCompleteStandings;
+            });
+
+            React.useEffect(() => {
+                localStorage.setItem('carram_standings', JSON.stringify(standings));
+            }, [standings]);
+
+            const [matchForm, setMatchForm] = React.useState({
+                stage: 'গ্রুপ পর্ব (Group Stage)', group: 'গ্রুপ এ', match: '', time: '', scoreStatus: 'আসন্ন', score: 'আসন্ন'
+            });
+            const [editingMatch, setEditingMatch] = React.useState(null);
+
             const [standingForm, setStandingForm] = React.useState({
                 team: '', group: 'গ্রুপ এ', played: 0, won: 0, lost: 0, pts: 0
             });
             const [editingStandingIndex, setEditingStandingIndex] = React.useState(null);
-
-            const [teamForm, setTeamForm] = React.useState({
-                group: 'গ্রুপ এ', serial: '০১', teamName: '', address: '',
-                player1: '', cat1: 'HIGH', phone1: '',
-                player2: '', cat2: 'MEDIUM', phone2: ''
-            });
 
             // Dedicated Single Player Form State for Admin Panel
             const [singlePlayerForm, setSinglePlayerForm] = React.useState({
@@ -285,27 +307,6 @@
                     t.phone2 = '';
                 }
                 setGroupsData({ ...groupsData, [groupName]: updatedGroup });
-            };
-
-            const addNotice = (e) => {
-                e.preventDefault();
-                if (editingNoticeId !== null) {
-                    setNotices(notices.map(n => n.id === editingNoticeId ? { ...n, text: editNoticeText } : n));
-                    setEditingNoticeId(null);
-                    setEditNoticeText('');
-                } else if (newNotice.trim()) {
-                    setNotices([{ id: Date.now(), text: newNotice, date: new Date().toISOString().split('T')[0] }, ...notices]);
-                    setNewNotice('');
-                }
-            };
-
-            const startEditNotice = (n) => {
-                setEditingNoticeId(n.id);
-                setEditNoticeText(n.text);
-            };
-
-            const deleteNotice = (id) => {
-                setNotices(notices.filter(n => n.id !== id));
             };
 
             const saveMatch = (e) => {
@@ -720,7 +721,7 @@
                                 <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
                                         <h2 className="text-xl font-extrabold text-yellow-400 mb-1">⚙️ এডমিন কন্ট্রোল প্যানেল</h2>
-                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (খেলোয়াড় এন্ট্রি, ফরম্যাট, পয়েন্ট টেবিল ও ম্যাচ রেজাল্ট পরিবর্তন করুন - সব জায়গায় অটোমেটিক আপডেট হবে)</p>
+                                        <p className="text-xs text-gray-300">সক্রিয় এডমিন: <span className="text-green-400 font-bold">{adminEmail}</span> (লোকাল স্টোরেজ সক্রিয় - ব্রাউজার বন্ধ বা রিফ্রেশ করলেও ডেটা সংরক্ষিত থাকবে)</p>
                                     </div>
                                     <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-700 flex items-center gap-2">
                                         <span className="text-xs text-yellow-400 font-bold">🔒 দ্রুত লগআউট:</span>
@@ -954,7 +955,7 @@
             );
         }
 
-        document.getElementById('root') && ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        document.getElementById('root') && ReactDOM.createRoot(document.getElementById('root')).root?.render(<App />) || ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
