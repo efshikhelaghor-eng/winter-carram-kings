@@ -16,13 +16,13 @@
 
     <script type="text/babel">
         // -------------------------------------------------------------
-        // Supabase Credentials (Configured)
+        // Supabase Credentials
         // -------------------------------------------------------------
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
         
         // Supabase Client Initialisation
-        const supabase = (SUPABASE_URL && window.supabase) 
+        const supabase = (window.supabase && SUPABASE_URL) 
             ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
             : null;
 
@@ -39,8 +39,6 @@
             const [passInput, setPassInput] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
 
-            const [selectedGroupModal, setSelectedGroupModal] = React.useState(null);
-
             const defaultGroups = {
                 'গ্রুপ এ': [],
                 'গ্রুপ বি': [],
@@ -50,11 +48,9 @@
 
             const [groupsData, setGroupsData] = React.useState(defaultGroups);
             const [notices, setNotices] = React.useState([]);
-            const [tournamentMatches, setTournamentMatches] = React.useState({});
-            const [standings, setStandings] = React.useState([]);
 
             // -------------------------------------------------------------
-            // Supabase Database থেকে লেটেস্ট Data Fetch করার Function
+            // Supabase Database থেকে Data Fetch করার Function
             // -------------------------------------------------------------
             const fetchDataFromSupabase = async () => {
                 if (!supabase) {
@@ -64,38 +60,22 @@
                 setLoading(true);
                 try {
                     // Fetch Teams
-                    const { data: teamsData } = await supabase.from('teams').select('*');
-                    if (teamsData) {
+                    const { data: teamsData, error: teamsError } = await supabase.from('teams').select('*');
+                    if (teamsError) console.error("Teams Fetch Error:", teamsError);
+                    if (teamsData && teamsData.length > 0) {
                         const formatted = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
                         teamsData.forEach(item => {
-                            if (formatted[item.group_name]) {
+                            if (item.group_name && formatted[item.group_name] && item.data) {
                                 formatted[item.group_name].push(item.data);
                             }
                         });
                         setGroupsData(formatted);
                     }
 
-                    // Fetch Matches
-                    const { data: matchesData } = await supabase.from('matches').select('*');
-                    if (matchesData) {
-                        const formattedMatches = {};
-                        matchesData.forEach(item => {
-                            if (!formattedMatches[item.stage]) formattedMatches[item.stage] = [];
-                            formattedMatches[item.stage].push(item.data);
-                        });
-                        setTournamentMatches(formattedMatches);
-                    }
-
                     // Fetch Notices
                     const { data: noticesData } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
                     if (noticesData) {
                         setNotices(noticesData.map(n => ({ id: n.id, text: n.text, date: n.date })));
-                    }
-
-                    // Fetch Standings
-                    const { data: standingsData } = await supabase.from('standings').select('*');
-                    if (standingsData) {
-                        setStandings(standingsData.map(s => s.data));
                     }
                 } catch (err) {
                     console.error("Error fetching data from Supabase:", err);
@@ -130,43 +110,46 @@
                 setActiveTab('home');
             };
 
-            // Player Save & Supabase Sync (Fixed with .insert)
+            // Player Save & Supabase Sync
             const saveSinglePlayer = async (e) => {
                 e.preventDefault();
-                if (singlePlayerForm.name && singlePlayerForm.group) {
-                    const group = singlePlayerForm.group;
-                    const groupTeams = [...(groupsData[group] || [])];
-                    
-                    const newTeamObj = {
-                        id: Date.now(), 
-                        serial: String(groupTeams.length + 1).padStart(2, '0'), 
-                        teamName: singlePlayerForm.teamName || 'টিম ' + (groupTeams.length + 1), 
-                        address: singlePlayerForm.address,
-                        player1: singlePlayerForm.name, 
-                        cat1: singlePlayerForm.category, 
-                        phone1: singlePlayerForm.phone,
-                        player2: 'অপেক্ষমাণ', 
-                        cat2: 'MEDIUM', 
-                        phone2: ''
-                    };
-                    
-                    // Supabase এ ডাটা সরাসরি Insert করার কোড
-                    if (supabase) {
-                        const { error } = await supabase.from('teams').insert([
-                            { group_name: group, data: newTeamObj }
-                        ]);
-                        if (error) {
-                            console.error("Supabase Insert Error:", error);
-                            alert("ডেটা সেভ করতে সমস্যা হয়েছে: " + error.message);
-                            return;
-                        }
-                    }
-
-                    groupTeams.push(newTeamObj);
-                    setGroupsData({ ...groupsData, [group]: groupTeams });
-                    setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
-                    alert('সফলভাবে Supabase-এ ডেটা সেভ হয়েছে!');
+                if (!singlePlayerForm.name || !singlePlayerForm.group) {
+                    alert('অনুগ্রহ করে খেলোয়াড়ের নাম ও গ্রুপ পূরণ করুন!');
+                    return;
                 }
+
+                const group = singlePlayerForm.group;
+                const groupTeams = [...(groupsData[group] || [])];
+                
+                const newTeamObj = {
+                    id: Date.now(), 
+                    serial: String(groupTeams.length + 1).padStart(2, '0'), 
+                    teamName: singlePlayerForm.teamName || 'টিম ' + (groupTeams.length + 1), 
+                    address: singlePlayerForm.address,
+                    player1: singlePlayerForm.name, 
+                    cat1: singlePlayerForm.category, 
+                    phone1: singlePlayerForm.phone,
+                    player2: 'অপেক্ষমাণ', 
+                    cat2: 'MEDIUM', 
+                    phone2: ''
+                };
+                
+                // Supabase ডাটাবেজে এন্ট্রি সেভ
+                if (supabase) {
+                    const { error } = await supabase.from('teams').insert([
+                        { id: newTeamObj.id, group_name: group, data: newTeamObj }
+                    ]);
+                    if (error) {
+                        console.error("Supabase Save Error:", error);
+                        alert("Supabase-এ সেভ হতে সমস্যা হয়েছে: " + error.message);
+                        return;
+                    }
+                }
+
+                groupTeams.push(newTeamObj);
+                setGroupsData({ ...groupsData, [group]: groupTeams });
+                setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
+                alert('সফলভাবে ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
             };
 
             const getAllRegisteredPlayers = () => {
@@ -221,9 +204,8 @@
 
                     {/* Navigation Bar */}
                     <nav className="flex justify-center bg-slate-800/80 backdrop-blur p-2.5 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
-                        <button onClick={() => { setActiveTab('home'); setSelectedGroupModal(null); }} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>হোম ও নোটিশ</button>
+                        <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>হোম ও নোটিশ</button>
                         <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
-                        <button onClick={() => setActiveTab('matches')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'matches' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>টুর্নামেন্ট ফিক্সচার</button>
                         {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-900/80 text-red-200'}`}>⚙️ এডমিন প্যানেল</button>}
                     </nav>
 
@@ -271,20 +253,52 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-slate-700 text-gray-200">
-                                                        {getAllRegisteredPlayers().map((p, idx) => (
-                                                            <tr key={idx} className="hover:bg-slate-700/40">
-                                                                <td className="p-3 text-yellow-400 font-bold">#{p.serial}</td>
-                                                                <td className="p-3 font-bold text-white">{p.name}</td>
-                                                                <td className="p-3">{getCategoryBadge(p.category)}</td>
-                                                                <td className="p-3 text-gray-300">{p.phone || 'N/A'}</td>
-                                                                <td className="p-3">{p.teamName}</td>
-                                                                <td className="p-3 text-yellow-400 font-semibold">{p.groupName}</td>
+                                                        {getAllRegisteredPlayers().length === 0 ? (
+                                                            <tr>
+                                                                <td colSpan="6" className="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td>
                                                             </tr>
-                                                        ))}
+                                                        ) : (
+                                                            getAllRegisteredPlayers().map((p, idx) => (
+                                                                <tr key={idx} className="hover:bg-slate-700/40">
+                                                                    <td className="p-3 text-yellow-400 font-bold">#{p.serial}</td>
+                                                                    <td className="p-3 font-bold text-white">{p.name}</td>
+                                                                    <td className="p-3">{getCategoryBadge(p.category)}</td>
+                                                                    <td className="p-3 text-gray-300">{p.phone || 'N/A'}</td>
+                                                                    <td className="p-3">{p.teamName}</td>
+                                                                    <td className="p-3 text-yellow-400 font-semibold">{p.groupName}</td>
+                                                                </tr>
+                                                            ))
+                                                        )}
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
+                                    </div>
+                                )}
+
+                                {/* GROUPS TAB */}
+                                {activeTab === 'groups' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {Object.keys(groupsData).map(groupName => (
+                                            <div key={groupName} className="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 shadow-lg">
+                                                <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 mb-3">{groupName}</h3>
+                                                {groupsData[groupName].length === 0 ? (
+                                                    <p className="text-gray-400 text-xs py-4 text-center">এই গ্রুপে কোনো দল নিবন্ধিত হয়নি।</p>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        {groupsData[groupName].map((t, idx) => (
+                                                            <div key={idx} className="bg-slate-700/50 p-3 rounded-xl border border-slate-600/50 flex justify-between items-center text-sm">
+                                                                <div>
+                                                                    <p className="font-bold text-white">{t.teamName}</p>
+                                                                    <p className="text-xs text-gray-300">👤 {t.player1} {getCategoryBadge(t.cat1)}</p>
+                                                                </div>
+                                                                <span className="text-xs text-gray-400">{t.phone1}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 )}
 
