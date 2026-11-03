@@ -103,15 +103,15 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: PLAYER REGISTRATION (SINGLE PLAYER BIO ONLY - GROUP & DOUBLE TOGGLE REMOVED) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2">
-                        📝 ১. খেলোয়াড় নিবন্ধন / এন্ট্রি সেকশন (একক বায়ো)
+                        নতুন খেলোয়ার নিবন্ধন ফরম
                     </h3>
                 </div>
 
-                <!-- SINGLE PLAYER REGISTRATION FORM (NO GROUP SELECTOR) -->
+                <!-- SINGLE UNIFIED PLAYER REGISTRATION FORM (AUTO APPLIES TO ALL FORMATS) -->
                 <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
@@ -139,7 +139,7 @@
                     </div>
                     
                     <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded-xl text-sm md:col-span-2 transition">
-                        💾 একক খেলোয়ার সেভ করুন
+                        💾 নতুন খেলোয়ার সেভ করুন (সকল ফরম্যাটে অটো যুক্ত হবে)
                     </button>
                 </form>
             </div>
@@ -609,7 +609,7 @@
             }
         }
 
-        // SAVE SINGLE PLAYER BIO (SECTION 1 - GROUP SELECTOR & DOUBLE TOGGLE REMOVED, DEFAULTS TO GROUP A OR FIRST GROUP)
+        // SAVE NEW PLAYER BIO (UNIFIED FOR ALL FORMATS / AUTOMATIC REGISTRATION)
         async function savePlayerBio(e) {
             e.preventDefault();
             
@@ -673,7 +673,7 @@
                     const err = await res.json();
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
                 } else {
-                    alert('✅ একক খেলোয়াড়ের বায়ো ডেটা সফলভাবে সেভ হয়েছে!');
+                    alert('✅ নতুন খেলোয়াড় সফলভাবে নিবন্ধিত হয়েছে এবং সকল ফরম্যাটে স্বয়ংক্রিয়ভাবে যুক্ত হয়েছে!');
                     document.getElementById('sName').value = '';
                     document.getElementById('sPhone').value = '';
                     document.getElementById('sAddress').value = '';
@@ -684,7 +684,7 @@
             } catch(err) {
                 alert("নেটওয়ার্ক সমস্যা হয়েছে!");
             } finally {
-                submitBtn.innerText = "💾 একক খেলোয়ার সেভ করুন";
+                submitBtn.innerText = "💾 নতুন খেলোয়ার সেভ করুন (সকল ফরম্যাটে অটো যুক্ত হবে)";
                 submitBtn.disabled = false;
             }
         }
