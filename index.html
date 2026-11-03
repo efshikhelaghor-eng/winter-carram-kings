@@ -20,7 +20,8 @@
 
     <!-- Nav Tabs -->
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
-        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ ও টিম ফরম্যাট)</button>
+        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ ও টিম)</button>
+        <button onclick="switchTab('fixtures')" id="navFixtures" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">⚔️ গ্রুপ ফিকশ্চার</button>
         <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">খেলোয়াড় তালিকা</button>
         <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
     </nav>
@@ -31,7 +32,7 @@
         <!-- LOADING SPINNER -->
         <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
-        <!-- HOME TAB: 4 GROUPS WITH CONFIGURABLE TEAM COUNT TOGGLES (1, 2, 3, 4 TEAMS PER GROUP) -->
+        <!-- HOME TAB: GROUPS & TEAMS -->
         <div id="tabHome" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
                 <div>
@@ -39,7 +40,7 @@
                     <div id="noticeList" class="text-xs text-gray-300">কোনো নোটিশ নেই।</div>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                    <span class="text-xs font-bold text-yellow-400">প্রতি গ্রুপে টিম সংখ্যা টগল:</span>
+                    <span class="text-xs font-bold text-yellow-400">প্রতি গ্রুপে টিম লিমিট:</span>
                     <div class="flex gap-1" id="groupSizeToggles">
                         <button onclick="setGroupTeamLimit(1)" id="limBtn1" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">১</button>
                         <button onclick="setGroupTeamLimit(2)" id="limBtn2" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">২</button>
@@ -52,6 +53,19 @@
             <!-- GROUPS CONTAINER -->
             <div id="groupsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Group A, B, C, D rendered here -->
+            </div>
+        </div>
+
+        <!-- FIXTURES TAB: GROUP STAGE MATCH FIXTURES -->
+        <div id="tabFixtures" class="space-y-6 hidden">
+            <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপ পর্বের ম্যাচ ফিকশ্চার (সম্পূর্ণ ফরম্যাট)</h2>
+                    <p class="text-xs text-gray-400">প্রতিটি গ্রুপের নিবন্ধিত টিমসমূহের মধ্যে রাউন্ড-রবিন ফিকশ্চার</p>
+                </div>
+                <div id="fixturesContainer" class="space-y-6">
+                    <!-- Dynamic Fixtures for A, B, C, D -->
+                </div>
             </div>
         </div>
 
@@ -194,7 +208,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: TEAM SETUP FORMAT (SUPPORTING 1, 2, 3, 4 TEAMS PER GROUP, SINGLE OR DOUBLE) -->
+            <!-- SECTION 2: TEAM SETUP FORMAT (SUPPORTING 1, 2, 3, 4 TEAMS, SINGLE OR DOUBLE) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
@@ -313,10 +327,12 @@
 
         function switchTab(tab) {
             document.getElementById('tabHome').classList.add('hidden');
+            document.getElementById('tabFixtures').classList.add('hidden');
             document.getElementById('tabGroups').classList.add('hidden');
             document.getElementById('tabDashboard').classList.add('hidden');
 
             document.getElementById('navHome').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
+            document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
             document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200";
@@ -324,6 +340,9 @@
             if(tab === 'home') {
                 document.getElementById('tabHome').classList.remove('hidden');
                 document.getElementById('navHome').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+            } else if(tab === 'fixtures') {
+                document.getElementById('tabFixtures').classList.remove('hidden');
+                document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'groups') {
                 document.getElementById('tabGroups').classList.remove('hidden');
                 document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
@@ -483,11 +502,10 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS WITH CONFIGURABLE TEAM LIMIT (1, 2, 3, or 4 teams per group)
+            // 1. RENDER HOMEPAGE GROUPS WITH CONFIGURABLE TEAM LIMIT
             let groupsHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let teamList = groups[gName] || [];
-                // Slice teamList based on current toggle limit (1, 2, 3, or 4)
                 let activeTeams = teamList.slice(0, currentGroupTeamLimit);
                 
                 let teamsContent = '';
@@ -518,9 +536,7 @@
                                     <span class="text-[10px] bg-slate-800 text-gray-300 px-2 py-0.5 rounded-full border border-slate-700">${isDoubleTeam ? 'দ্বৈত টিম' : 'একক টিম'}</span>
                                 </div>
 
-                                <!-- Players in this Team Section -->
                                 <div class="space-y-2 text-xs">
-                                    <!-- Player 1 -->
                                     <div class="flex items-center justify-between bg-slate-800/60 p-2 rounded-lg">
                                         <div class="flex items-center gap-2">
                                             ${p1Img}
@@ -531,7 +547,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Player 2 (if double team) -->
                                     ${isDoubleTeam && t.player2 && t.player2 !== 'অপেক্ষমাণ' ? `
                                         <div class="flex items-center justify-between bg-slate-800/60 p-2 rounded-lg">
                                             <div class="flex items-center gap-2">
@@ -565,7 +580,52 @@
             });
             document.getElementById('groupsContainer').innerHTML = groupsHtml;
 
-            // 2. RENDER PLAYERS TAB TABLE
+            // 2. RENDER FIXTURES TAB (ROUND-ROBIN MATCHES PER GROUP)
+            let fixturesHtml = '';
+            ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
+                let teamList = groups[gName] || [];
+                let activeTeams = teamList.slice(0, currentGroupTeamLimit);
+                
+                let matchCards = '';
+                if(activeTeams.length < 2) {
+                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমানে আছে ${activeTeams.length}টি)।</p>`;
+                } else {
+                    let matchNo = 1;
+                    for(let i=0; i<activeTeams.length; i++) {
+                        for(let j=i+1; j<activeTeams.length; j++) {
+                            let t1Name = activeTeams[i].teamName || ('টিম ' + (i+1));
+                            let t2Name = activeTeams[j].teamName || ('Team ' + (j+1));
+                            matchCards += `
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs">
+                                    <div class="flex items-center gap-2 font-bold text-yellow-300">
+                                        <span class="bg-slate-800 px-2 py-1 rounded text-[10px] text-gray-400">ম্যাচ #০${matchNo++}</span>
+                                        <span>${t1Name}</span>
+                                    </div>
+                                    <span class="bg-yellow-500/10 text-yellow-400 font-extrabold px-2 py-0.5 rounded border border-yellow-500/30">বনাম</span>
+                                    <div class="font-bold text-yellow-300 text-right">
+                                        <span>${t2Name}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+
+                fixturesHtml += `
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h3 class="font-bold text-yellow-400 text-sm border-b border-slate-700 pb-1.5 flex justify-between items-center">
+                            <span>🏆 ${gName} - ফিকশ্চার</span>
+                            <span class="text-[10px] text-gray-400">টিম সংখ্যা: ${activeTeams.length}</span>
+                        </h3>
+                        <div class="space-y-2">
+                            ${matchCards}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('fixturesContainer').innerHTML = fixturesHtml;
+
+            // 3. RENDER PLAYERS TAB TABLE
             let tableHtml = '';
             if(allPlayersList.length === 0) {
                 tableHtml = `<tr><td colspan="${isAdmin ? 10 : 9}" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
@@ -627,7 +687,6 @@
             }
         }
 
-        // SAVE SINGLE/DOUBLE PLAYER BIO (SECTION 1)
         async function savePlayerBio(e, regType) {
             e.preventDefault();
             
@@ -745,7 +804,6 @@
             }
         }
 
-        // SAVE TEAM SETUP
         async function saveTeamSetup(e) {
             e.preventDefault();
             const editId = document.getElementById('editRowId').value;
