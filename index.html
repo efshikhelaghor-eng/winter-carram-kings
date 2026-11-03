@@ -31,14 +31,14 @@
         <!-- LOADING SPINNER -->
         <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
-        <!-- HOME TAB: 4 GROUPS (A, B, C, D) WITH UP TO 12 TEAMS & PLAYERS -->
+        <!-- HOME TAB: 4 GROUPS (A, B, C, D) WITH UP TO 12 TEAMS -->
         <div id="tabHome" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow">
                 <h2 class="text-lg font-bold text-yellow-400 mb-3">📢 নোটিশ</h2>
                 <div id="noticeList" class="space-y-2 text-xs text-gray-300">কোনো নোটিশ নেই।</div>
             </div>
 
-            <!-- GROUPS CONTAINER (DISPLAYING UP TO 12 TEAMS IN GROUPS) -->
+            <!-- GROUPS CONTAINER -->
             <div id="groupsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Group A, B, C, D rendered here -->
             </div>
@@ -75,12 +75,12 @@
             </div>
         </div>
 
-        <!-- ADMIN DASHBOARD TAB (SEPARATE SECTIONS FOR REGISTRATION & TEAM SETUP) -->
+        <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: PLAYER REGISTRATION FORMS (SINGLE & DOUBLE) -->
+            <!-- SECTION 1: PLAYER REGISTRATION (SINGLE & DOUBLE BIO) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2">
                         📝 ১. খেলোয়াড় নিবন্ধন / এন্ট্রি সেকশন (একক ও দ্বৈত বায়ো)
                     </h3>
@@ -183,17 +183,23 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: SEPARATE TEAM SETTINGS & 12 TEAMS SECTION FORMAT -->
-            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-4 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <!-- SECTION 2: TEAM SETUP FORMAT (12 TEAMS, SINGLE OR DOUBLE TOGGLE) -->
+            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
                         🛡️ ২. টিম সেট করার ফরম্যাট (১২ টি টিম সেকশন সেটআপ)
                     </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-300 font-semibold">টিমের ধরণ:</span>
+                        <button type="button" onclick="toggleTeamType('single')" id="btnTeamSingle" class="px-3 py-1 rounded text-xs font-bold bg-blue-600 text-white">একক টিম</button>
+                        <button type="button" onclick="toggleTeamType('double')" id="btnTeamDouble" class="px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">দ্বৈত টিম</button>
+                    </div>
                     <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
                 </div>
                 
                 <form onsubmit="saveTeamSetup(event)" class="space-y-4">
                     <input type="hidden" id="editRowId" value="">
+                    <input type="hidden" id="teamMode" value="single">
                     <input type="hidden" id="existingImgUrl1" value="">
                     <input type="hidden" id="existingImgUrl2" value="">
                     
@@ -213,9 +219,9 @@
                         </div>
                     </div>
 
-                    <!-- TEAM PLAYER 1 -->
+                    <!-- TEAM PLAYER 1 (ALWAYS SHOWN) -->
                     <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
-                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👤 টিমের ১ম খেলোয়াড়ের তথ্য</h4>
+                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👤 টিমের খেলোয়াড়ের তথ্য (বায়ো)</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <input type="text" id="tp1Name" placeholder="খেলোয়াড়ের নাম *" required class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
                             <input type="text" id="tp1Phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
@@ -229,11 +235,11 @@
                         </div>
                     </div>
 
-                    <!-- TEAM PLAYER 2 (OPTIONAL) -->
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
-                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👥 টিমের ২য় খেলোয়াড়ের তথ্য (ঐচ্ছিক)</h4>
+                    <!-- TEAM PLAYER 2 (SHOWN ONLY IN DOUBLE TEAM MODE) -->
+                    <div id="teamPlayer2Container" class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3 hidden">
+                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👥 টিমের ২য় খেলোয়াড়ের তথ্য (পার্টনার বায়ো)</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <input type="text" id="tp2Name" placeholder="পার্টনারের নাম (যদি থাকে)" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            <input type="text" id="tp2Name" placeholder="২য় খেলোয়াড়ের নাম *" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
                             <input type="text" id="tp2Phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
                             <input type="text" id="tp2Address" placeholder="ঠিকানা" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
                             <select id="tp2Cat" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
@@ -348,6 +354,21 @@
             }
         }
 
+        function toggleTeamType(mode) {
+            document.getElementById('teamMode').value = mode;
+            if(mode === 'single') {
+                document.getElementById('teamPlayer2Container').classList.add('hidden');
+                document.getElementById('tp2Name').removeAttribute('required');
+                document.getElementById('btnTeamSingle').className = "px-3 py-1 rounded text-xs font-bold bg-blue-600 text-white";
+                document.getElementById('btnTeamDouble').className = "px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
+            } else {
+                document.getElementById('teamPlayer2Container').classList.remove('hidden');
+                document.getElementById('tp2Name').setAttribute('required', 'true');
+                document.getElementById('btnTeamSingle').className = "px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
+                document.getElementById('btnTeamDouble').className = "px-3 py-1 rounded text-xs font-bold bg-blue-600 text-white";
+            }
+        }
+
         async function loadData() {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
@@ -395,14 +416,14 @@
                     groups[item.group_name].push({ db_id: item.id, ...item.data });
 
                     const teamNameStr = item.data.teamName || 'টিম';
-                    const isDouble = item.data.player2 && item.data.player2 !== 'অপেক্ষমাণ';
+                    const isDouble = item.data.teamMode === 'double' || (item.data.player2 && item.data.player2 !== 'অপেক্ষমাণ');
 
                     // Player 1
                     if(item.data.player1) {
                         allPlayersList.push({
                             db_id: item.id,
                             serial: String(globalSeq++).padStart(2, '0'),
-                            type: isDouble ? 'দ্বৈত' : 'একক',
+                            type: isDouble ? 'দ্বৈত টিম' : 'একক টিম',
                             teamName: teamNameStr,
                             name: item.data.player1,
                             phone: item.data.phone1,
@@ -413,11 +434,11 @@
                         });
                     }
                     // Player 2
-                    if(isDouble) {
+                    if(isDouble && item.data.player2 && item.data.player2 !== 'অপেক্ষমাণ') {
                         allPlayersList.push({
                             db_id: item.id,
                             serial: String(globalSeq++).padStart(2, '0'),
-                            type: 'দ্বৈত',
+                            type: 'দ্বৈত টিম',
                             teamName: teamNameStr,
                             name: item.data.player2,
                             phone: item.data.phone2,
@@ -437,7 +458,7 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS FORMAT WITH TEAMS (UP TO 12 TEAMS)
+            // 1. RENDER HOMEPAGE GROUPS FORMAT WITH UP TO 12 TEAMS
             let groupsHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let teamList = groups[gName] || [];
@@ -452,6 +473,7 @@
 
                         let cat1Color = t.cat1 === 'HIGH' ? 'bg-red-500/20 text-red-400' : t.cat1 === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
                         let cat2Color = t.cat2 === 'HIGH' ? 'bg-red-500/20 text-red-400' : t.cat2 === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
+                        let isDoubleTeam = t.teamMode === 'double' || (t.player2 && t.player2 !== 'অপেক্ষমাণ');
 
                         let adminBtns = isAdmin ? `
                             <div class="flex gap-1.5 mt-2 justify-end border-t border-slate-700/50 pt-2">
@@ -466,29 +488,29 @@
                                     <h5 class="font-bold text-yellow-400 text-sm flex items-center gap-1.5">
                                         <span>🛡️</span> টিমের নাম: <span class="text-white">${t.teamName || 'টিম ' + (tIdx + 1)}</span>
                                     </h5>
-                                    <span class="text-[10px] bg-slate-800 text-gray-300 px-2 py-0.5 rounded-full border border-slate-700">টিম সেকশন #${tIdx + 1}</span>
+                                    <span class="text-[10px] bg-slate-800 text-gray-300 px-2 py-0.5 rounded-full border border-slate-700">${isDoubleTeam ? 'দ্বৈত টিম' : 'একক টিম'}</span>
                                 </div>
 
-                                <!-- Players in this Team Section -->
+                                <!-- Players under this Team Section -->
                                 <div class="space-y-2 text-xs">
                                     <!-- Player 1 -->
                                     <div class="flex items-center justify-between bg-slate-800/60 p-2 rounded-lg">
                                         <div class="flex items-center gap-2">
                                             ${p1Img}
                                             <div>
-                                                <p class="font-bold text-white text-xs">খেলোয়াড় ১: ${t.player1} <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold ${cat1Color}">${t.cat1 || 'HIGH'}</span></p>
+                                                <p class="font-bold text-white text-xs">খেলোয়াড়: ${t.player1} <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold ${cat1Color}">${t.cat1 || 'HIGH'}</span></p>
                                                 <p class="text-[10px] text-gray-400">📱 ${t.phone1 || 'N/A'} ${t.address || t.address1 ? ' | 📍 ' + (t.address || t.address1) : ''}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Player 2 (if exists) -->
-                                    ${t.player2 && t.player2 !== 'অপেক্ষমাণ' ? `
+                                    <!-- Player 2 (if double team) -->
+                                    ${isDoubleTeam && t.player2 && t.player2 !== 'অপেক্ষমাণ' ? `
                                         <div class="flex items-center justify-between bg-slate-800/60 p-2 rounded-lg">
                                             <div class="flex items-center gap-2">
                                                 ${p2Img}
                                                 <div>
-                                                    <p class="font-bold text-white text-xs">খেলোয়াড় ২: ${t.player2} <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold ${cat2Color}">${t.cat2 || 'MEDIUM'}</span></p>
+                                                    <p class="font-bold text-white text-xs">পার্টনার: ${t.player2} <span class="px-1.5 py-0.2 rounded text-[10px] font-semibold ${cat2Color}">${t.cat2 || 'MEDIUM'}</span></p>
                                                     <p class="text-[10px] text-gray-400">📱 ${t.phone2 || 'N/A'} ${t.address2 ? ' | 📍 ' + t.address2 : ''}</p>
                                                 </div>
                                             </div>
@@ -629,14 +651,10 @@
                 if(url) img2Url = url;
             }
 
-            let currentCount = 0;
-            globalTeamsData.forEach(item => {
-                if(item.group_name === group) currentCount++;
-            });
-
             const targetId = String(Date.now());
             const newTeamObj = {
                 id: targetId,
+                teamMode: regType === 'double' ? 'double' : 'single',
                 teamName: regType === 'double' ? `${p1Name} & ${p2Name}` : `টিম (${p1Name})`,
                 player1: p1Name,
                 phone1: p1Phone,
@@ -700,12 +718,13 @@
             }
         }
 
-        // SAVE TEAM SETUP (SECTION 2 - 12 TEAMS FORMAT)
+        // SAVE TEAM SETUP (SECTION 2 - SUPPORTING BOTH SINGLE & DOUBLE TEAMS)
         async function saveTeamSetup(e) {
             e.preventDefault();
             const editId = document.getElementById('editRowId').value;
             const group = document.getElementById('tGroup').value;
             const teamName = document.getElementById('tTeamName').value.trim();
+            const mode = document.getElementById('teamMode').value;
 
             const p1Name = document.getElementById('tp1Name').value.trim();
             const p1Phone = document.getElementById('tp1Phone').value.trim();
@@ -714,12 +733,21 @@
             const p1ImgFile = document.getElementById('tp1Image').files[0];
             let p1ExistingImg = document.getElementById('existingImgUrl1').value;
 
-            const p2Name = document.getElementById('tp2Name').value.trim();
-            const p2Phone = document.getElementById('tp2Phone').value.trim();
-            const p2Address = document.getElementById('tp2Address').value.trim();
-            const p2Cat = document.getElementById('tp2Cat').value;
-            const p2ImgFile = document.getElementById('tp2Image').files[0];
+            let p2Name = '', p2Phone = '', p2Address = '', p2Cat = 'MEDIUM', p2ImgFile = null;
             let p2ExistingImg = document.getElementById('existingImgUrl2').value;
+
+            if(mode === 'double') {
+                p2Name = document.getElementById('tp2Name').value.trim();
+                p2Phone = document.getElementById('tp2Phone').value.trim();
+                p2Address = document.getElementById('tp2Address').value.trim();
+                p2Cat = document.getElementById('tp2Cat').value;
+                p2ImgFile = document.getElementById('tp2Image').files[0];
+
+                if(!p2Name) {
+                    alert('দ্বৈত টিমের জন্য ২য় খেলোয়াড়ের নাম আবশ্যক!');
+                    return;
+                }
+            }
 
             if(!teamName) {
                 alert('টিমের নাম সেকশন পূরণ করুন!');
@@ -741,7 +769,7 @@
             }
 
             let finalImg2 = p2ExistingImg;
-            if(p2ImgFile) {
+            if(mode === 'double' && p2ImgFile) {
                 const url = await uploadImage(p2ImgFile);
                 if(url) finalImg2 = url;
             }
@@ -750,6 +778,7 @@
             const newTeamObj = {
                 id: targetId,
                 teamName: teamName,
+                teamMode: mode,
                 player1: p1Name,
                 phone1: p1Phone,
                 address1: p1Address,
@@ -758,11 +787,11 @@
                 imageUrl1: finalImg1,
                 imageUrl: finalImg1,
 
-                player2: p2Name || 'অপেক্ষমাণ',
-                phone2: p2Phone,
-                address2: p2Address,
-                cat2: p2Cat,
-                imageUrl2: finalImg2
+                player2: mode === 'double' ? p2Name : 'অপেক্ষমাণ',
+                phone2: mode === 'double' ? p2Phone : '',
+                address2: mode === 'double' ? p2Address : '',
+                cat2: mode === 'double' ? p2Cat : 'MEDIUM',
+                imageUrl2: mode === 'double' ? finalImg2 : ''
             };
 
             try {
@@ -823,17 +852,22 @@
             document.getElementById('tGroup').value = item.group_name || 'গ্রুপ এ';
             document.getElementById('tTeamName').value = item.data.teamName || '';
 
+            const isDouble = item.data.teamMode === 'double' || (item.data.player2 && item.data.player2 !== 'অপেক্ষমাণ');
+            toggleTeamType(isDouble ? 'double' : 'single');
+
             document.getElementById('tp1Name').value = item.data.player1 || '';
             document.getElementById('tp1Phone').value = item.data.phone1 || '';
             document.getElementById('tp1Address').value = item.data.address1 || item.data.address || '';
             document.getElementById('tp1Cat').value = item.data.cat1 || 'HIGH';
             document.getElementById('existingImgUrl1').value = item.data.imageUrl1 || item.data.imageUrl || '';
 
-            document.getElementById('tp2Name').value = item.data.player2 !== 'অপেক্ষমাণ' ? (item.data.player2 || '') : '';
-            document.getElementById('tp2Phone').value = item.data.phone2 || '';
-            document.getElementById('tp2Address').value = item.data.address2 || '';
-            document.getElementById('tp2Cat').value = item.data.cat2 || 'MEDIUM';
-            document.getElementById('existingImgUrl2').value = item.data.imageUrl2 || '';
+            if(isDouble) {
+                document.getElementById('tp2Name').value = item.data.player2 || '';
+                document.getElementById('tp2Phone').value = item.data.phone2 || '';
+                document.getElementById('tp2Address').value = item.data.address2 || '';
+                document.getElementById('tp2Cat').value = item.data.cat2 || 'MEDIUM';
+                document.getElementById('existingImgUrl2').value = item.data.imageUrl2 || '';
+            }
 
             document.getElementById('teamSetupTitle').innerText = "✏️ টিমের তথ্য এডিট ফরম";
             document.getElementById('teamSubmitBtn').innerText = "🔄 টিমের তথ্য আপডেট করুন";
@@ -881,6 +915,8 @@
             document.getElementById('tp2Phone').value = '';
             document.getElementById('tp2Address').value = '';
             document.getElementById('tp2Image').value = '';
+
+            toggleTeamType('single');
 
             document.getElementById('teamSetupTitle').innerText = "🛡️ ২. টিম সেট করার ফরম্যাট (১২ টি টিম সেকশন সেটআপ)";
             document.getElementById('teamSubmitBtn').innerText = "💾 টিমের সেকশনে ডাটা সেভ করুন";
