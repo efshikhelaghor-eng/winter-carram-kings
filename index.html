@@ -8,8 +8,6 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Supabase JS Library v2 (Standard Global Build) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-javascript@2/dist/umd/supabase.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 text-white font-sans min-h-screen">
     <div id="root"></div>
@@ -18,27 +16,11 @@
         // Supabase Credentials
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
-        
-        let supabaseClient = null;
-        function getSupabase() {
-            if (supabaseClient) return supabaseClient;
-            const sbLib = window.supabase || (window.supabasejs && window.supabasejs.supabase);
-            if (sbLib && typeof sbLib.createClient === 'function') {
-                try {
-                    supabaseClient = sbLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    return supabaseClient;
-                } catch (e) {
-                    console.error("Supabase Init Exception:", e);
-                }
-            }
-            return null;
-        }
 
         function App() {
             const [activeTab, setActiveTab] = React.useState('home');
             const [isAdmin, setIsAdmin] = React.useState(false);
             const [loading, setLoading] = React.useState(true);
-            const [sbReady, setSbReady] = React.useState(false);
             
             const [adminEmail, setAdminEmail] = React.useState('efshikhelaghor@gmail.com');
             const [adminPassword, setAdminPassword] = React.useState('admin123');
@@ -57,17 +39,18 @@
             const [groupsData, setGroupsData] = React.useState(defaultGroups);
             const [notices, setNotices] = React.useState([]);
 
+            // Direct REST API Fetch from Supabase (No CDN dependency)
             const fetchDataFromSupabase = async () => {
-                const client = getSupabase();
-                if (!client) {
-                    setLoading(false);
-                    return;
-                }
                 setLoading(true);
                 try {
-                    const { data: teamsData, error: teamsError } = await client.from('teams').select('*');
-                    if (teamsError) console.error("Teams Fetch Error:", teamsError);
-                    if (teamsData) {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    });
+                    const teamsData = await response.json();
+                    if (Array.isArray(teamsData)) {
                         const formatted = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
                         teamsData.forEach(item => {
                             if (item.group_name && formatted[item.group_name] && item.data) {
@@ -77,35 +60,25 @@
                         setGroupsData(formatted);
                     }
 
-                    const { data: noticesData } = await client.from('notices').select('*').order('created_at', { ascending: false });
-                    if (noticesData) {
+                    const noticeRes = await fetch(`${SUPABASE_URL}/rest/v1/notices?select=*&order=created_at.desc`, {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    });
+                    const noticesData = await noticeRes.json();
+                    if (Array.isArray(noticesData)) {
                         setNotices(noticesData.map(n => ({ id: n.id, text: n.text, date: n.date })));
                     }
                 } catch (err) {
-                    console.error("Error fetching data from Supabase:", err);
+                    console.error("Fetch Error:", err);
                 } finally {
                     setLoading(false);
                 }
             };
 
             React.useEffect(() => {
-                let attempts = 0;
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    const client = getSupabase();
-                    if (client) {
-                        clearInterval(checkInterval);
-                        setSbReady(true);
-                        fetchDataFromSupabase();
-                    } else if (attempts >= 15) {
-                        // Force ready so UI doesn't get stuck indefinitely
-                        clearInterval(checkInterval);
-                        setSbReady(true);
-                        setLoading(false);
-                    }
-                }, 200);
-
-                return () => clearInterval(checkInterval);
+                fetchDataFromSupabase();
             }, []);
 
             const [singlePlayerForm, setSinglePlayerForm] = React.useState({
@@ -130,6 +103,7 @@
                 setActiveTab('home');
             };
 
+            // Direct REST API Insert to Supabase
             const saveSinglePlayer = async (e) => {
                 e.preventDefault();
                 if (!singlePlayerForm.name || !singlePlayerForm.group) {
@@ -137,7 +111,6 @@
                     return;
                 }
 
-                const client = getSupabase();
                 const group = singlePlayerForm.group;
                 const groupTeams = [...(groupsData[group] || [])];
                 
@@ -154,32 +127,36 @@
                     cat2: 'MEDIUM', 
                     phone2: ''
                 };
+                
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({
+                            id: generatedId,
+                            group_name: group,
+                            data: newTeamObj
+                        })
+                    });
 
-                if (client) {
-                    try {
-                        const { error } = await client.from('teams').insert([
-                            { id: generatedId, group_name: group, data: newTeamObj }
-                        ]);
-
-                        if (error) {
-                            console.error("Supabase Save Error:", error);
-                            alert("⚠️ ডাটাবেজে সেভ হতে সমস্যা হয়েছে: " + error.message);
-                            return;
-                        }
-                        alert('✅ সফলভাবে ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
-                    } catch (err) {
-                        console.error("Insert Exception:", err);
-                        alert("⚠️ নেটওয়ার্ক এক্সসেপশন বা সংযোগের সমস্যা হয়েছে!");
+                    if (!response.ok) {
+                        const errData = await response.json();
+                        alert("⚠️ ডাটাবেজে সেভ হয়নি! এরর: " + (errData.message || response.statusText));
                         return;
                     }
-                } else {
-                    alert("⚠️ Supabase ক্লায়েন্ট লাইব্রেরি সম্পূর্ণ লোড হতে পারেনি, কিন্তু লোকাল স্টেটে যুক্ত করা হলো।");
-                }
 
-                groupTeams.push(newTeamObj);
-                setGroupsData({ ...groupsData, [group]: groupTeams });
-                setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
-                if (client) await fetchDataFromSupabase();
+                    alert('✅ সফলভাবে Supabase ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
+                    setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
+                    await fetchDataFromSupabase();
+                } catch (err) {
+                    console.error("Network/Exception Error:", err);
+                    alert("⚠️ নেটওয়ার্ক সমস্যা বা সংযোগে বাধা পেয়েছে!");
+                }
             };
 
             const getAllRegisteredPlayers = () => {
@@ -208,14 +185,13 @@
 
             return (
                 <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100 font-sans">
-                    {/* Header */}
                     <header className="bg-slate-900/90 backdrop-blur-md shadow-lg p-4 border-b border-yellow-500/40 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
                         <div className="flex items-center space-x-3">
                             <span className="text-2xl md:text-3xl">👑</span>
                             <div>
                                 <h1 className="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
                                 <p className="text-[11px] md:text-xs text-gray-400 tracking-wide">
-                                    Supabase ডাটাবেজ {sbReady ? <span className="text-green-400 font-bold">কানেক্টেড ✅</span> : <span className="text-yellow-400 animate-pulse">কানেক্ট হচ্ছে... 🔄</span>} {isAdmin && <span className="bg-red-600/90 text-white px-2 py-0.5 rounded-full text-[10px] ml-2 font-bold border border-red-400">এডমিন মোড</span>}
+                                    Supabase ডাটাবেজ <span className="text-green-400 font-bold">ডাইরেক্ট কানেক্টেড ✅</span> {isAdmin && <span className="bg-red-600/90 text-white px-2 py-0.5 rounded-full text-[10px] ml-2 font-bold border border-red-400">এডমিন মোড</span>}
                                 </p>
                             </div>
                         </div>
@@ -232,7 +208,6 @@
                         </div>
                     </header>
 
-                    {/* Navigation Bar */}
                     <nav className="flex justify-center bg-slate-800/80 backdrop-blur p-2.5 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
                         <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>হোম ও নোটিশ</button>
                         <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
@@ -246,7 +221,6 @@
                             </div>
                         ) : (
                             <>
-                                {/* HOME TAB */}
                                 {activeTab === 'home' && (
                                     <div className="space-y-6">
                                         <div className="bg-slate-800/90 p-6 rounded-2xl border border-yellow-500/35 shadow-xl">
@@ -263,7 +237,6 @@
                                             </div>
                                         </div>
 
-                                        {/* Registered Players Table */}
                                         <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-4">
                                             <div className="flex justify-between items-center border-b border-slate-700 pb-3">
                                                 <h2 className="text-xl font-extrabold text-yellow-400">📋 রেজিষ্ট্রেশনকৃত খেলোয়ারের তালিকা</h2>
@@ -305,7 +278,6 @@
                                     </div>
                                 )}
 
-                                {/* GROUPS TAB */}
                                 {activeTab === 'groups' && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {Object.keys(groupsData).map(groupName => (
@@ -331,7 +303,6 @@
                                     </div>
                                 )}
 
-                                {/* ADMIN TAB */}
                                 {activeTab === 'admin' && !isAdmin && (
                                     <div className="flex justify-center items-center py-10">
                                         <div className="bg-slate-800 p-8 rounded-3xl border border-yellow-500/40 w-full max-w-md shadow-2xl space-y-6">
@@ -346,11 +317,10 @@
                                     </div>
                                 )}
 
-                                {/* ADMIN DASHBOARD */}
                                 {activeTab === 'dashboard' && isAdmin && (
                                     <div className="space-y-8">
                                         <div className="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
-                                            <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">👤 খেলোয়াড় এন্ট্রি ফরম (Supabase Live Save)</h3>
+                                            <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">👤 খেলোয়াড় এন্ট্রি ফরম (Direct REST API)</h3>
                                             <form onSubmit={saveSinglePlayer} className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                                 <select value={singlePlayerForm.group} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, group: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
                                                     <option value="গ্রুপ এ">গ্রুপ এ</option>
@@ -367,7 +337,7 @@
                                                     <option value="LOW">LOW</option>
                                                 </select>
                                                 <button type="submit" className="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-3">
-                                                    Supabase এ ডাটা সেভ করুন
+                                                    Supabase-এ সরাসরি সেভ করুন
                                                 </button>
                                             </form>
                                         </div>
@@ -384,7 +354,7 @@
             );
         }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        ReactDOM.createRoot(defaultGroups ? document.getElementById('root') : null).render(<App />);
     </script>
 </body>
 </html>
