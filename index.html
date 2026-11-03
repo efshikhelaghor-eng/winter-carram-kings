@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 text-white font-sans min-h-screen">
+<body class="bg-gray-950 text-white font-sans min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
-        // Supabase Credentials
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
 
@@ -29,30 +28,28 @@
             const [passInput, setPassInput] = React.useState('');
             const [loginError, setLoginError] = React.useState('');
 
-            const defaultGroups = {
+            const [groupsData, setGroupsData] = React.useState({
                 'গ্রুপ এ': [],
                 'গ্রুপ বি': [],
                 'গ্রুপ সি': [],
                 'গ্রুপ ডি': []
-            };
-
-            const [groupsData, setGroupsData] = React.useState(defaultGroups);
+            });
             const [notices, setNotices] = React.useState([]);
 
-            // Direct REST API Fetch from Supabase (No CDN dependency)
-            const fetchDataFromSupabase = async () => {
+            // Load data via Direct REST API
+            const loadData = async () => {
                 setLoading(true);
                 try {
-                    const response = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
                             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                         }
                     });
-                    const teamsData = await response.json();
-                    if (Array.isArray(teamsData)) {
+                    const teams = await res.json();
+                    if (Array.isArray(teams)) {
                         const formatted = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
-                        teamsData.forEach(item => {
+                        teams.forEach(item => {
                             if (item.group_name && formatted[item.group_name] && item.data) {
                                 formatted[item.group_name].push(item.data);
                             }
@@ -60,28 +57,28 @@
                         setGroupsData(formatted);
                     }
 
-                    const noticeRes = await fetch(`${SUPABASE_URL}/rest/v1/notices?select=*&order=created_at.desc`, {
+                    const noticeRes = await fetch(`${SUPABASE_URL}/rest/v1/notices?select=*`, {
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
                             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                         }
                     });
-                    const noticesData = await noticeRes.json();
-                    if (Array.isArray(noticesData)) {
-                        setNotices(noticesData.map(n => ({ id: n.id, text: n.text, date: n.date })));
+                    const nots = await noticeRes.json();
+                    if (Array.isArray(nots)) {
+                        setNotices(nots);
                     }
-                } catch (err) {
-                    console.error("Fetch Error:", err);
+                } catch (e) {
+                    console.error("Load error:", e);
                 } finally {
                     setLoading(false);
                 }
             };
 
             React.useEffect(() => {
-                fetchDataFromSupabase();
+                loadData();
             }, []);
 
-            const [singlePlayerForm, setSinglePlayerForm] = React.useState({
+            const [form, setForm] = React.useState({
                 name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: ''
             });
 
@@ -96,38 +93,27 @@
                 }
             };
 
-            const handleLogout = () => {
-                setIsAdmin(false);
-                setEmailInput('');
-                setPassInput('');
-                setActiveTab('home');
-            };
-
-            // Direct REST API Insert to Supabase
-            const saveSinglePlayer = async (e) => {
+            const handleSave = async (e) => {
                 e.preventDefault();
-                if (!singlePlayerForm.name || !singlePlayerForm.group) {
-                    alert('অনুগ্রহ করে খেলোয়াড়ের নাম ও গ্রুপ পূরণ করুন!');
+                if (!form.name) {
+                    alert('খেলোয়াড়ের নাম দিন!');
                     return;
                 }
 
-                const group = singlePlayerForm.group;
-                const groupTeams = [...(groupsData[group] || [])];
-                
-                const generatedId = Date.now();
-                const newTeamObj = {
-                    id: generatedId, 
-                    serial: String(groupTeams.length + 1).padStart(2, '0'), 
-                    teamName: singlePlayerForm.teamName || 'টিম ' + (groupTeams.length + 1), 
-                    address: singlePlayerForm.address,
-                    player1: singlePlayerForm.name, 
-                    cat1: singlePlayerForm.category, 
-                    phone1: singlePlayerForm.phone,
-                    player2: 'অপেক্ষমাণ', 
-                    cat2: 'MEDIUM', 
+                const groupTeams = groupsData[form.group] || [];
+                const newObj = {
+                    id: Date.now(),
+                    serial: String(groupTeams.length + 1).padStart(2, '0'),
+                    teamName: form.teamName || 'টিম ' + (groupTeams.length + 1),
+                    address: form.address,
+                    player1: form.name,
+                    cat1: form.category,
+                    phone1: form.phone,
+                    player2: 'অপেক্ষমাণ',
+                    cat2: 'MEDIUM',
                     phone2: ''
                 };
-                
+
                 try {
                     const response = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
                         method: 'POST',
@@ -138,139 +124,107 @@
                             'Prefer': 'return=minimal'
                         },
                         body: JSON.stringify({
-                            id: generatedId,
-                            group_name: group,
-                            data: newTeamObj
+                            id: newObj.id,
+                            group_name: form.group,
+                            data: newObj
                         })
                     });
 
                     if (!response.ok) {
-                        const errData = await response.json();
-                        alert("⚠️ ডাটাবেজে সেভ হয়নি! এরর: " + (errData.message || response.statusText));
+                        const err = await response.json();
+                        alert("সেভ হয়নি: " + (err.message || response.statusText));
                         return;
                     }
 
-                    alert('✅ সফলভাবে Supabase ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
-                    setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
-                    await fetchDataFromSupabase();
+                    alert('✅ সফলভাবে ডাটাবেজে সেভ হয়েছে!');
+                    setForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
+                    loadData();
                 } catch (err) {
-                    console.error("Network/Exception Error:", err);
-                    alert("⚠️ নেটওয়ার্ক সমস্যা বা সংযোগে বাধা পেয়েছে!");
+                    alert("নেটওয়ার্ক এরর!");
                 }
             };
 
-            const getAllRegisteredPlayers = () => {
+            const getAllPlayers = () => {
                 let list = [];
-                let globalSerial = 1;
+                let c = 1;
                 Object.keys(groupsData).forEach(g => {
                     groupsData[g].forEach(t => {
                         if (t.player1) {
-                            list.push({ 
-                                serial: String(globalSerial++).padStart(2, '0'),
-                                name: t.player1, phone: t.phone1, category: t.cat1, teamName: t.teamName, address: t.address, groupName: g 
-                            });
+                            list.push({ serial: String(c++).padStart(2, '0'), ...t, groupName: g });
                         }
                     });
                 });
                 return list;
             };
 
-            const getCategoryBadge = (cat) => {
-                let color = "bg-gray-700 text-gray-200 border-gray-600";
-                if (cat === 'HIGH') color = "bg-red-500/20 text-red-400 border-red-500/30";
-                else if (cat === 'MEDIUM') color = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-                else if (cat === 'LOW') color = "bg-green-500/20 text-green-400 border-green-500/30";
-                return <span className={`px-2 py-0.5 rounded text-xs border font-semibold ml-1.5 inline-block ${color}`}>{cat}</span>;
-            };
-
             return (
-                <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100 font-sans">
-                    <header className="bg-slate-900/90 backdrop-blur-md shadow-lg p-4 border-b border-yellow-500/40 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
-                        <div className="flex items-center space-x-3">
-                            <span className="text-2xl md:text-3xl">👑</span>
-                            <div>
-                                <h1 className="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-                                <p className="text-[11px] md:text-xs text-gray-400 tracking-wide">
-                                    Supabase ডাটাবেজ <span className="text-green-400 font-bold">ডাইরেক্ট কানেক্টেড ✅</span> {isAdmin && <span className="bg-red-600/90 text-white px-2 py-0.5 rounded-full text-[10px] ml-2 font-bold border border-red-400">এডমিন মোড</span>}
-                                </p>
-                            </div>
+                <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+                    {/* Header */}
+                    <header className="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50">
+                        <div>
+                            <h1 className="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
+                            <p className="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টেড ✅</p>
                         </div>
                         <div>
                             {isAdmin ? (
-                                <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md transition flex items-center gap-1.5">
-                                    🔒 লগআউট
-                                </button>
+                                <button onClick={() => { setIsAdmin(false); setActiveTab('home'); }} className="bg-red-600 text-white px-3 py-1.5 rounded text-xs font-bold">লগআউট</button>
                             ) : (
-                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 hover:bg-yellow-400 text-gray-950 px-4 py-2 rounded-xl text-sm font-extrabold shadow-md transition flex items-center gap-1.5">
-                                    🔑 এডমিন লগইন
-                                </button>
+                                <button onClick={() => setActiveTab('admin')} className="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold">এডমিন লগইন</button>
                             )}
                         </div>
                     </header>
 
-                    <nav className="flex justify-center bg-slate-800/80 backdrop-blur p-2.5 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
-                        <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>হোম ও নোটিশ</button>
-                        <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
-                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-900/80 text-red-200'}`}>⚙️ এডমিন প্যানেল</button>}
+                    {/* Nav */}
+                    <nav className="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700">
+                        <button onClick={() => setActiveTab('home')} className={`px-4 py-1.5 rounded text-sm font-bold ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700 text-gray-200'}`}>হোম</button>
+                        <button onClick={() => setActiveTab('groups')} className={`px-4 py-1.5 rounded text-sm font-bold ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700 text-gray-200'}`}>গ্রুপ</button>
+                        {isAdmin && <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-1.5 rounded text-sm font-bold ${activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'bg-red-900 text-red-200'}`}>এডমিন প্যানেল</button>}
                     </nav>
 
-                    <main className="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-6">
+                    <main className="flex-grow p-4 max-w-4xl mx-auto w-full space-y-6">
                         {loading ? (
-                            <div className="text-center py-20 text-yellow-400 font-bold animate-pulse text-lg">
-                                🔄 Supabase থেকে ডাটা লোড হচ্ছে...
-                            </div>
+                            <div className="text-center py-20 text-yellow-400 font-bold">লোড হচ্ছে...</div>
                         ) : (
                             <>
                                 {activeTab === 'home' && (
                                     <div className="space-y-6">
-                                        <div className="bg-slate-800/90 p-6 rounded-2xl border border-yellow-500/35 shadow-xl">
-                                            <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">📢 নোটিশ ও ঘোষণা</h2>
-                                            <div className="space-y-3">
-                                                {notices.length === 0 ? (
-                                                    <p className="text-gray-400 text-xs">কোনো নোটিশ পাওয়া যায়নি।</p>
-                                                ) : notices.map(n => (
-                                                    <div key={n.id} className="bg-slate-700/60 p-4 rounded-xl border border-slate-600/80 shadow">
-                                                        <p className="text-gray-100 text-base">{n.text}</p>
-                                                        <span className="text-xs text-gray-400 mt-2 block">তারিখ: {n.date}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                        <div className="bg-slate-800 p-4 rounded-xl border border-yellow-500/30">
+                                            <h2 className="text-lg font-bold text-yellow-400 mb-3">📢 নোটিশ</h2>
+                                            {notices.length === 0 ? <p className="text-xs text-gray-400">কোনো নোটিশ নেই।</p> : notices.map(n => (
+                                                <div key={n.id} className="bg-slate-700 p-3 rounded mb-2">
+                                                    <p className="text-sm">{n.text}</p>
+                                                    <span className="text-[10px] text-gray-400">{n.date}</span>
+                                                </div>
+                                            ))}
                                         </div>
 
-                                        <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-4">
-                                            <div className="flex justify-between items-center border-b border-slate-700 pb-3">
-                                                <h2 className="text-xl font-extrabold text-yellow-400">📋 রেজিষ্ট্রেশনকৃত খেলোয়ারের তালিকা</h2>
-                                                <span className="text-xs bg-slate-700 px-3 py-1 rounded-full text-yellow-300 font-bold">মোট: {getAllRegisteredPlayers().length} জন</span>
-                                            </div>
+                                        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                            <h2 className="text-lg font-bold text-yellow-400 mb-3">📋 নিবন্ধিত খেলোয়াড়বৃন্দ (মোট: {getAllPlayers().length} জন)</h2>
                                             <div className="overflow-x-auto">
-                                                <table className="w-full text-left text-sm border-collapse">
+                                                <table className="w-full text-left text-xs md:text-sm">
                                                     <thead>
-                                                        <tr className="bg-slate-700/80 text-yellow-400 border-b border-slate-600">
-                                                            <th className="p-3">ক্রমিক</th>
-                                                            <th className="p-3">খেলোয়াড়ের নাম</th>
-                                                            <th className="p-3">ক্যাটাগরি</th>
-                                                            <th className="p-3">মোবাইল</th>
-                                                            <th className="p-3">টিম</th>
-                                                            <th className="p-3">গ্রুপ</th>
+                                                        <tr className="bg-slate-700 text-yellow-400">
+                                                            <th className="p-2">ক্রমিক</th>
+                                                            <th className="p-2">নাম</th>
+                                                            <th className="p-2">ক্যাটাগরি</th>
+                                                            <th className="p-2">মোবাইল</th>
+                                                            <th className="p-2">টিম</th>
+                                                            <th className="p-2">গ্রুপ</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="divide-y divide-slate-700 text-gray-200">
-                                                        {getAllRegisteredPlayers().length === 0 ? (
-                                                            <tr>
-                                                                <td colSpan="6" className="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td>
+                                                    <tbody className="divide-y divide-slate-700">
+                                                        {getAllPlayers().length === 0 ? (
+                                                            <tr><td colSpan="6" className="p-4 text-center text-gray-400">কোনো খেলোয়াড় নেই।</td></tr>
+                                                        ) : getAllPlayers().map((p, i) => (
+                                                            <tr key={i}>
+                                                                <td className="p-2 text-yellow-400 font-bold">#{p.serial}</td>
+                                                                <td className="p-2 font-bold">{p.player1}</td>
+                                                                <td className="p-2"><span className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 text-xs">{p.cat1}</span></td>
+                                                                <td className="p-2">{p.phone1 || 'N/A'}</td>
+                                                                <td className="p-2">{p.teamName}</td>
+                                                                <td className="p-2 text-yellow-400">{p.groupName}</td>
                                                             </tr>
-                                                        ) : (
-                                                            getAllRegisteredPlayers().map((p, idx) => (
-                                                                <tr key={idx} className="hover:bg-slate-700/40">
-                                                                    <td className="p-3 text-yellow-400 font-bold">#{p.serial}</td>
-                                                                    <td className="p-3 font-bold text-white">{p.name}</td>
-                                                                    <td className="p-3">{getCategoryBadge(p.category)}</td>
-                                                                    <td className="p-3 text-gray-300">{p.phone || 'N/A'}</td>
-                                                                    <td className="p-3">{p.teamName}</td>
-                                                                    <td className="p-3 text-yellow-400 font-semibold">{p.groupName}</td>
-                                                                </tr>
-                                                            ))
-                                                        )}
+                                                        ))}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -279,82 +233,70 @@
                                 )}
 
                                 {activeTab === 'groups' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {Object.keys(groupsData).map(groupName => (
-                                            <div key={groupName} className="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 shadow-lg">
-                                                <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2 mb-3">{groupName}</h3>
-                                                {groupsData[groupName].length === 0 ? (
-                                                    <p className="text-gray-400 text-xs py-4 text-center">এই গ্রুপে কোনো দল নিবন্ধিত হয়নি।</p>
-                                                ) : (
-                                                    <div className="space-y-2">
-                                                        {groupsData[groupName].map((t, idx) => (
-                                                            <div key={idx} className="bg-slate-700/50 p-3 rounded-xl border border-slate-600/50 flex justify-between items-center text-sm">
-                                                                <div>
-                                                                    <p className="font-bold text-white">{t.teamName}</p>
-                                                                    <p className="text-xs text-gray-300">👤 {t.player1} {getCategoryBadge(t.cat1)}</p>
-                                                                </div>
-                                                                <span className="text-xs text-gray-400">{t.phone1}</span>
-                                                            </div>
-                                                        ))}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {Object.keys(groupsData).map(g => (
+                                            <div key={g} className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                                <h3 className="font-bold text-yellow-400 border-b border-slate-700 pb-2 mb-3">{g}</h3>
+                                                {groupsData[g].length === 0 ? <p className="text-xs text-gray-400">খালি</p> : groupsData[g].map((t, i) => (
+                                                    <div key={i} className="bg-slate-700/50 p-2 rounded mb-2 flex justify-between text-xs">
+                                                        <div>
+                                                            <p className="font-bold">{t.teamName}</p>
+                                                            <p className="text-gray-300">👤 {t.player1}</p>
+                                                        </div>
+                                                        <span>{t.phone1}</span>
                                                     </div>
-                                                )}
+                                                ))}
                                             </div>
                                         ))}
                                     </div>
                                 )}
 
                                 {activeTab === 'admin' && !isAdmin && (
-                                    <div className="flex justify-center items-center py-10">
-                                        <div className="bg-slate-800 p-8 rounded-3xl border border-yellow-500/40 w-full max-w-md shadow-2xl space-y-6">
-                                            <h2 className="text-2xl font-black text-yellow-400 text-center">এডমিন লগইন</h2>
+                                    <div className="flex justify-center py-10">
+                                        <form onSubmit={handleLogin} className="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 w-full max-w-sm space-y-4">
+                                            <h2 className="text-xl font-bold text-yellow-400 text-center">এডমিন লগইন</h2>
                                             {loginError && <p className="text-red-400 text-xs text-center font-bold">{loginError}</p>}
-                                            <form onSubmit={handleLogin} className="space-y-4">
-                                                <input type="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="ইমেইল" required className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white text-sm" />
-                                                <input type="password" value={passInput} onChange={(e) => setPassInput(e.target.value)} placeholder="পাসওয়ার্ড" required className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white text-sm" />
-                                                <button type="submit" className="w-full bg-yellow-500 text-gray-950 font-black py-3 rounded-xl text-sm">লগইন করুন</button>
-                                            </form>
-                                        </div>
+                                            <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder="ইমেইল" required className="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm" />
+                                            <input type="password" value={passInput} onChange={e => setPassInput(e.target.value)} placeholder="পাসওয়ার্ড" required className="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm" />
+                                            <button type="submit" className="w-full bg-yellow-500 text-gray-950 font-bold py-2.5 rounded text-sm">লগইন করুন</button>
+                                        </form>
                                     </div>
                                 )}
 
                                 {activeTab === 'dashboard' && isAdmin && (
-                                    <div className="space-y-8">
-                                        <div className="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
-                                            <h3 className="text-lg font-bold text-yellow-400 border-b border-slate-700 pb-2">👤 খেলোয়াড় এন্ট্রি ফরম (Direct REST API)</h3>
-                                            <form onSubmit={saveSinglePlayer} className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                <select value={singlePlayerForm.group} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, group: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
-                                                    <option value="গ্রুপ এ">গ্রুপ এ</option>
-                                                    <option value="গ্রুপ বি">গ্রুপ বি</option>
-                                                    <option value="গ্রুপ সি">গ্রুপ সি</option>
-                                                    <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                                                </select>
-                                                <input type="text" placeholder="টিমের নাম" value={singlePlayerForm.teamName} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, teamName: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
-                                                <input type="text" placeholder="খেলোয়াড়ের নাম *" value={singlePlayerForm.name} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, name: e.target.value })} required className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
-                                                <input type="text" placeholder="মোবাইল" value={singlePlayerForm.phone} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, phone: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white" />
-                                                <select value={singlePlayerForm.category} onChange={e => setSinglePlayerForm({ ...singlePlayerForm, category: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-yellow-400 font-bold">
-                                                    <option value="HIGH">HIGH</option>
-                                                    <option value="MEDIUM">MEDIUM</option>
-                                                    <option value="LOW">LOW</option>
-                                                </select>
-                                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm md:col-span-3">
-                                                    Supabase-এ সরাসরি সেভ করুন
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <div className="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4">
+                                        <h3 className="text-base font-bold text-yellow-400 border-b border-slate-700 pb-2">👤 খেলোয়াড় এন্ট্রি ফরম</h3>
+                                        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                            <select value={form.group} onChange={e => setForm({...form, group: e.target.value})} className="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                                                <option value="গ্রুপ এ">গ্রুপ এ</option>
+                                                <option value="গ্রুপ বি">গ্রুপ বি</option>
+                                                <option value="গ্রুপ সি">গ্রুপ সি</option>
+                                                <option value="গ্রুপ ডি">গ্রুপ ডি</option>
+                                            </select>
+                                            <input type="text" placeholder="টিমের নাম" value={form.teamName} onChange={e => setForm({...form, teamName: e.target.value})} className="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm" />
+                                            <input type="text" placeholder="খেলোয়াড়ের নাম *" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm" />
+                                            <input type="text" placeholder="মোবাইল" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm" />
+                                            <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                                                <option value="HIGH">HIGH</option>
+                                                <option value="MEDIUM">MEDIUM</option>
+                                                <option value="LOW">LOW</option>
+                                            </select>
+                                            <button type="submit" className="bg-yellow-500 text-gray-950 font-bold py-2.5 rounded text-sm md:col-span-3">ডাটাবেজে সেভ করুন</button>
+                                        </form>
                                     </div>
                                 )}
                             </>
                         )}
                     </main>
 
-                    <footer className="bg-slate-900 text-center p-4 text-xs text-gray-400 border-t border-slate-800">
-                        © 2026 Winter Carram Kings Battle. All rights reserved.
+                    <footer className="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800">
+                        © 2026 Winter Carram Kings Battle
                     </footer>
                 </div>
             );
         }
 
-        ReactDOM.createRoot(defaultGroups ? document.getElementById('root') : null).render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
