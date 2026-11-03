@@ -74,22 +74,119 @@
             </div>
         </div>
 
-        <!-- ADMIN DASHBOARD TAB (TEAM FORM WITH 1-2 PLAYERS & TEAM NAME) -->
-        <div id="tabDashboard" class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4 hidden">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                <h3 id="formTitle" class="text-base font-bold text-yellow-400">🛡️ নতুন টিম তৈরি ও খেলোয়াড় এন্ট্রি ফরম</h3>
-                <button id="cancelEditBtn" onclick="resetForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
-            </div>
+        <!-- ADMIN DASHBOARD TAB (SEPARATE FORMS FOR NEW TEAM AND SINGLE PLAYER ENTRY) -->
+        <div id="tabDashboard" class="space-y-6 hidden">
             
-            <form onsubmit="saveTeam(event)" class="space-y-4">
-                <input type="hidden" id="editRowId" value="">
-                <input type="hidden" id="existingImgUrl1" value="">
-                <input type="hidden" id="existingImgUrl2" value="">
+            <!-- FORM 1: NEW TEAM CREATION FORM (TEAM WITH 1 OR 2 PLAYERS) -->
+            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                    <h3 id="teamFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
+                        🛡️ ১. নতুন টিম তৈরি ফরম (টিমের নাম + ১/২ জন খেলোয়াড়)
+                    </h3>
+                    <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
+                </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                <form onsubmit="saveTeam(event)" class="space-y-4">
+                    <input type="hidden" id="editRowId" value="">
+                    <input type="hidden" id="existingImgUrl1" value="">
+                    <input type="hidden" id="existingImgUrl2" value="">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">গ্রুপ নির্বাচন করুন *</label>
+                            <select id="fGroup" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                                <option value="গ্রুপ এ">গ্রুপ এ</option>
+                                <option value="গ্রুপ বি">গ্রুপ বি</option>
+                                <option value="গ্রুপ সি">গ্রুপ সি</option>
+                                <option value="গ্রুপ ডি">গ্রুপ ডি</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">টিমের নাম *</label>
+                            <input type="text" id="fTeamName" placeholder="টিমের নাম লিখুন (যেমন: ড্রাগন কিংস)" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white font-bold">
+                        </div>
+                    </div>
+
+                    <!-- PLAYER 1 SECTION -->
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👤 ১ম খেলোয়াড়ের তথ্য (প্রধান)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
+                                <input type="text" id="fName1" placeholder="নাম" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
+                                <input type="text" id="fPhone1" placeholder="মোবাইল" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
+                                <input type="text" id="fAddress1" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
+                                <select id="fCat1" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
+                                    <option value="HIGH">HIGH</option>
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="LOW">LOW</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs text-gray-400 block mb-1">ছবি (Supabase Storage)</label>
+                                <input type="file" id="fImage1" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PLAYER 2 SECTION (OPTIONAL) -->
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👥 ২য় খেলোয়াড়ের তথ্য (পার্টনার / ঐচ্ছিক)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">পার্টনারের নাম</label>
+                                <input type="text" id="fName2" placeholder="নাম (যদি থাকে)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
+                                <input type="text" id="fPhone2" placeholder="মোবাইল" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
+                                <input type="text" id="fAddress2" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
+                                <select id="fCat2" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="HIGH">HIGH</option>
+                                    <option value="LOW">LOW</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs text-gray-400 block mb-1">ছবি (Supabase Storage)</label>
+                                <input type="file" id="fImage2" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="teamSubmitBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm transition shadow-lg">
+                        💾 টিম হিসেবে ডাটাবেজে সেভ করুন
+                    </button>
+                </form>
+            </div>
+
+            <!-- FORM 2: SINGLE PLAYER ENTRY FORM (INDIVIDUAL PLAYER ADD) -->
+            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                    <h3 id="singleFormTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
+                        👤 ২. একক খেলোয়াড় এন্ট্রি ফরম (আলাদা খেলোয়াড় এন্ট্রি)
+                    </h3>
+                </div>
+                
+                <form onsubmit="saveSinglePlayer(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">গ্রুপ নির্বাচন করুন *</label>
-                        <select id="fGroup" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                        <select id="sfGroup" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
                             <option value="গ্রুপ এ">গ্রুপ এ</option>
                             <option value="গ্রুপ বি">গ্রুপ বি</option>
                             <option value="গ্রুপ সি">গ্রুপ সি</option>
@@ -97,77 +194,40 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-xs text-gray-400 block mb-1">টিমের নাম *</label>
-                        <input type="text" id="fTeamName" placeholder="টিমের নাম লিখুন (যেমন: টাইগার্স)" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white font-bold">
+                        <label class="text-xs text-gray-400 block mb-1">টিমের নাম (ঐচ্ছিক / ডিফল্ট অটো)</label>
+                        <input type="text" id="sfTeamName" placeholder="টিমের নাম (ফাঁকা রাখলে অটো হবে)" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
                     </div>
-                </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
+                        <input type="text" id="sfName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
+                        <input type="text" id="sfPhone" placeholder="মোবাইল নম্বর" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
+                        <input type="text" id="sfAddress" placeholder="ঠিকানা" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
+                        <select id="sfCat" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (Supabase Storage)</label>
+                        <input type="file" id="sfImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-gray-300">
+                    </div>
+                    
+                    <button type="submit" id="singleSubmitBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-sm md:col-span-2 transition shadow-lg">
+                        💾 একক খেলোয়াড় সেভ করুন
+                    </button>
+                </form>
+            </div>
 
-                <!-- PLAYER 1 SECTION -->
-                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
-                    <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👤 ১ম খেলোয়াড়ের তথ্য (প্রধান)</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
-                            <input type="text" id="fName1" placeholder="নাম" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
-                            <input type="text" id="fPhone1" placeholder="মোবাইল" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
-                            <input type="text" id="fAddress1" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
-                            <select id="fCat1" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
-                                <option value="HIGH">HIGH</option>
-                                <option value="MEDIUM">MEDIUM</option>
-                                <option value="LOW">LOW</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="text-xs text-gray-400 block mb-1">ছবি (Supabase Storage)</label>
-                            <input type="file" id="fImage1" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PLAYER 2 SECTION (OPTIONAL) -->
-                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
-                    <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👥 ২য় খেলোয়াড়ের তথ্য (পার্টনার / ঐচ্ছিক)</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">পার্টনারের নাম</label>
-                            <input type="text" id="fName2" placeholder="নাম (যদি থাকে)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
-                            <input type="text" id="fPhone2" placeholder="মোবাইল" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
-                            <input type="text" id="fAddress2" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
-                            <select id="fCat2" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
-                                <option value="MEDIUM">MEDIUM</option>
-                                <option value="HIGH">HIGH</option>
-                                <option value="LOW">LOW</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="text-xs text-gray-400 block mb-1">ছবি (Supabase Storage)</label>
-                            <input type="file" id="fImage2" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300">
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" id="submitBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-3 rounded-xl text-sm transition shadow-lg">
-                    💾 ডাটাবেজে টিম সেভ করুন
-                </button>
-            </form>
         </div>
 
     </main>
@@ -477,6 +537,7 @@
             }
         }
 
+        // SAVE / UPDATE FULL TEAM (FORM 1)
         async function saveTeam(e) {
             e.preventDefault();
             const editId = document.getElementById('editRowId').value;
@@ -506,7 +567,7 @@
                 return;
             }
 
-            const submitBtn = document.getElementById('submitBtn');
+            const submitBtn = document.getElementById('teamSubmitBtn');
             submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
             submitBtn.disabled = true;
 
@@ -579,14 +640,101 @@
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
                 } else {
                     alert(editId ? '✅ টিমের তথ্য এডিট করে সফলভাবে আপডেট করা হয়েছে!' : '✅ সফলভাবে টিম ও খেলোয়াড় সেভ হয়েছে!');
-                    resetForm();
+                    resetTeamForm();
                     switchTab('home');
                     await loadData();
                 }
             } catch(err) {
                 alert("নেটওয়ার্ক সমস্যা হয়েছে!");
             } finally {
-                submitBtn.innerText = "💾 ডাটাবেজে টিম সেভ করুন";
+                submitBtn.innerText = "💾 টিম হিসেবে ডাটাবেজে সেভ করুন";
+                submitBtn.disabled = false;
+            }
+        }
+
+        // SAVE SINGLE PLAYER (FORM 2)
+        async function saveSinglePlayer(e) {
+            e.preventDefault();
+            const group = document.getElementById('sfGroup').value;
+            const teamName = document.getElementById('sfTeamName').value.trim();
+            const name = document.getElementById('sfName').value.trim();
+            const phone = document.getElementById('sfPhone').value.trim();
+            const address = document.getElementById('sfAddress').value.trim();
+            const category = document.getElementById('sfCat').value;
+            const imgFile = document.getElementById('sfImage').files[0];
+
+            if(!name) {
+                alert('খেলোয়াড়ের নাম আবশ্যক!');
+                return;
+            }
+
+            const submitBtn = document.getElementById('singleSubmitBtn');
+            submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
+            submitBtn.disabled = true;
+
+            let finalImg = '';
+            if(imgFile) {
+                const url = await uploadImage(imgFile);
+                if(url) finalImg = url;
+            }
+
+            let currentGroupCount = 0;
+            globalTeamsData.forEach(item => {
+                if(item.group_name === group) currentGroupCount++;
+            });
+
+            const targetId = String(Date.now());
+            const newTeamObj = {
+                id: targetId,
+                teamName: teamName || ('টিম ' + (currentGroupCount + 1)),
+                player1: name,
+                phone1: phone,
+                address1: address,
+                address: address,
+                cat1: category,
+                imageUrl1: finalImg,
+                imageUrl: finalImg,
+
+                player2: 'অপেক্ষমাণ',
+                phone2: '',
+                address2: '',
+                cat2: 'MEDIUM',
+                imageUrl2: ''
+            };
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        id: targetId,
+                        group_name: group,
+                        data: newTeamObj
+                    })
+                });
+
+                if(!res.ok) {
+                    const err = await res.json();
+                    alert("সেভ হয়নি: " + (err.message || res.statusText));
+                } else {
+                    alert('✅ সফলভাবে একক খেলোয়াড় সেভ হয়েছে!');
+                    document.getElementById('sfTeamName').value = '';
+                    document.getElementById('sfName').value = '';
+                    document.getElementById('sfPhone').value = '';
+                    document.getElementById('sfAddress').value = '';
+                    document.getElementById('sfImage').value = '';
+                    switchTab('home');
+                    await loadData();
+                }
+            } catch(err) {
+                alert("নেটওয়ার্ক সমস্যা হয়েছে!");
+            } finally {
+                submitBtn.innerText = "💾 একক খেলোয়াড় সেভ করুন";
                 submitBtn.disabled = false;
             }
         }
@@ -611,11 +759,12 @@
             document.getElementById('fCat2').value = item.data.cat2 || 'MEDIUM';
             document.getElementById('existingImgUrl2').value = item.data.imageUrl2 || '';
 
-            document.getElementById('formTitle').innerText = "✏️ টিমের তথ্য এডিট ফরম";
-            document.getElementById('submitBtn').innerText = "🔄 টিমের তথ্য আপডেট করুন";
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            document.getElementById('teamFormTitle').innerText = "✏️ টিমের তথ্য এডিট ফরম";
+            document.getElementById('teamSubmitBtn').innerText = "🔄 টিমের তথ্য আপডেট করুন";
+            document.getElementById('cancelTeamEditBtn').classList.remove('hidden');
 
             switchTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function deleteTeam(dbId) {
@@ -641,7 +790,7 @@
             }
         }
 
-        function resetForm() {
+        function resetTeamForm() {
             document.getElementById('editRowId').value = '';
             document.getElementById('existingImgUrl1').value = '';
             document.getElementById('existingImgUrl2').value = '';
@@ -657,9 +806,9 @@
             document.getElementById('fAddress2').value = '';
             document.getElementById('fImage2').value = '';
 
-            document.getElementById('formTitle').innerText = "🛡️ নতুন টিম তৈরি ও খেলোয়াড় এন্ট্রি ফরম";
-            document.getElementById('submitBtn').innerText = "💾 ডাটাবেজে টিম সেভ করুন";
-            document.getElementById('cancelEditBtn').classList.add('hidden');
+            document.getElementById('teamFormTitle').innerText = "🛡️ ১. নতুন টিম তৈরি ফরম (টিমের নাম + ১/২ জন খেলোয়াড়)";
+            document.getElementById('teamSubmitBtn').innerText = "💾 টিম হিসেবে ডাটাবেজে সেভ করুন";
+            document.getElementById('cancelTeamEditBtn').classList.add('hidden');
         }
 
         loadData();
