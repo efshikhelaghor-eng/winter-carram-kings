@@ -59,10 +59,11 @@
                 }
                 setLoading(true);
                 try {
-                    // Fetch Teams
                     const { data: teamsData, error: teamsError } = await supabase.from('teams').select('*');
-                    if (teamsError) console.error("Teams Fetch Error:", teamsError);
-                    if (teamsData && teamsData.length > 0) {
+                    if (teamsError) {
+                        console.error("Teams Fetch Error:", teamsError);
+                    }
+                    if (teamsData) {
                         const formatted = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
                         teamsData.forEach(item => {
                             if (item.group_name && formatted[item.group_name] && item.data) {
@@ -72,7 +73,6 @@
                         setGroupsData(formatted);
                     }
 
-                    // Fetch Notices
                     const { data: noticesData } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
                     if (noticesData) {
                         setNotices(noticesData.map(n => ({ id: n.id, text: n.text, date: n.date })));
@@ -121,8 +121,9 @@
                 const group = singlePlayerForm.group;
                 const groupTeams = [...(groupsData[group] || [])];
                 
+                const generatedId = Date.now();
                 const newTeamObj = {
-                    id: Date.now(), 
+                    id: generatedId, 
                     serial: String(groupTeams.length + 1).padStart(2, '0'), 
                     teamName: singlePlayerForm.teamName || 'টিম ' + (groupTeams.length + 1), 
                     address: singlePlayerForm.address,
@@ -134,22 +135,26 @@
                     phone2: ''
                 };
                 
-                // Supabase ডাটাবেজে এন্ট্রি সেভ
                 if (supabase) {
-                    const { error } = await supabase.from('teams').insert([
-                        { id: newTeamObj.id, group_name: group, data: newTeamObj }
-                    ]);
+                    // Supabase এ ইনসার্ট
+                    const { data, error } = await supabase.from('teams').insert([
+                        { id: generatedId, group_name: group, data: newTeamObj }
+                    ]).select();
+
                     if (error) {
                         console.error("Supabase Save Error:", error);
-                        alert("Supabase-এ সেভ হতে সমস্যা হয়েছে: " + error.message);
-                        return;
+                        alert("⚠️ Supabase ডাটাবেজে সেভ হয়নি! এরর: " + error.message + " (কড: " + error.code + ")");
+                        return; // সেভ না হলে স্টেট আপডেট করবে না
                     }
+
+                    alert('✅ সফলভাবে ডাটাবেজে সেভ হয়েছে!');
+                    // ডাটাবেজ থেকে নতুন করে ফেচ করে কনফার্ম করা
+                    await fetchDataFromSupabase();
+                } else {
+                    alert("Supabase কানেক্টেড নেই!");
                 }
 
-                groupTeams.push(newTeamObj);
-                setGroupsData({ ...groupsData, [group]: groupTeams });
                 setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
-                alert('সফলভাবে ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
             };
 
             const getAllRegisteredPlayers = () => {
