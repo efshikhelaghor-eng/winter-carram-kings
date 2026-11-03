@@ -19,15 +19,17 @@
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
         
-        // Safe Supabase Client Initialisation
-        let supabase = null;
-        try {
-            if (window.supabase && typeof window.supabase.createClient === 'function') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Safe & Dynamic Supabase Client Getter
+        const getSupabase = () => {
+            try {
+                if (window.supabase && typeof window.supabase.createClient === 'function') {
+                    return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
+            } catch (e) {
+                console.error("Supabase Client Error:", e);
             }
-        } catch (e) {
-            console.error("Supabase Init Error:", e);
-        }
+            return null;
+        };
 
         function App() {
             const [activeTab, setActiveTab] = React.useState('home');
@@ -52,14 +54,15 @@
             const [notices, setNotices] = React.useState([]);
 
             const fetchDataFromSupabase = async () => {
-                if (!supabase) {
-                    console.warn("Supabase client not ready");
+                const client = getSupabase();
+                if (!client) {
+                    console.warn("Supabase client not ready yet");
                     setLoading(false);
                     return;
                 }
                 setLoading(true);
                 try {
-                    const { data: teamsData, error: teamsError } = await supabase.from('teams').select('*');
+                    const { data: teamsData, error: teamsError } = await client.from('teams').select('*');
                     if (teamsError) {
                         console.error("Teams Fetch Error:", teamsError);
                     }
@@ -73,7 +76,7 @@
                         setGroupsData(formatted);
                     }
 
-                    const { data: noticesData } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
+                    const { data: noticesData } = await client.from('notices').select('*').order('created_at', { ascending: false });
                     if (noticesData) {
                         setNotices(noticesData.map(n => ({ id: n.id, text: n.text, date: n.date })));
                     }
@@ -85,7 +88,11 @@
             };
 
             React.useEffect(() => {
-                fetchDataFromSupabase();
+                // Slight delay to ensure CDN is fully ready
+                const timer = setTimeout(() => {
+                    fetchDataFromSupabase();
+                }, 500);
+                return () => clearTimeout(timer);
             }, []);
 
             const [singlePlayerForm, setSinglePlayerForm] = React.useState({
@@ -117,8 +124,9 @@
                     return;
                 }
 
-                if (!supabase) {
-                    alert('⚠️ Supabase কানেক্টেড নেই! দয়া করে পেজটি আবার রিফ্রেশ করুন।');
+                const client = getSupabase();
+                if (!client) {
+                    alert('⚠️ Supabase কানেক্ট হতে একটু সময় নিচ্ছে। দয়া করে পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।');
                     return;
                 }
 
@@ -140,7 +148,7 @@
                 };
                 
                 try {
-                    const { error } = await supabase.from('teams').insert([
+                    const { error } = await client.from('teams').insert([
                         { id: generatedId, group_name: group, data: newTeamObj }
                     ]);
 
