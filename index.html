@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টেড ✅</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ ও স্টোরেজ কানেক্টেড ✅</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -22,14 +22,14 @@
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700">
         <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম</button>
         <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">গ্রুপ</button>
-        <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">এডমিন প্যানেল</button>
+        <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
     </nav>
 
     <!-- Main Content Area -->
     <main class="flex-grow p-4 max-w-4xl mx-auto w-full space-y-6">
         
         <!-- LOADING SPINNER -->
-        <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">লোড হচ্ছে...</div>
+        <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
         <!-- HOME TAB -->
         <div id="tabHome" class="space-y-6 hidden">
@@ -47,16 +47,18 @@
                     <table class="w-full text-left text-xs md:text-sm">
                         <thead>
                             <tr class="bg-slate-700 text-yellow-400 border-b border-slate-600">
+                                <th class="p-2">ছবি</th>
                                 <th class="p-2">ক্রমিক</th>
                                 <th class="p-2">নাম</th>
                                 <th class="p-2">ক্যাটাগরি</th>
                                 <th class="p-2">মোবাইল</th>
                                 <th class="p-2">টিম</th>
                                 <th class="p-2">গ্রুপ</th>
+                                <th class="p-2 actionHeader hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody id="playerTableBody" class="divide-y divide-slate-700">
-                            <tr><td colspan="6" class="p-4 text-center text-gray-400">ডেটা লোড হচ্ছে...</td></tr>
+                            <tr><td colspan="8" class="p-4 text-center text-gray-400">ডেটা লোড হচ্ছে...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -85,23 +87,52 @@
 
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4 hidden">
-            <h3 class="text-base font-bold text-yellow-400 border-b border-slate-700 pb-2">👤 খেলোয়াড় এন্ট্রি ফরম</h3>
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                <h3 id="formTitle" class="text-base font-bold text-yellow-400">👤 নতুন খেলোয়াড় এন্ট্রি ফরম</h3>
+                <button id="cancelEditBtn" onclick="resetForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
+            </div>
+            
             <form onsubmit="savePlayer(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <select id="fGroup" class="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
-                    <option value="গ্রুপ এ">গ্রুপ এ</option>
-                    <option value="গ্রুপ বি">গ্রুপ বি</option>
-                    <option value="গ্রুপ সি">গ্রুপ সি</option>
-                    <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                </select>
-                <input type="text" id="fTeam" placeholder="টিমের নাম" class="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
-                <input type="text" id="fName" placeholder="খেলোয়াড়ের নাম *" required class="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
-                <input type="text" id="fPhone" placeholder="মোবাইল" class="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
-                <select id="fCat" class="bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <button type="submit" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded text-sm md:col-span-3">ডাটাবেজে সেভ করুন</button>
+                <input type="hidden" id="editRowId" value="">
+                <input type="hidden" id="existingImgUrl" value="">
+                
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">গ্রুপ সিলেক্ট করুন</label>
+                    <select id="fGroup" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                        <option value="গ্রুপ এ">গ্রুপ এ</option>
+                        <option value="গ্রুপ বি">গ্রুপ বি</option>
+                        <option value="গ্রুপ সি">গ্রুপ সি</option>
+                        <option value="গ্রুপ ডি">গ্রুপ ডি</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">টিমের নাম</label>
+                    <input type="text" id="fTeam" placeholder="টিমের নাম" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
+                    <input type="text" id="fName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
+                    <input type="text" id="fPhone" placeholder="মোবাইল" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
+                    <select id="fCat" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                        <option value="HIGH">HIGH</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="LOW">LOW</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (Supabase Storage)</label>
+                    <input type="file" id="fImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-gray-300">
+                </div>
+                
+                <button type="submit" id="submitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded text-sm md:col-span-3 transition">
+                    💾 ডাটাবেজে সেভ করুন
+                </button>
             </form>
         </div>
 
@@ -160,6 +191,7 @@
                 document.getElementById('authBtn').innerText = "এডমিন লগইন";
                 document.getElementById('navDashboard').classList.add('hidden');
                 switchTab('home');
+                renderData(globalTeamsData);
             } else {
                 const modal = document.getElementById('loginModal');
                 modal.classList.toggle('hidden');
@@ -177,6 +209,7 @@
                 document.getElementById('loginModal').classList.add('hidden');
                 document.getElementById('navDashboard').classList.remove('hidden');
                 errElem.classList.add('hidden');
+                renderData(globalTeamsData);
                 switchTab('dashboard');
             } else {
                 errElem.innerText = "ভুল ইমেইল বা পাসওয়ার্ড!";
@@ -184,6 +217,7 @@
             }
         }
 
+        // Fetch Data from Supabase
         async function loadData() {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
@@ -232,6 +266,7 @@
                     
                     if(item.data.player1) {
                         allPlayers.push({
+                            db_id: item.id,
                             serial: String(globalSeq++).padStart(2, '0'),
                             ...item.data,
                             groupName: item.group_name
@@ -240,9 +275,17 @@
                 }
             });
 
+            // Action Headers Show/Hide
+            const actionHeaders = document.querySelectorAll('.actionHeader');
+            actionHeaders.forEach(el => {
+                if(isAdmin) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            // Render Table
             let tableHtml = '';
             if(allPlayers.length === 0) {
-                tableHtml = '<tr><td colspan="6" class="p-4 text-center text-gray-400">কোনো খেলোয়াড় পাওয়া যায়নি।</td></tr>';
+                tableHtml = `<tr><td colspan="${isAdmin ? 8 : 7}" class="p-4 text-center text-gray-400">কোনো খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
             } else {
                 allPlayers.forEach(p => {
                     let badgeColor = "bg-gray-700 text-gray-200";
@@ -250,14 +293,29 @@
                     else if(p.cat1 === 'MEDIUM') badgeColor = "bg-yellow-500/20 text-yellow-400";
                     else if(p.cat1 === 'LOW') badgeColor = "bg-green-500/20 text-green-400";
 
+                    let imgHtml = p.imageUrl 
+                        ? `<img src="${p.imageUrl}" class="w-9 h-9 rounded-full object-cover border border-yellow-500/50">`
+                        : `<div class="w-9 h-9 rounded-full bg-slate-700 flex justify-center items-center text-xs font-bold text-gray-400">👤</div>`;
+
+                    let actionHtml = isAdmin ? `
+                        <td class="p-2">
+                            <div class="flex gap-1.5">
+                                <button onclick="editPlayer('${p.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded text-xs">✏️ এডিট</button>
+                                <button onclick="deletePlayer('${p.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-xs">🗑️ মুছুন</button>
+                            </div>
+                        </td>
+                    ` : '';
+
                     tableHtml += `
                         <tr class="hover:bg-slate-700/40">
+                            <td class="p-2">${imgHtml}</td>
                             <td class="p-2 text-yellow-400 font-bold">#${p.serial}</td>
                             <td class="p-2 font-bold text-white">${p.player1}</td>
                             <td class="p-2"><span class="px-1.5 py-0.5 rounded text-xs border border-slate-600 ${badgeColor}">${p.cat1 || 'HIGH'}</span></td>
                             <td class="p-2 text-gray-300">${p.phone1 || 'N/A'}</td>
                             <td class="p-2">${p.teamName || ''}</td>
                             <td class="p-2 text-yellow-400 font-semibold">${p.groupName}</td>
+                            ${actionHtml}
                         </tr>
                     `;
                 });
@@ -265,6 +323,7 @@
             document.getElementById('playerTableBody').innerHTML = tableHtml;
             document.getElementById('totalCount').innerText = `মোট: ${allPlayers.length} জন`;
 
+            // Render Groups
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let listId = gName === 'গ্রুপ এ' ? 'groupA_list' : gName === 'গ্রুপ বি' ? 'groupB_list' : gName === 'গ্রুপ সি' ? 'groupC_list' : 'groupD_list';
                 let list = groups[gName];
@@ -273,11 +332,15 @@
                     gHtml = '<p class="text-xs text-gray-400">কোনো দল নেই।</p>';
                 } else {
                     list.forEach(t => {
+                        let gImg = t.imageUrl ? `<img src="${t.imageUrl}" class="w-7 h-7 rounded-full object-cover">` : '';
                         gHtml += `
-                            <div class="bg-slate-700/50 p-2 rounded mb-2 flex justify-between text-xs">
-                                <div>
-                                    <p class="font-bold text-white">${t.teamName}</p>
-                                    <p class="text-gray-300">👤 ${t.player1}</p>
+                            <div class="bg-slate-700/50 p-2 rounded mb-2 flex justify-between items-center text-xs">
+                                <div class="flex items-center gap-2">
+                                    ${gImg}
+                                    <div>
+                                        <p class="font-bold text-white">${t.teamName}</p>
+                                        <p class="text-gray-300">👤 ${t.player1}</p>
+                                    </div>
                                 </div>
                                 <span class="text-gray-400">${t.phone1 || ''}</span>
                             </div>
@@ -288,17 +351,58 @@
             });
         }
 
+        // Upload Image to Supabase Storage Bucket ('player-images')
+        async function uploadImage(file) {
+            const ext = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${ext}`;
+
+            const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/player-images/${fileName}`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': file.type
+                },
+                body: file
+            });
+
+            if(uploadRes.ok) {
+                return `${SUPABASE_URL}/storage/v1/object/public/player-images/${fileName}`;
+            } else {
+                console.error("Image Upload Failed");
+                return null;
+            }
+        }
+
+        // Save / Update Player
         async function savePlayer(e) {
             e.preventDefault();
+            const editId = document.getElementById('editRowId').value;
             const group = document.getElementById('fGroup').value;
             const teamName = document.getElementById('fTeam').value.trim();
             const name = document.getElementById('fName').value.trim();
             const phone = document.getElementById('fPhone').value.trim();
             const category = document.getElementById('fCat').value;
+            const imageFile = document.getElementById('fImage').files[0];
+            let existingUrl = document.getElementById('existingImgUrl').value;
 
             if(!name) {
                 alert('খেলোয়াড়ের নাম আবশ্যক!');
                 return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
+            submitBtn.disabled = true;
+
+            let finalImgUrl = existingUrl;
+            if(imageFile) {
+                const uploadedUrl = await uploadImage(imageFile);
+                if(uploadedUrl) {
+                    finalImgUrl = uploadedUrl;
+                } else {
+                    alert('⚠️ ছবি আপলোড হতে পারেনি! তবে বাকী তথ্য সেভ করা হচ্ছে।');
+                }
             }
 
             let currentGroupCount = 0;
@@ -306,9 +410,9 @@
                 if(item.group_name === group) currentGroupCount++;
             });
 
-            const generatedId = Date.now();
+            const targetId = editId ? editId : String(Date.now());
             const newTeamObj = {
-                id: generatedId,
+                id: targetId,
                 serial: String(currentGroupCount + 1).padStart(2, '0'),
                 teamName: teamName || 'টিম ' + (currentGroupCount + 1),
                 address: '',
@@ -317,40 +421,116 @@
                 phone1: phone,
                 player2: 'অপেক্ষমাণ',
                 cat2: 'MEDIUM',
-                phone2: ''
+                phone2: '',
+                imageUrl: finalImgUrl
             };
 
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        id: generatedId,
-                        group_name: group,
-                        data: newTeamObj
-                    })
-                });
+                let res;
+                if(editId) {
+                    // Update existing record
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${editId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({
+                            group_name: group,
+                            data: newTeamObj
+                        })
+                    });
+                } else {
+                    // Insert new record
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({
+                            id: targetId,
+                            group_name: group,
+                            data: newTeamObj
+                        })
+                    });
+                }
 
                 if(!res.ok) {
                     const err = await res.json();
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
-                    return;
+                } else {
+                    alert(editId ? '✅ খেলোয়াড়ের তথ্য এডিট করে সফলভাবে আপডেট করা হয়েছে!' : '✅ সফলভাবে ডাটাবেজ ও স্টোরেজে সেভ হয়েছে!');
+                    resetForm();
+                    switchTab('home');
+                    await loadData();
                 }
-
-                alert('✅ সফলভাবে ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
-                document.getElementById('fTeam').value = '';
-                document.getElementById('fName').value = '';
-                document.getElementById('fPhone').value = '';
-                switchTab('home');
-                loadData();
             } catch(err) {
                 alert("নেটওয়ার্ক সমস্যা হয়েছে!");
+            } finally {
+                submitBtn.innerText = "💾 ডাটাবেজে সেভ করুন";
+                submitBtn.disabled = false;
             }
+        }
+
+        // Edit Player Fill Form
+        function editPlayer(dbId) {
+            const item = globalTeamsData.find(t => String(t.id) === String(dbId));
+            if(!item || !item.data) return;
+
+            document.getElementById('editRowId').value = item.id;
+            document.getElementById('fGroup').value = item.group_name || 'গ্রুপ এ';
+            document.getElementById('fTeam').value = item.data.teamName || '';
+            document.getElementById('fName').value = item.data.player1 || '';
+            document.getElementById('fPhone').value = item.data.phone1 || '';
+            document.getElementById('fCat').value = item.data.cat1 || 'HIGH';
+            document.getElementById('existingImgUrl').value = item.data.imageUrl || '';
+
+            document.getElementById('formTitle').innerText = "✏️ খেলোয়াড়ের তথ্য এডিট ফরম";
+            document.getElementById('submitBtn').innerText = "🔄 তথ্য আপডেট করুন";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+            switchTab('dashboard');
+        }
+
+        // Delete Player
+        async function deletePlayer(dbId) {
+            if(!confirm("আপনি কি নিশ্চিত যে এই খেলোয়াড়ের তথ্য মুছে ফেলতে চান?")) return;
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                if(res.ok) {
+                    alert("🗑️ খেলোয়াড়ের তথ্য ডাটাবেজ থেকে সফলভাবে মুছে ফেলা হয়েছে!");
+                    await loadData();
+                } else {
+                    alert("মুছতে ব্যর্থ হয়েছে!");
+                }
+            } catch(e) {
+                alert("নেটওয়ার্ক এরর!");
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('editRowId').value = '';
+            document.getElementById('existingImgUrl').value = '';
+            document.getElementById('fTeam').value = '';
+                document.getElementById('fName').value = '';
+            document.getElementById('fPhone').value = '';
+            document.getElementById('fImage').value = '';
+            document.getElementById('formTitle').innerText = "👤 নতুন খেলোয়াড় এন্ট্রি ফরম";
+            document.getElementById('submitBtn').innerText = "💾 ডাটাবেজে সেভ করুন";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
         }
 
         loadData();
