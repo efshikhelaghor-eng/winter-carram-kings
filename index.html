@@ -20,7 +20,7 @@
 
     <!-- Nav Tabs -->
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
-        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ ও ১২টি টিম)</button>
+        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ ও টিম ফরম্যাট)</button>
         <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">খেলোয়াড় তালিকা</button>
         <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
     </nav>
@@ -31,11 +31,22 @@
         <!-- LOADING SPINNER -->
         <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
-        <!-- HOME TAB: 4 GROUPS (A, B, C, D) WITH UP TO 12 TEAMS -->
+        <!-- HOME TAB: 4 GROUPS WITH CONFIGURABLE TEAM COUNT TOGGLES (1, 2, 3, 4 TEAMS PER GROUP) -->
         <div id="tabHome" class="space-y-6 hidden">
-            <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow">
-                <h2 class="text-lg font-bold text-yellow-400 mb-3">📢 নোটিশ</h2>
-                <div id="noticeList" class="space-y-2 text-xs text-gray-300">কোনো নোটিশ নেই।</div>
+            <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="text-lg font-bold text-yellow-400 mb-1">📢 নোটিশ ও টুর্নামেন্ট ফরম্যাট</h2>
+                    <div id="noticeList" class="text-xs text-gray-300">কোনো নোটিশ নেই।</div>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <span class="text-xs font-bold text-yellow-400">প্রতি গ্রুপে টিম সংখ্যা টগল:</span>
+                    <div class="flex gap-1" id="groupSizeToggles">
+                        <button onclick="setGroupTeamLimit(1)" id="limBtn1" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">১</button>
+                        <button onclick="setGroupTeamLimit(2)" id="limBtn2" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">২</button>
+                        <button onclick="setGroupTeamLimit(3)" id="limBtn3" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">৩</button>
+                        <button onclick="setGroupTeamLimit(4)" id="limBtn4" class="px-2.5 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950">৪</button>
+                    </div>
+                </div>
             </div>
 
             <!-- GROUPS CONTAINER -->
@@ -183,11 +194,11 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: TEAM SETUP FORMAT (12 TEAMS, SINGLE OR DOUBLE TOGGLE) -->
+            <!-- SECTION 2: TEAM SETUP FORMAT (SUPPORTING 1, 2, 3, 4 TEAMS PER GROUP, SINGLE OR DOUBLE) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
-                        🛡️ ২. টিম সেট করার ফরম্যাট (১২ টি টিম সেকশন সেটআপ)
+                        🛡️ ২. টিম সেট করার ফরম্যাট (গ্রুপ প্রতি ১-৪ টিম ফরম্যাট)
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-gray-300 font-semibold">টিমের ধরণ:</span>
@@ -219,7 +230,7 @@
                         </div>
                     </div>
 
-                    <!-- TEAM PLAYER 1 (ALWAYS SHOWN) -->
+                    <!-- TEAM PLAYER 1 -->
                     <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
                         <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider">👤 টিমের খেলোয়াড়ের তথ্য (বায়ো)</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -285,6 +296,20 @@
 
         let isAdmin = false;
         let globalTeamsData = [];
+        let currentGroupTeamLimit = 4; // default limit per group (1, 2, 3, or 4)
+
+        function setGroupTeamLimit(limit) {
+            currentGroupTeamLimit = limit;
+            for(let i=1; i<=4; i++) {
+                const btn = document.getElementById('limBtn' + i);
+                if(i === limit) {
+                    btn.className = "px-2.5 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
+                }
+            }
+            renderData(globalTeamsData);
+        }
 
         function switchTab(tab) {
             document.getElementById('tabHome').classList.add('hidden');
@@ -393,7 +418,7 @@
                 if(Array.isArray(notices) && notices.length > 0) {
                     let html = '';
                     notices.forEach(n => {
-                        html += `<div class="bg-slate-700 p-2.5 rounded mb-1"><p>${n.text}</p><span class="text-[10px] text-gray-400">${n.date}</span></div>`;
+                        html += `<div><p>${n.text}</p><span class="text-[10px] text-gray-400">${n.date}</span></div>`;
                     });
                     document.getElementById('noticeList').innerHTML = html;
                 }
@@ -458,16 +483,18 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS FORMAT WITH UP TO 12 TEAMS
+            // 1. RENDER HOMEPAGE GROUPS WITH CONFIGURABLE TEAM LIMIT (1, 2, 3, or 4 teams per group)
             let groupsHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let teamList = groups[gName] || [];
+                // Slice teamList based on current toggle limit (1, 2, 3, or 4)
+                let activeTeams = teamList.slice(0, currentGroupTeamLimit);
                 
                 let teamsContent = '';
-                if(teamList.length === 0) {
-                    teamsContent = `<div class="p-4 text-center text-xs text-gray-500 italic">এখনো কোনো টিম সেকশন যোগ করা হয়নি।</div>`;
+                if(activeTeams.length === 0) {
+                    teamsContent = `<div class="p-4 text-center text-xs text-gray-500 italic">এই লিমিটে কোনো টিম সেকশন নেই।</div>`;
                 } else {
-                    teamList.forEach((t, tIdx) => {
+                    activeTeams.forEach((t, tIdx) => {
                         let p1Img = t.imageUrl || t.imageUrl1 ? `<img src="${t.imageUrl || t.imageUrl1}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/40">` : `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>`;
                         let p2Img = t.imageUrl2 ? `<img src="${t.imageUrl2}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/40">` : (t.player2 && t.player2 !== 'অপেক্ষমাণ' ? `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>` : '');
 
@@ -491,7 +518,7 @@
                                     <span class="text-[10px] bg-slate-800 text-gray-300 px-2 py-0.5 rounded-full border border-slate-700">${isDoubleTeam ? 'দ্বৈত টিম' : 'একক টিম'}</span>
                                 </div>
 
-                                <!-- Players under this Team Section -->
+                                <!-- Players in this Team Section -->
                                 <div class="space-y-2 text-xs">
                                     <!-- Player 1 -->
                                     <div class="flex items-center justify-between bg-slate-800/60 p-2 rounded-lg">
@@ -528,7 +555,7 @@
                     <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-xl space-y-3">
                         <div class="flex justify-between items-center border-b border-yellow-500/30 pb-2">
                             <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2">🏆 ${gName}</h3>
-                            <span class="text-xs bg-slate-700 text-yellow-300 font-bold px-2.5 py-0.5 rounded-full border border-slate-600">টিম: ${teamList.length} টি</span>
+                            <span class="text-xs bg-slate-700 text-yellow-300 font-bold px-2.5 py-0.5 rounded-full border border-slate-600">টিম লিমিট: ${currentGroupTeamLimit} টি</span>
                         </div>
                         <div class="space-y-3">
                             ${teamsContent}
@@ -718,7 +745,7 @@
             }
         }
 
-        // SAVE TEAM SETUP (SECTION 2 - SUPPORTING BOTH SINGLE & DOUBLE TEAMS)
+        // SAVE TEAM SETUP
         async function saveTeamSetup(e) {
             e.preventDefault();
             const editId = document.getElementById('editRowId').value;
@@ -918,7 +945,7 @@
 
             toggleTeamType('single');
 
-            document.getElementById('teamSetupTitle').innerText = "🛡️ ২. টিম সেট করার ফরম্যাট (১২ টি টিম সেকশন সেটআপ)";
+            document.getElementById('teamSetupTitle').innerText = "🛡️ ২. টিম সেট করার ফরম্যাট (গ্রুপ প্রতি ১-৪ টিম ফরম্যাট)";
             document.getElementById('teamSubmitBtn').innerText = "💾 টিমের সেকশনে ডাটা সেভ করুন";
             document.getElementById('cancelTeamEditBtn').classList.add('hidden');
         }
