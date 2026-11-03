@@ -8,30 +8,32 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Supabase JS Library -->
+    <!-- Supabase JS Library v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-javascript@2"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 text-white font-sans min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
-        // -------------------------------------------------------------
         // Supabase Credentials
-        // -------------------------------------------------------------
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
         
-        // Supabase Client Initialisation
-        const supabase = (window.supabase && SUPABASE_URL) 
-            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
-            : null;
+        // Safe Supabase Client Initialisation
+        let supabase = null;
+        try {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error("Supabase Init Error:", e);
+        }
 
         function App() {
             const [activeTab, setActiveTab] = React.useState('home');
             const [isAdmin, setIsAdmin] = React.useState(false);
             const [loading, setLoading] = React.useState(true);
             
-            // Admin Credentials
             const [adminEmail, setAdminEmail] = React.useState('efshikhelaghor@gmail.com');
             const [adminPassword, setAdminPassword] = React.useState('admin123');
 
@@ -49,11 +51,9 @@
             const [groupsData, setGroupsData] = React.useState(defaultGroups);
             const [notices, setNotices] = React.useState([]);
 
-            // -------------------------------------------------------------
-            // Supabase Database থেকে Data Fetch করার Function
-            // -------------------------------------------------------------
             const fetchDataFromSupabase = async () => {
                 if (!supabase) {
+                    console.warn("Supabase client not ready");
                     setLoading(false);
                     return;
                 }
@@ -110,11 +110,15 @@
                 setActiveTab('home');
             };
 
-            // Player Save & Supabase Sync
             const saveSinglePlayer = async (e) => {
                 e.preventDefault();
                 if (!singlePlayerForm.name || !singlePlayerForm.group) {
                     alert('অনুগ্রহ করে খেলোয়াড়ের নাম ও গ্রুপ পূরণ করুন!');
+                    return;
+                }
+
+                if (!supabase) {
+                    alert('⚠️ Supabase কানেক্টেড নেই! দয়া করে পেজটি আবার রিফ্রেশ করুন।');
                     return;
                 }
 
@@ -135,23 +139,23 @@
                     phone2: ''
                 };
                 
-                if (supabase) {
-                    // Supabase এ ইনসার্ট
-                    const { data, error } = await supabase.from('teams').insert([
+                try {
+                    const { error } = await supabase.from('teams').insert([
                         { id: generatedId, group_name: group, data: newTeamObj }
-                    ]).select();
+                    ]);
 
                     if (error) {
                         console.error("Supabase Save Error:", error);
-                        alert("⚠️ Supabase ডাটাবেজে সেভ হয়নি! এরর: " + error.message + " (কড: " + error.code + ")");
-                        return; // সেভ না হলে স্টেট আপডেট করবে না
+                        alert("⚠️ সেভ হয়নি! এরর: " + error.message);
+                        return;
                     }
 
-                    alert('✅ সফলভাবে ডাটাবেজে সেভ হয়েছে!');
-                    // ডাটাবেজ থেকে নতুন করে ফেচ করে কনফার্ম করা
+                    alert('✅ সফলভাবে ডাটাবেজে স্থায়ীভাবে সেভ হয়েছে!');
                     await fetchDataFromSupabase();
-                } else {
-                    alert("Supabase কানেক্টেড নেই!");
+                } catch (err) {
+                    console.error("Network/Exception Error:", err);
+                    alert("নেটওয়ার্ক সমস্যা বা এক্সসেস এরর হয়েছে!");
+                    return;
                 }
 
                 setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
@@ -183,7 +187,6 @@
 
             return (
                 <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100 font-sans">
-                    {/* Header */}
                     <header className="bg-slate-900/90 backdrop-blur-md shadow-lg p-4 border-b border-yellow-500/40 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
                         <div className="flex items-center space-x-3">
                             <span className="text-2xl md:text-3xl">👑</span>
@@ -207,7 +210,6 @@
                         </div>
                     </header>
 
-                    {/* Navigation Bar */}
                     <nav className="flex justify-center bg-slate-800/80 backdrop-blur p-2.5 gap-2 md:gap-4 flex-wrap border-b border-slate-700">
                         <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'home' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>হোম ও নোটিশ</button>
                         <button onClick={() => setActiveTab('groups')} className={`px-4 py-2 rounded-xl font-bold text-sm ${activeTab === 'groups' ? 'bg-yellow-500 text-gray-950' : 'bg-slate-700/80 text-gray-200'}`}>গ্রুপ ও খেলোয়াড়বৃন্দ</button>
@@ -215,14 +217,12 @@
                     </nav>
 
                     <main className="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-6">
-
                         {loading ? (
                             <div className="text-center py-20 text-yellow-400 font-bold animate-pulse text-lg">
                                 🔄 Supabase থেকে ডাটা লোড হচ্ছে...
                             </div>
                         ) : (
                             <>
-                                {/* HOME TAB */}
                                 {activeTab === 'home' && (
                                     <div className="space-y-6">
                                         <div className="bg-slate-800/90 p-6 rounded-2xl border border-yellow-500/35 shadow-xl">
@@ -239,7 +239,6 @@
                                             </div>
                                         </div>
 
-                                        {/* Registered Players Table */}
                                         <div className="bg-slate-800/90 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-4">
                                             <div className="flex justify-between items-center border-b border-slate-700 pb-3">
                                                 <h2 className="text-xl font-extrabold text-yellow-400">📋 রেজিষ্ট্রেশনকৃত খেলোয়ারের তালিকা</h2>
@@ -281,7 +280,6 @@
                                     </div>
                                 )}
 
-                                {/* GROUPS TAB */}
                                 {activeTab === 'groups' && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {Object.keys(groupsData).map(groupName => (
@@ -307,7 +305,6 @@
                                     </div>
                                 )}
 
-                                {/* ADMIN TAB */}
                                 {activeTab === 'admin' && !isAdmin && (
                                     <div className="flex justify-center items-center py-10">
                                         <div className="bg-slate-800 p-8 rounded-3xl border border-yellow-500/40 w-full max-w-md shadow-2xl space-y-6">
@@ -322,7 +319,6 @@
                                     </div>
                                 )}
 
-                                {/* ADMIN DASHBOARD */}
                                 {activeTab === 'dashboard' && isAdmin && (
                                     <div className="space-y-8">
                                         <div className="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
