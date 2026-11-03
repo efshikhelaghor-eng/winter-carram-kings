@@ -50,6 +50,7 @@
                                 <th class="p-2">ছবি</th>
                                 <th class="p-2">ক্রমিক</th>
                                 <th class="p-2">নাম</th>
+                                <th class="p-2">ঠিকানা</th>
                                 <th class="p-2">ক্যাটাগরি</th>
                                 <th class="p-2">মোবাইল</th>
                                 <th class="p-2">গ্রুপ</th>
@@ -57,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody id="playerTableBody" class="divide-y divide-slate-700">
-                            <tr><td colspan="7" class="p-4 text-center text-gray-400">ডেটা লোড হচ্ছে...</td></tr>
+                            <tr><td colspan="8" class="p-4 text-center text-gray-400">ডেটা লোড হচ্ছে...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -109,6 +110,10 @@
                     <input type="text" id="fName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
                 </div>
                 <div>
+                    <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
+                    <input type="text" id="fAddress" placeholder="ঠিকানা" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
+                </div>
+                <div>
                     <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর</label>
                     <input type="text" id="fPhone" placeholder="মোবাইল" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm">
                 </div>
@@ -120,7 +125,7 @@
                         <option value="LOW">LOW</option>
                     </select>
                 </div>
-                <div class="md:col-span-2">
+                <div>
                     <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (Supabase Storage)</label>
                     <input type="file" id="fImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-gray-300">
                 </div>
@@ -277,7 +282,7 @@
 
             let tableHtml = '';
             if(allPlayers.length === 0) {
-                tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
+                tableHtml = `<tr><td colspan="${isAdmin ? 8 : 7}" class="p-4 text-center text-gray-400">কোনো খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
             } else {
                 allPlayers.forEach(p => {
                     let badgeColor = "bg-gray-700 text-gray-200";
@@ -303,6 +308,7 @@
                             <td class="p-2">${imgHtml}</td>
                             <td class="p-2 text-yellow-400 font-bold">#${p.serial}</td>
                             <td class="p-2 font-bold text-white">${p.player1}</td>
+                            <td class="p-2 text-gray-300">${p.address || 'N/A'}</td>
                             <td class="p-2"><span class="px-1.5 py-0.5 rounded text-xs border border-slate-600 ${badgeColor}">${p.cat1 || 'HIGH'}</span></td>
                             <td class="p-2 text-gray-300">${p.phone1 || 'N/A'}</td>
                             <td class="p-2 text-yellow-400 font-semibold">${p.groupName}</td>
@@ -329,6 +335,7 @@
                                     ${gImg}
                                     <div>
                                         <p class="font-bold text-white">👤 ${t.player1}</p>
+                                        ${t.address ? `<p class="text-[10px] text-gray-400">📍 ${t.address}</p>` : ''}
                                     </div>
                                 </div>
                                 <span class="text-gray-400">${t.phone1 || ''}</span>
@@ -367,6 +374,7 @@
             const editId = document.getElementById('editRowId').value;
             const group = document.getElementById('fGroup').value;
             const name = document.getElementById('fName').value.trim();
+            const address = document.getElementById('fAddress').value.trim();
             const phone = document.getElementById('fPhone').value.trim();
             const category = document.getElementById('fCat').value;
             const imageFile = document.getElementById('fImage').files[0];
@@ -401,7 +409,7 @@
                 id: targetId,
                 serial: String(currentGroupCount + 1).padStart(2, '0'),
                 teamName: '',
-                address: '',
+                address: address,
                 player1: name,
                 cat1: category,
                 phone1: phone,
@@ -468,6 +476,7 @@
             document.getElementById('editRowId').value = item.id;
             document.getElementById('fGroup').value = item.group_name || 'গ্রুপ এ';
             document.getElementById('fName').value = item.data.player1 || '';
+            document.getElementById('fAddress').value = item.data.address || '';
             document.getElementById('fPhone').value = item.data.phone1 || '';
             document.getElementById('fCat').value = item.data.cat1 || 'HIGH';
             document.getElementById('existingImgUrl').value = item.data.imageUrl || '';
@@ -506,6 +515,7 @@
             document.getElementById('editRowId').value = '';
             document.getElementById('existingImgUrl').value = '';
             document.getElementById('fName').value = '';
+            document.getElementById('fAddress').value = '';
             document.getElementById('fPhone').value = '';
             document.getElementById('fImage').value = '';
             document.getElementById('formTitle').innerText = "👤 নতুন খেলোয়াড় এন্ট্রি ফরম";
