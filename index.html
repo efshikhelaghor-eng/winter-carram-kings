@@ -130,7 +130,7 @@
                 setActiveTab('home');
             };
 
-            // Player Save & Supabase Sync
+            // Player Save & Supabase Sync (Fixed with .insert)
             const saveSinglePlayer = async (e) => {
                 e.preventDefault();
                 if (singlePlayerForm.name && singlePlayerForm.group) {
@@ -149,15 +149,23 @@
                         cat2: 'MEDIUM', 
                         phone2: ''
                     };
-                    groupTeams.push(newTeamObj);
-
-                    // Upsert into Supabase
+                    
+                    // Supabase এ ডাটা সরাসরি Insert করার কোড
                     if (supabase) {
-                        await supabase.from('teams').upsert({ group_name: group, data: newTeamObj });
+                        const { error } = await supabase.from('teams').insert([
+                            { group_name: group, data: newTeamObj }
+                        ]);
+                        if (error) {
+                            console.error("Supabase Insert Error:", error);
+                            alert("ডেটা সেভ করতে সমস্যা হয়েছে: " + error.message);
+                            return;
+                        }
                     }
 
+                    groupTeams.push(newTeamObj);
                     setGroupsData({ ...groupsData, [group]: groupTeams });
                     setSinglePlayerForm({ name: '', address: '', phone: '', category: 'HIGH', group: 'গ্রুপ এ', teamName: '' });
+                    alert('সফলভাবে Supabase-এ ডেটা সেভ হয়েছে!');
                 }
             };
 
