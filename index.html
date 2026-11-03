@@ -132,7 +132,6 @@
         let isAdmin = false;
         let globalTeamsData = [];
 
-        // Tab Switching
         function switchTab(tab) {
             document.getElementById('tabHome').classList.add('hidden');
             document.getElementById('tabGroups').classList.add('hidden');
@@ -185,7 +184,6 @@
             }
         }
 
-        // Fetch Data from Supabase
         async function loadData() {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
@@ -242,7 +240,6 @@
                 }
             });
 
-            // Render Table
             let tableHtml = '';
             if(allPlayers.length === 0) {
                 tableHtml = '<tr><td colspan="6" class="p-4 text-center text-gray-400">কোনো খেলোয়াড় পাওয়া যায়নি।</td></tr>';
@@ -268,7 +265,6 @@
             document.getElementById('playerTableBody').innerHTML = tableHtml;
             document.getElementById('totalCount').innerText = `মোট: ${allPlayers.length} জন`;
 
-            // Render Groups
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let listId = gName === 'গ্রুপ এ' ? 'groupA_list' : gName === 'গ্রুপ বি' ? 'groupB_list' : gName === 'গ্রুপ সি' ? 'groupC_list' : 'groupD_list';
                 let list = groups[gName];
@@ -292,7 +288,6 @@
             });
         }
 
-        // Save Player
         async function savePlayer(e) {
             e.preventDefault();
             const group = document.getElementById('fGroup').value;
@@ -306,7 +301,6 @@
                 return;
             }
 
-            // Find current group count for serial
             let currentGroupCount = 0;
             globalTeamsData.forEach(item => {
                 if(item.group_name === group) currentGroupCount++;
@@ -359,7 +353,6 @@
             }
         }
 
-        // Initial Load
         loadData();
     </script>
 </body>
