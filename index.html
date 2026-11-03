@@ -103,29 +103,16 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: PLAYER REGISTRATION (SINGLE & DOUBLE BIO) -->
+            <!-- SECTION 1: PLAYER REGISTRATION (SINGLE PLAYER BIO ONLY - GROUP & DOUBLE TOGGLE REMOVED) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2">
-                        📝 ১. খেলোয়াড় নিবন্ধন / এন্ট্রি সেকশন (একক ও দ্বৈত বায়ো)
+                        📝 ১. খেলোয়াড় নিবন্ধন / এন্ট্রি সেকশন (একক বায়ো)
                     </h3>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="toggleRegType('single')" id="btnRegSingle" class="px-3 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950">একক খেলোয়ার</button>
-                        <button type="button" onclick="toggleRegType('double')" id="btnRegDouble" class="px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">দ্বৈত খেলোয়ার</button>
-                    </div>
                 </div>
 
-                <!-- SINGLE PLAYER REGISTRATION FORM -->
-                <form id="singleRegForm" onsubmit="savePlayerBio(event, 'single')" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">গ্রুপ নির্বাচন করুন *</label>
-                        <select id="sGroup" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
-                            <option value="গ্রুপ এ">গ্রুপ এ</option>
-                            <option value="গ্রুপ বি">গ্রুপ বি</option>
-                            <option value="গ্রুপ সি">গ্রুপ সি</option>
-                            <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                        </select>
-                    </div>
+                <!-- SINGLE PLAYER REGISTRATION FORM (NO GROUP SELECTOR) -->
+                <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
                         <input type="text" id="sName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
@@ -146,64 +133,13 @@
                             <option value="LOW">LOW</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (Supabase Storage)</label>
                         <input type="file" id="sImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-gray-300">
                     </div>
                     
                     <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded-xl text-sm md:col-span-2 transition">
                         💾 একক খেলোয়ার সেভ করুন
-                    </button>
-                </form>
-
-                <!-- DOUBLE PLAYER REGISTRATION FORM -->
-                <form id="doubleRegForm" onsubmit="savePlayerBio(event, 'double')" class="space-y-4 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-700">
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">গ্রুপ নির্বাচন করুন *</label>
-                            <select id="dGroup" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-sm text-yellow-400 font-bold">
-                                <option value="গ্রুপ এ">গ্রুপ এ</option>
-                                <option value="গ্রুপ বি">গ্রুপ বি</option>
-                                <option value="গ্রুপ সি">গ্রুপ সি</option>
-                                <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- PLAYER 1 -->
-                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2">
-                        <h4 class="text-xs font-bold text-yellow-400">👤 ১ম খেলোয়াড়ের বায়ো</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                            <input type="text" id="dP1Name" placeholder="১ম খেলোয়াড়ের নাম *" required class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <input type="text" id="dP1Phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <input type="text" id="dP1Address" placeholder="ঠিকানা" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <select id="dP1Cat" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
-                                <option value="HIGH">HIGH</option>
-                                <option value="MEDIUM">MEDIUM</option>
-                                <option value="LOW">LOW</option>
-                            </select>
-                            <input type="file" id="dP1Image" accept="image/*" class="bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300 md:col-span-2">
-                        </div>
-                    </div>
-
-                    <!-- PLAYER 2 -->
-                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2">
-                        <h4 class="text-xs font-bold text-yellow-400">👥 ২য় খেলোয়াড়ের বায়ো</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                            <input type="text" id="dP2Name" placeholder="২য় খেলোয়াড়ের নাম *" required class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <input type="text" id="dP2Phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <input type="text" id="dP2Address" placeholder="ঠিকানা" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
-                            <select id="dP2Cat" class="bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-400 font-bold">
-                                <option value="MEDIUM">MEDIUM</option>
-                                <option value="HIGH">HIGH</option>
-                                <option value="LOW">LOW</option>
-                            </select>
-                            <input type="file" id="dP2Image" accept="image/*" class="bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300 md:col-span-2">
-                        </div>
-                    </div>
-
-                    <button type="submit" id="dSubmitBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded-xl text-sm transition">
-                        💾 দ্বৈত খেলোয়ার সেভ করুন
                     </button>
                 </form>
             </div>
@@ -381,20 +317,6 @@
             } else {
                 errElem.innerText = "ভুল ইমেইল বা পাসওয়ার্ড!";
                 errElem.classList.remove('hidden');
-            }
-        }
-
-        function toggleRegType(type) {
-            if(type === 'single') {
-                document.getElementById('singleRegForm').classList.remove('hidden');
-                document.getElementById('doubleRegForm').classList.add('hidden');
-                document.getElementById('btnRegSingle').className = "px-3 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950";
-                document.getElementById('btnRegDouble').className = "px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
-            } else {
-                document.getElementById('singleRegForm').classList.add('hidden');
-                document.getElementById('doubleRegForm').classList.remove('hidden');
-                document.getElementById('btnRegSingle').className = "px-3 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
-                document.getElementById('btnRegDouble').className = "px-3 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950";
             }
         }
 
@@ -687,41 +609,22 @@
             }
         }
 
-        async function savePlayerBio(e, regType) {
+        // SAVE SINGLE PLAYER BIO (SECTION 1 - GROUP SELECTOR & DOUBLE TOGGLE REMOVED, DEFAULTS TO GROUP A OR FIRST GROUP)
+        async function savePlayerBio(e) {
             e.preventDefault();
             
-            let group, p1Name, p1Phone, p1Address, p1Cat, p1ImgFile;
-            let p2Name = '', p2Phone = '', p2Address = '', p2Cat = 'MEDIUM', p2ImgFile = null;
-
-            if(regType === 'single') {
-                group = document.getElementById('sGroup').value;
-                p1Name = document.getElementById('sName').value.trim();
-                p1Phone = document.getElementById('sPhone').value.trim();
-                p1Address = document.getElementById('sAddress').value.trim();
-                p1Cat = document.getElementById('sCat').value;
-                p1ImgFile = document.getElementById('sImage').files[0];
-            } else {
-                group = document.getElementById('dGroup').value;
-                p1Name = document.getElementById('dP1Name').value.trim();
-                p1Phone = document.getElementById('dP1Phone').value.trim();
-                p1Address = document.getElementById('dP1Address').value.trim();
-                p1Cat = document.getElementById('dP1Cat').value;
-                p1ImgFile = document.getElementById('dP1Image').files[0];
-
-                p2Name = document.getElementById('dP2Name').value.trim();
-                p2Phone = document.getElementById('dP2Phone').value.trim();
-                p2Address = document.getElementById('dP2Address').value.trim();
-                p2Cat = document.getElementById('dP2Cat').value;
-                p2ImgFile = document.getElementById('dP2Image').files[0];
-            }
+            const p1Name = document.getElementById('sName').value.trim();
+            const p1Phone = document.getElementById('sPhone').value.trim();
+            const p1Address = document.getElementById('sAddress').value.trim();
+            const p1Cat = document.getElementById('sCat').value;
+            const p1ImgFile = document.getElementById('sImage').files[0];
 
             if(!p1Name) {
                 alert('খেলোয়াড়ের নাম আবশ্যক!');
                 return;
             }
 
-            const btnId = regType === 'single' ? 'sSubmitBtn' : 'dSubmitBtn';
-            const submitBtn = document.getElementById(btnId);
+            const submitBtn = document.getElementById('sSubmitBtn');
             submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
             submitBtn.disabled = true;
 
@@ -731,17 +634,11 @@
                 if(url) img1Url = url;
             }
 
-            let img2Url = '';
-            if(p2ImgFile) {
-                const url = await uploadImage(p2ImgFile);
-                if(url) img2Url = url;
-            }
-
             const targetId = String(Date.now());
             const newTeamObj = {
                 id: targetId,
-                teamMode: regType === 'double' ? 'double' : 'single',
-                teamName: regType === 'double' ? `${p1Name} & ${p2Name}` : `টিম (${p1Name})`,
+                teamMode: 'single',
+                teamName: `টিম (${p1Name})`,
                 player1: p1Name,
                 phone1: p1Phone,
                 address1: p1Address,
@@ -749,12 +646,11 @@
                 cat1: p1Cat,
                 imageUrl1: img1Url,
                 imageUrl: img1Url,
-
-                player2: p2Name || 'অপেক্ষমাণ',
-                phone2: p2Phone,
-                address2: p2Address,
-                cat2: p2Cat,
-                imageUrl2: img2Url
+                player2: 'অপেক্ষমাণ',
+                phone2: '',
+                address2: '',
+                cat2: 'MEDIUM',
+                imageUrl2: ''
             };
 
             try {
@@ -768,7 +664,7 @@
                     },
                     body: JSON.stringify({
                         id: targetId,
-                        group_name: group,
+                        group_name: 'গ্রুপ এ',
                         data: newTeamObj
                     })
                 });
@@ -777,29 +673,18 @@
                     const err = await res.json();
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
                 } else {
-                    alert('✅ খেলোয়াড়ের বায়ো ডেটা সফলভাবে সেভ হয়েছে!');
-                    if(regType === 'single') {
-                        document.getElementById('sName').value = '';
-                        document.getElementById('sPhone').value = '';
-                        document.getElementById('sAddress').value = '';
-                        document.getElementById('sImage').value = '';
-                    } else {
-                        document.getElementById('dP1Name').value = '';
-                        document.getElementById('dP1Phone').value = '';
-                        document.getElementById('dP1Address').value = '';
-                        document.getElementById('dP1Image').value = '';
-                        document.getElementById('dP2Name').value = '';
-                        document.getElementById('dP2Phone').value = '';
-                        document.getElementById('dP2Address').value = '';
-                        document.getElementById('dP2Image').value = '';
-                    }
+                    alert('✅ একক খেলোয়াড়ের বায়ো ডেটা সফলভাবে সেভ হয়েছে!');
+                    document.getElementById('sName').value = '';
+                    document.getElementById('sPhone').value = '';
+                    document.getElementById('sAddress').value = '';
+                    document.getElementById('sImage').value = '';
                     switchTab('home');
                     await loadData();
                 }
             } catch(err) {
                 alert("নেটওয়ার্ক সমস্যা হয়েছে!");
             } finally {
-                submitBtn.innerText = regType === 'single' ? "💾 একক খেলোয়ার সেভ করুন" : "💾 দ্বৈত খেলোয়ার সেভ করুন";
+                submitBtn.innerText = "💾 একক খেলোয়ার সেভ করুন";
                 submitBtn.disabled = false;
             }
         }
