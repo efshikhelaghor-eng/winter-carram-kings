@@ -40,7 +40,7 @@
                     <div id="noticeList" class="text-xs text-gray-300">কোনো নোটিশ নেই।</div>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                    <span class="text-xs font-bold text-yellow-400">প্রতি গ্রুপে টিম লিমিট:</span>
+                    <span class="text-xs font-bold text-yellow-400">প্রতি গ্রুপে টিম লিমিট (১/২/৩/৪):</span>
                     <div class="flex gap-1" id="groupSizeToggles">
                         <button onclick="setGroupTeamLimit(1)" id="limBtn1" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">১</button>
                         <button onclick="setGroupTeamLimit(2)" id="limBtn2" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">২</button>
@@ -52,20 +52,20 @@
 
             <!-- MAIN GROUPS SELECTION CARDS (A, B, C, D) -->
             <div id="groupsSelectionView" class="space-y-4">
-                <h3 class="text-sm font-bold text-yellow-400 border-b border-slate-700 pb-2">🏆 গ্রুপ নির্বাচন করুন (গ্রুপের ভেতরে টিম তালিকা দেখার জন্য ক্লিক করুন):</h3>
+                <h3 class="text-sm font-bold text-yellow-400 border-b border-slate-700 pb-2">🏆 গ্রুপ নির্বাচন করুন (গ্রুপের ভেতরে নির্দিষ্ট টিম ফরম্যাট দেখার জন্য ক্লিক করুন):</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="groupCardsContainer">
                     <!-- Rendered dynamically -->
                 </div>
             </div>
 
-            <!-- SINGLE GROUP DETAIL VIEW (SHOWN WHEN A GROUP IS CLICKED) -->
+            <!-- SINGLE GROUP DETAIL VIEW (SHOWN WHEN A GROUP IS CLICKED - STRICTLY ISOLATED FORMAT) -->
             <div id="singleGroupDetailView" class="space-y-4 hidden">
                 <div class="flex justify-between items-center bg-slate-900 p-3 rounded-xl border border-yellow-500/40">
                     <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-3 py-1.5 rounded font-bold border border-slate-700">← সকল গ্রুপে ফিরে যান</button>
                     <h3 id="detailGroupTitle" class="text-base font-extrabold text-yellow-400">গ্রুপ বিস্তারিত</h3>
                 </div>
                 <div id="detailGroupTeamsContainer" class="space-y-3">
-                    <!-- Teams inside clicked group -->
+                    <!-- Teams inside clicked group strictly filtered by current group limit -->
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <!-- PLAYERS LIST TAB -->
+        <!-- PLAYERS LIST TAB (AUTO-SYNCED & EDITABLE) -->
         <div id="tabGroups" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
                 <div class="flex justify-between items-center mb-3">
@@ -114,16 +114,19 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (SAVES INDEPENDENTLY TO PLAYERS TABLE) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (AUTO-ADDS TO PLAYERS TABLE, EDITABLE) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
-                    <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2">
+                    <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
                         নতুন খেলোয়ার নিবন্ধন ফরম
                     </h3>
+                    <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
                 </div>
 
-                <!-- SINGLE UNIFIED PLAYER REGISTRATION FORM (INDEPENDENT PLAYERS TABLE) -->
+                <!-- SINGLE UNIFIED PLAYER REGISTRATION FORM -->
                 <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input type="hidden" id="editPlayerId" value="">
+                    <input type="hidden" id="existingPlayerImgUrl" value="">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
                         <input type="text" id="sName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
@@ -155,7 +158,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: TEAM SETUP FORMAT (SUPPORTING 1, 2, 3, 4 TEAMS, SINGLE OR DOUBLE) -->
+            <!-- SECTION 2: TEAM SETUP FORMAT (STRICTLY ISOLATED 1, 2, 3, 4 FORMATS) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
@@ -258,8 +261,8 @@
         let isAdmin = false;
         let globalTeamsData = [];
         let globalPlayersData = [];
-        let currentGroupTeamLimit = 4; // default limit per group (1, 2, 3, or 4)
-        let selectedViewGroup = null; // null for group cards view, or 'গ্রুপ এ', etc.
+        let currentGroupTeamLimit = 4; // 1, 2, 3, or 4 teams limit per group
+        let selectedViewGroup = null; // null for cards view, or 'গ্রুপ এ', etc.
 
         function setGroupTeamLimit(limit) {
             currentGroupTeamLimit = limit;
@@ -426,15 +429,15 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW
+            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW (STRICTLY ISOLATED BY CURRENT LIMIT 1, 2, 3, or 4)
             if(selectedViewGroup === null) {
-                // Show Group Selection Cards (A, B, C, D)
                 document.getElementById('groupsSelectionView').classList.remove('hidden');
                 document.getElementById('singleGroupDetailView').classList.add('hidden');
 
                 let cardsHtml = '';
                 ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                     let teamList = groups[gName] || [];
+                    // Strictly isolate teams up to currentGroupTeamLimit
                     let activeTeamsCount = Math.min(teamList.length, currentGroupTeamLimit);
 
                     cardsHtml += `
@@ -443,7 +446,7 @@
                                 <h4 class="text-lg font-extrabold text-yellow-400 group-hover:text-yellow-300 flex items-center gap-2">
                                     <span>🏆</span> ${gName}
                                 </h4>
-                                <p class="text-xs text-gray-400">নিবন্ধিত টিম: <span class="text-white font-bold">${activeTeamsCount} টি</span> (লিমিট: ${currentGroupTeamLimit})</p>
+                                <p class="text-xs text-gray-400">নিবন্ধিত টিম ফরম্যাট (${currentGroupTeamLimit} টিম): <span class="text-white font-bold">${activeTeamsCount} টি</span></p>
                             </div>
                             <div class="bg-slate-900 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 p-3 rounded-xl border border-slate-700 font-bold text-xs transition">
                                 টিম তালিকা দেখুন →
@@ -453,17 +456,17 @@
                 });
                 document.getElementById('groupCardsContainer').innerHTML = cardsHtml;
             } else {
-                // Show Detail View for Selected Group
                 document.getElementById('groupsSelectionView').classList.add('hidden');
                 document.getElementById('singleGroupDetailView').classList.remove('hidden');
-                document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - টিম তালিকা`;
+                document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - টিম তালিকা (${currentGroupTeamLimit} টিম ফরম্যাট)`;
 
                 let teamList = groups[selectedViewGroup] || [];
+                // STRICT ISOLATION: Exactly show up to currentGroupTeamLimit teams, preventing overlapping with other limits
                 let activeTeams = teamList.slice(0, currentGroupTeamLimit);
 
                 let detailHtml = '';
                 if(activeTeams.length === 0) {
-                    detailHtml = `<div class="bg-slate-800 p-6 rounded-xl text-center text-xs text-gray-400 italic">এই গ্রুপে এখনো কোনো টিম সেকশন যোগ করা হয়নি।</div>`;
+                    detailHtml = `<div class="bg-slate-800 p-6 rounded-xl text-center text-xs text-gray-400 italic">এই ফরম্যাটে (${currentGroupTeamLimit} টিম) এই গ্রুপে এখনো কোনো টিম সেকশন যোগ করা হয়নি।</div>`;
                 } else {
                     activeTeams.forEach((t, tIdx) => {
                         let p1Img = t.imageUrl || t.imageUrl1 ? `<img src="${t.imageUrl || t.imageUrl1}" class="w-9 h-9 rounded-full object-cover border border-yellow-500/40">` : `<div class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>`;
@@ -521,7 +524,7 @@
                 document.getElementById('detailGroupTeamsContainer').innerHTML = detailHtml;
             }
 
-            // 2. RENDER FIXTURES TAB (ROUND-ROBIN MATCHES PER GROUP)
+            // 2. RENDER FIXTURES TAB (STRICTLY ISOLATED BY CURRENT LIMIT)
             let fixturesHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let teamList = groups[gName] || [];
@@ -529,7 +532,7 @@
                 
                 let matchCards = '';
                 if(activeTeams.length < 2) {
-                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমানে আছে ${activeTeams.length}টি)।</p>`;
+                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমান ফরম্যাটে আছে ${activeTeams.length}টি)।</p>`;
                 } else {
                     let matchNo = 1;
                     for(let i=0; i<activeTeams.length; i++) {
@@ -555,7 +558,7 @@
                 fixturesHtml += `
                     <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-3">
                         <h3 class="font-bold text-yellow-400 text-sm border-b border-slate-700 pb-1.5 flex justify-between items-center">
-                            <span>🏆 ${gName} - ফিকশ্চার</span>
+                            <span>🏆 ${gName} - ফিকশ্চার (${currentGroupTeamLimit} টিম ফরম্যাট)</span>
                             <span class="text-[10px] text-gray-400">টিম সংখ্যা: ${activeTeams.length}</span>
                         </h3>
                         <div class="space-y-2">
@@ -566,7 +569,7 @@
             });
             document.getElementById('fixturesContainer').innerHTML = fixturesHtml;
 
-            // 3. RENDER PLAYERS TAB TABLE (INDEPENDENT PLAYERS TABLE)
+            // 3. RENDER PLAYERS TAB TABLE (AUTO-SYNCED & EDITABLE)
             let tableHtml = '';
             if(players.length === 0) {
                 tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
@@ -580,6 +583,7 @@
                     let actionHtml = isAdmin ? `
                         <td class="p-2">
                             <div class="flex gap-1.5">
+                                <button onclick="editPlayerBio('${p.id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded text-xs">✏️ এডিট</button>
                                 <button onclick="deletePlayerBio('${p.id}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-xs">🗑️ মুছুন</button>
                             </div>
                         </td>
@@ -624,15 +628,17 @@
             }
         }
 
-        // SAVE NEW PLAYER BIO (SAVES INDEPENDENTLY TO PLAYERS TABLE WITHOUT AUTO-ADDING TO TEAMS)
+        // SAVE / UPDATE PLAYER BIO (AUTO-SYNCED TO PLAYERS TABLE & EDITABLE)
         async function savePlayerBio(e) {
             e.preventDefault();
+            const editPlayerId = document.getElementById('editPlayerId').value;
             
             const name = document.getElementById('sName').value.trim();
             const phone = document.getElementById('sPhone').value.trim();
             const address = document.getElementById('sAddress').value.trim();
             const cat = document.getElementById('sCat').value;
             const imgFile = document.getElementById('sImage').files[0];
+            let existingImg = document.getElementById('existingPlayerImgUrl').value;
 
             if(!name) {
                 alert('খেলোয়াড়ের নাম আবশ্যক!');
@@ -643,42 +649,59 @@
             submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
             submitBtn.disabled = true;
 
-            let imageUrl = '';
+            let imageUrl = existingImg;
             if(imgFile) {
                 const url = await uploadImage(imgFile);
                 if(url) imageUrl = url;
             }
 
-            const targetId = String(Date.now());
+            const targetId = editPlayerId ? editPlayerId : String(Date.now());
 
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/players`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({
-                        id: targetId,
-                        name: name,
-                        phone: phone,
-                        address: address,
-                        cat: cat,
-                        image_url: imageUrl
-                    })
-                });
+                let res;
+                if(editPlayerId) {
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/players?id=eq.${editPlayerId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            phone: phone,
+                            address: address,
+                            cat: cat,
+                            image_url: imageUrl
+                        })
+                    });
+                } else {
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/players`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({
+                            id: targetId,
+                            name: name,
+                            phone: phone,
+                            address: address,
+                            cat: cat,
+                            image_url: imageUrl
+                        })
+                    });
+                }
 
                 if(!res.ok) {
                     const err = await res.json();
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
                 } else {
-                    alert('✅ নতুন খেলোয়াড় সফলভাবে নিবন্ধিত হয়েছে!');
-                    document.getElementById('sName').value = '';
-                    document.getElementById('sPhone').value = '';
-                    document.getElementById('sAddress').value = '';
-                    document.getElementById('sImage').value = '';
+                    alert(editPlayerId ? '✅ খেলোয়াড়ের তথ্য সফলভাবে আপডেট করা হয়েছে!' : '✅ নতুন খেলোয়াড় সফলভাবে নিবন্ধিত হয়েছে এবং খেলোয়াড় তালিকায় স্বয়ংক্রিয়ভাবে যুক্ত হয়েছে!');
+                    resetPlayerForm();
                     switchTab('groups');
                     await loadData();
                 }
@@ -688,6 +711,39 @@
                 submitBtn.innerText = "💾 নতুন খেলোয়ার সেভ করুন";
                 submitBtn.disabled = false;
             }
+        }
+
+        function editPlayerBio(playerId) {
+            const player = globalPlayersData.find(p => String(p.id) === String(playerId));
+            if(!player) return;
+
+            document.getElementById('editPlayerId').value = player.id;
+            document.getElementById('sName').value = player.name || '';
+            document.getElementById('sPhone').value = player.phone || '';
+            document.getElementById('sAddress').value = player.address || '';
+            document.getElementById('sCat').value = player.cat || 'HIGH';
+            document.getElementById('existingPlayerImgUrl').value = player.image_url || '';
+
+            document.getElementById('playerFormTitle').innerText = "✏️ খেলোয়াড় তথ্য এডিট ফরম";
+            document.getElementById('sSubmitBtn').innerText = "🔄 খেলোয়াড় তথ্য আপডেট করুন";
+            document.getElementById('cancelPlayerEditBtn').classList.remove('hidden');
+
+            switchTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetPlayerForm() {
+            document.getElementById('editPlayerId').value = '';
+            document.getElementById('existingPlayerImgUrl').value = '';
+            document.getElementById('sName').value = '';
+            document.getElementById('sPhone').value = '';
+            document.getElementById('sAddress').value = '';
+            document.getElementById('sImage').value = '';
+            document.getElementById('sCat').value = 'HIGH';
+
+            document.getElementById('playerFormTitle').innerText = "নতুন খেলোয়ার নিবন্ধন ফরম";
+            document.getElementById('sSubmitBtn').innerText = "💾 নতুন খেলোয়ার সেভ করুন";
+            document.getElementById('cancelPlayerEditBtn').classList.add('hidden');
         }
 
         async function deletePlayerBio(playerId) {
@@ -895,7 +951,6 @@
         }
 
         function resetTeamForm() {
-            document.getElementById('editRowId').value = '/' ? '' : '';
             document.getElementById('editRowId').value = '';
             document.getElementById('existingImgUrl1').value = '';
             document.getElementById('existingImgUrl2').value = '';
