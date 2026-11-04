@@ -114,7 +114,7 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'teams' TABLE TO STORE PLAYERS UNDER 'group_name = "PLAYERS_POOL"') -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'teams' TABLE WITH group_name = 'PLAYERS_POOL') -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
@@ -353,8 +353,8 @@
 
         async function loadData() {
             try {
-                // Fetch Teams
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
+                // Fetch Teams (EXCLUDING PLAYERS_POOL)
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=neq.PLAYERS_POOL&select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
@@ -532,7 +532,7 @@
                 
                 let matchCards = '';
                 if(activeTeams.length < 2) {
-                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমান ফরম্যাটে আছে ${activeTeams.length}টি).</p>`;
+                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমান ফরম্যাটে আছে ${activeTeams.length}টি)।</p>`;
                 } else {
                     let matchNo = 1;
                     for(let i=0; i<activeTeams.length; i++) {
@@ -948,7 +948,7 @@
                     alert("মুছতে ব্যর্থ হয়েছে!");
                 }
             } catch(e) {
-                alert("নেটওয়ার_error!");
+                alert("নেটওয়ার্ক এরর!");
             }
         }
 
@@ -970,6 +970,7 @@
 
             toggleTeamType('single');
 
+            document.getElementById('teamSetupTitle').innerText = "🛡️ ২. টিম সেট করার ফরম্যাট (গ্রুপ প্রতি ১-৪ টিম ফরম্যাট)";
             document.getElementById('teamSubmitBtn').innerText = "💾 টিমের সেকশনে ডাটা সেভ করুন";
             document.getElementById('cancelTeamEditBtn').classList.add('hidden');
         }
