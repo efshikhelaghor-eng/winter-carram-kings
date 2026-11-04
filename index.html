@@ -114,7 +114,7 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'data' JSONB COLUMN COMPATIBLE WITH SUPABASE) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'data' JSONB COLUMN IN SUPABASE TO PREVENT SCHEMA ISSUES) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
@@ -365,16 +365,21 @@
                     globalTeamsData = teams;
                 }
 
-                // Fetch Independent Players
+                // Fetch Independent Players (using jsonb 'data' column format for zero-schema-error compatibility)
                 const pRes = await fetch(`${SUPABASE_URL}/rest/v1/players?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
                 });
-                const players = await pRes.json();
-                if(Array.isArray(players)) {
-                    globalPlayersData = players;
+                const rawPlayers = await pRes.json();
+                if(Array.isArray(rawPlayers)) {
+                    globalPlayersData = rawPlayers.map(p => {
+                        if(p.data && typeof p.data === 'object') {
+                            return { id: p.id, ...p.data };
+                        }
+                        return p;
+                    });
                 }
 
                 renderData(globalTeamsData, globalPlayersData);
@@ -530,7 +535,7 @@
                 
                 let matchCards = '';
                 if(activeTeams.length < 2) {
-                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমান ফরম্যাটে আছে ${activeTeams.length}টি)।</p>`;
+                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২টি টিম প্রয়োজন (বর্তমান ফরম্যাটে আছে ${activeTeams.length}টি).</p>`;
                 } else {
                     let matchNo = 1;
                     for(let i=0; i<activeTeams.length; i++) {
@@ -574,8 +579,8 @@
             } else {
                 players.forEach((p, idx) => {
                     let badgeColor = p.cat === 'HIGH' ? "bg-red-500/20 text-red-400" : p.cat === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
-                    let imgHtml = p.image_url 
-                        ? `<img src="${p.image_url}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/50">`
+                    let imgHtml = p.image_url || p.imageUrl 
+                        ? `<img src="${p.image_url || p.imageUrl}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/50">`
                         : `<div class="w-8 h-8 rounded-full bg-slate-700 flex justify-center items-center text-xs font-bold text-gray-400">👤</div>`;
 
                     let actionHtml = isAdmin ? `
@@ -591,7 +596,7 @@
                         <tr class="hover:bg-slate-700/40">
                             <td class="p-2">${imgHtml}</td>
                             <td class="p-2 text-yellow-400 font-bold">#${String(idx + 1).padStart(2, '0')}</td>
-                            <td class="p-2 font-bold text-white">${p.name}</td>
+                            <td class="p-2 font-bold text-white">${p.name || 'N/A'}</td>
                             <td class="p-2 text-gray-300">${p.address || 'N/A'}</td>
                             <td class="p-2"><span class="px-1.5 py-0.5 rounded text-xs border border-slate-600 ${badgeColor}">${p.cat || 'HIGH'}</span></td>
                             <td class="p-2 text-gray-300">${p.phone || 'N/A'}</td>
@@ -626,7 +631,7 @@
             }
         }
 
-        // SAVE / UPDATE PLAYER BIO (USES 'image_url' TO MATCH SUPABASE SCHEMA)
+        // SAVE / UPDATE PLAYER BIO (USES JSONB 'data' COLUMN TO PREVENT ANY COLUMN NOT FOUND ERROR)
         async function savePlayerBio(e) {
             e.preventDefault();
             const editPlayerId = document.getElementById('editPlayerId').value;
@@ -654,6 +659,14 @@
             }
 
             const targetId = editPlayerId ? editPlayerId : String(Date.now());
+            const playerDataObj = {
+                id: targetId,
+                name: name,
+                phone: phone,
+                address: address,
+                cat: cat,
+                image_url: imageUrl
+            };
 
             try {
                 let res;
@@ -667,11 +680,7 @@
                             'Prefer': 'return=minimal'
                         },
                         body: JSON.stringify({
-                            name: name,
-                            phone: phone,
-                            address: address,
-                            cat: cat,
-                            image_url: imageUrl
+                            data: playerDataObj
                         })
                     });
                 } else {
@@ -685,11 +694,7 @@
                         },
                         body: JSON.stringify({
                             id: targetId,
-                            name: name,
-                            phone: phone,
-                            address: address,
-                            cat: cat,
-                            image_url: imageUrl
+                            data: playerDataObj
                         })
                     });
                 }
@@ -720,7 +725,7 @@
             document.getElementById('sPhone').value = player.phone || '';
             document.getElementById('sAddress').value = player.address || '';
             document.getElementById('sCat').value = player.cat || 'HIGH';
-            document.getElementById('existingPlayerImgUrl').value = player.image_url || '';
+            document.getElementById('existingPlayerImgUrl').value = player.image_url || player.imageUrl || '';
 
             document.getElementById('playerFormTitle').innerText = "✏️ খেলোয়াড় তথ্য এডিট ফরম";
             document.getElementById('sSubmitBtn').innerText = "🔄 খেলোয়াড় তথ্য আপডেট করুন";
@@ -925,10 +930,6 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        async function deleteTeamStorageOrEntry(dbId) {
-            await deleteTeamSetup(dbId);
-        }
-
         async function deleteTeamSetup(dbId) {
             if(!confirm("আপনি কি নিশ্চিত যে এই টিম সেকশনের তথ্য মুছে ফেলতে চান?")) return;
 
@@ -937,7 +938,7 @@
                     method: 'DELETE',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANEN_KEY || SUPABASE_ANON_KEY}`
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
                 });
 
@@ -957,6 +958,7 @@
             document.getElementById('existingImgUrl1').value = '';
             document.getElementById('existingImgUrl2').value = '';
 
+            document.getElementById('tTeamName').value = ';';
             document.getElementById('tTeamName').value = '';
             document.getElementById('tp1Name').value = '';
             document.getElementById('tp1Phone').value = '';
@@ -970,7 +972,6 @@
 
             toggleTeamType('single');
 
-            document.getElementById('teamSetupTitle').innerText = "🛡️ ২. টিম সেট করার ফরম্যাট (গ্রুপ প্রতি ১-৪ টিম ফরম্যাট)";
             document.getElementById('teamSubmitBtn').innerText = "💾 টিমের সেকশনে ডাটা সেভ করুন";
             document.getElementById('cancelTeamEditBtn').classList.add('hidden');
         }
