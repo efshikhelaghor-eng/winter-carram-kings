@@ -114,7 +114,7 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (AUTO-ADDS TO PLAYERS TABLE, EDITABLE) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'data' JSONB COLUMN COMPATIBLE WITH SUPABASE) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
@@ -261,8 +261,8 @@
         let isAdmin = false;
         let globalTeamsData = [];
         let globalPlayersData = [];
-        let currentGroupTeamLimit = 4; // 1, 2, 3, or 4 teams limit per group
-        let selectedViewGroup = null; // null for cards view, or 'গ্রুপ এ', etc.
+        let currentGroupTeamLimit = 4;
+        let selectedViewGroup = null;
 
         function setGroupTeamLimit(limit) {
             currentGroupTeamLimit = limit;
@@ -429,7 +429,7 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW (STRICTLY ISOLATED BY CURRENT LIMIT 1, 2, 3, or 4)
+            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW
             if(selectedViewGroup === null) {
                 document.getElementById('groupsSelectionView').classList.remove('hidden');
                 document.getElementById('singleGroupDetailView').classList.add('hidden');
@@ -437,7 +437,6 @@
                 let cardsHtml = '';
                 ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                     let teamList = groups[gName] || [];
-                    // Strictly isolate teams up to currentGroupTeamLimit
                     let activeTeamsCount = Math.min(teamList.length, currentGroupTeamLimit);
 
                     cardsHtml += `
@@ -461,7 +460,6 @@
                 document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - টিম তালিকা (${currentGroupTeamLimit} টিম ফরম্যাট)`;
 
                 let teamList = groups[selectedViewGroup] || [];
-                // STRICT ISOLATION: Exactly show up to currentGroupTeamLimit teams, preventing overlapping with other limits
                 let activeTeams = teamList.slice(0, currentGroupTeamLimit);
 
                 let detailHtml = '';
@@ -524,7 +522,7 @@
                 document.getElementById('detailGroupTeamsContainer').innerHTML = detailHtml;
             }
 
-            // 2. RENDER FIXTURES TAB (STRICTLY ISOLATED BY CURRENT LIMIT)
+            // 2. RENDER FIXTURES TAB
             let fixturesHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let teamList = groups[gName] || [];
@@ -569,7 +567,7 @@
             });
             document.getElementById('fixturesContainer').innerHTML = fixturesHtml;
 
-            // 3. RENDER PLAYERS TAB TABLE (AUTO-SYNCED & EDITABLE)
+            // 3. RENDER PLAYERS TAB TABLE
             let tableHtml = '';
             if(players.length === 0) {
                 tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
@@ -628,7 +626,7 @@
             }
         }
 
-        // SAVE / UPDATE PLAYER BIO (AUTO-SYNCED TO PLAYERS TABLE & EDITABLE)
+        // SAVE / UPDATE PLAYER BIO (USES 'image_url' TO MATCH SUPABASE SCHEMA)
         async function savePlayerBio(e) {
             e.preventDefault();
             const editPlayerId = document.getElementById('editPlayerId').value;
@@ -700,7 +698,7 @@
                     const err = await res.json();
                     alert("সেভ হয়নি: " + (err.message || res.statusText));
                 } else {
-                    alert(editPlayerId ? '✅ খেলোয়াড়ের তথ্য সফলভাবে আপডেট করা হয়েছে!' : '✅ নতুন খেলোয়াড় সফলভাবে নিবন্ধিত হয়েছে এবং খেলোয়াড় তালিকায় স্বয়ংক্রিয়ভাবে যুক্ত হয়েছে!');
+                    alert(editPlayerId ? '✅ খেলোয়াড়ের তথ্য সফলভাবে আপডেট করা হয়েছে!' : '✅ নতুন খেলোয়াড় সফলভাবে নিবন্ধিত হয়েছে!');
                     resetPlayerForm();
                     switchTab('groups');
                     await loadData();
@@ -927,6 +925,10 @@
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
+        async function deleteTeamStorageOrEntry(dbId) {
+            await deleteTeamSetup(dbId);
+        }
+
         async function deleteTeamSetup(dbId) {
             if(!confirm("আপনি কি নিশ্চিত যে এই টিম সেকশনের তথ্য মুছে ফেলতে চান?")) return;
 
@@ -935,7 +937,7 @@
                     method: 'DELETE',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        'Authorization': `Bearer ${SUPABASE_ANEN_KEY || SUPABASE_ANON_KEY}`
                     }
                 });
 
