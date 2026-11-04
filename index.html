@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <!-- SINGLE GROUP DETAIL VIEW (SHOWN WHEN A GROUP IS CLICKED - STRICTLY ISOLATED FORMAT) -->
+            <!-- SINGLE GROUP DETAIL VIEW -->
             <div id="singleGroupDetailView" class="space-y-4 hidden">
                 <div class="flex justify-between items-center bg-slate-900 p-3 rounded-xl border border-yellow-500/40">
                     <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-3 py-1.5 rounded font-bold border border-slate-700">← সকল গ্রুপে ফিরে যান</button>
@@ -114,7 +114,7 @@
         <!-- ADMIN DASHBOARD TAB -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'data' JSONB COLUMN IN SUPABASE TO PREVENT SCHEMA ISSUES) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (USES 'teams' TABLE TO STORE PLAYERS UNDER 'group_name = "PLAYERS_POOL"') -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
@@ -365,8 +365,8 @@
                     globalTeamsData = teams;
                 }
 
-                // Fetch Independent Players (using jsonb 'data' column format for zero-schema-error compatibility)
-                const pRes = await fetch(`${SUPABASE_URL}/rest/v1/players?select=*`, {
+                // Fetch Independent Players (Stored in 'teams' table with group_name = 'PLAYERS_POOL' to avoid missing table/column errors)
+                const pRes = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=eq.PLAYERS_POOL&select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
@@ -375,10 +375,7 @@
                 const rawPlayers = await pRes.json();
                 if(Array.isArray(rawPlayers)) {
                     globalPlayersData = rawPlayers.map(p => {
-                        if(p.data && typeof p.data === 'object') {
-                            return { id: p.id, ...p.data };
-                        }
-                        return p;
+                        return { db_id: p.id, ...(p.data || {}) };
                     });
                 }
 
@@ -421,7 +418,7 @@
             let groups = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
 
             teams.forEach(item => {
-                if(item.group_name && item.data) {
+                if(item.group_name && item.group_name !== 'PLAYERS_POOL' && item.data) {
                     if(!groups[item.group_name]) groups[item.group_name] = [];
                     groups[item.group_name].push({ db_id: item.id, ...item.data });
                 }
@@ -579,15 +576,15 @@
             } else {
                 players.forEach((p, idx) => {
                     let badgeColor = p.cat === 'HIGH' ? "bg-red-500/20 text-red-400" : p.cat === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
-                    let imgHtml = p.image_url || p.imageUrl 
-                        ? `<img src="${p.image_url || p.imageUrl}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/50">`
+                    let imgHtml = p.imageUrl || p.image_url 
+                        ? `<img src="${p.imageUrl || p.image_url}" class="w-8 h-8 rounded-full object-cover border border-yellow-500/50">`
                         : `<div class="w-8 h-8 rounded-full bg-slate-700 flex justify-center items-center text-xs font-bold text-gray-400">👤</div>`;
 
                     let actionHtml = isAdmin ? `
                         <td class="p-2">
                             <div class="flex gap-1.5">
-                                <button onclick="editPlayerBio('${p.id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded text-xs">✏️ এডিট</button>
-                                <button onclick="deletePlayerBio('${p.id}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-xs">🗑️ মুছুন</button>
+                                <button onclick="editPlayerBio('${p.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded text-xs">✏️ এডিট</button>
+                                <button onclick="deletePlayerBio('${p.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded text-xs">🗑️ মুছুন</button>
                             </div>
                         </td>
                     ` : '';
@@ -631,7 +628,7 @@
             }
         }
 
-        // SAVE / UPDATE PLAYER BIO (USES JSONB 'data' COLUMN TO PREVENT ANY COLUMN NOT FOUND ERROR)
+        // PERMANENT FIX: USES EXISTING 'teams' TABLE WITH group_name = 'PLAYERS_POOL' (100% Schema Compatible)
         async function savePlayerBio(e) {
             e.preventDefault();
             const editPlayerId = document.getElementById('editPlayerId').value;
@@ -665,13 +662,13 @@
                 phone: phone,
                 address: address,
                 cat: cat,
-                image_url: imageUrl
+                imageUrl: imageUrl
             };
 
             try {
                 let res;
                 if(editPlayerId) {
-                    res = await fetch(`${SUPABASE_URL}/rest/v1/players?id=eq.${editPlayerId}`, {
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${editPlayerId}`, {
                         method: 'PATCH',
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
@@ -680,11 +677,12 @@
                             'Prefer': 'return=minimal'
                         },
                         body: JSON.stringify({
+                            group_name: 'PLAYERS_POOL',
                             data: playerDataObj
                         })
                     });
                 } else {
-                    res = await fetch(`${SUPABASE_URL}/rest/v1/players`, {
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
                         method: 'POST',
                         headers: {
                             'apikey': SUPABASE_ANON_KEY,
@@ -694,6 +692,7 @@
                         },
                         body: JSON.stringify({
                             id: targetId,
+                            group_name: 'PLAYERS_POOL',
                             data: playerDataObj
                         })
                     });
@@ -716,16 +715,16 @@
             }
         }
 
-        function editPlayerBio(playerId) {
-            const player = globalPlayersData.find(p => String(p.id) === String(playerId));
+        function editPlayerBio(dbId) {
+            const player = globalPlayersData.find(p => String(p.db_id) === String(dbId));
             if(!player) return;
 
-            document.getElementById('editPlayerId').value = player.id;
+            document.getElementById('editPlayerId').value = player.db_id;
             document.getElementById('sName').value = player.name || '';
             document.getElementById('sPhone').value = player.phone || '';
             document.getElementById('sAddress').value = player.address || '';
             document.getElementById('sCat').value = player.cat || 'HIGH';
-            document.getElementById('existingPlayerImgUrl').value = player.image_url || player.imageUrl || '';
+            document.getElementById('existingPlayerImgUrl').value = player.imageUrl || player.image_url || '';
 
             document.getElementById('playerFormTitle').innerText = "✏️ খেলোয়াড় তথ্য এডিট ফরম";
             document.getElementById('sSubmitBtn').innerText = "🔄 খেলোয়াড় তথ্য আপডেট করুন";
@@ -749,11 +748,11 @@
             document.getElementById('cancelPlayerEditBtn').classList.add('hidden');
         }
 
-        async function deletePlayerBio(playerId) {
+        async function deletePlayerBio(dbId) {
             if(!confirm("আপনি কি নিশ্চিত যে এই খেলোয়াড়কে তালিকা থেকে মুছে ফেলতে চান?")) return;
 
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/players?id=eq.${playerId}`, {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
                     method: 'DELETE',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -949,7 +948,7 @@
                     alert("মুছতে ব্যর্থ হয়েছে!");
                 }
             } catch(e) {
-                alert("নেটওয়ার্ক এরর!");
+                alert("নেটওয়ার_error!");
             }
         }
 
@@ -958,7 +957,6 @@
             document.getElementById('existingImgUrl1').value = '';
             document.getElementById('existingImgUrl2').value = '';
 
-            document.getElementById('tTeamName').value = ';';
             document.getElementById('tTeamName').value = '';
             document.getElementById('tp1Name').value = '';
             document.getElementById('tp1Phone').value = '';
