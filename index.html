@@ -32,7 +32,7 @@
         <!-- LOADING SPINNER -->
         <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
-        <!-- HOME TAB: GROUPS SELECTION & INDIVIDUAL GROUP VIEWS (ONLY SINGLE PLAYERS FORMAT) -->
+        <!-- HOME TAB: GROUPS SELECTION & INDIVIDUAL GROUP VIEWS -->
         <div id="tabHome" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
                 <div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- FIXTURES TAB: GROUP STAGE MATCH FIXTURES (SINGLE PLAYERS) -->
+        <!-- FIXTURES TAB: GROUP STAGE MATCH FIXTURES -->
         <div id="tabFixtures" class="space-y-6 hidden">
             <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <!-- PLAYERS LIST TAB (AUTO-SYNCED & EDITABLE) -->
+        <!-- PLAYERS LIST TAB -->
         <div id="tabGroups" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
                 <div class="flex justify-between items-center mb-3">
@@ -151,7 +151,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: SINGLE PLAYER GROUP ASSIGNMENT (100% SINGLE FORMAT) -->
+            <!-- SECTION 2: SINGLE PLAYER GROUP ASSIGNMENT -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
@@ -371,7 +371,7 @@
                 else el.classList.add('hidden');
             });
 
-            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW (100% SINGLE FORMAT)
+            // 1. RENDER HOMEPAGE GROUPS SELECTION OR DETAIL VIEW
             if(selectedViewGroup === null) {
                 document.getElementById('groupsSelectionView').classList.remove('hidden');
                 document.getElementById('singleGroupDetailView').classList.add('hidden');
@@ -444,7 +444,7 @@
                 document.getElementById('detailGroupTeamsContainer').innerHTML = detailHtml;
             }
 
-            // 2. RENDER FIXTURES TAB (SINGLE PLAYER MATCHES)
+            // 2. RENDER FIXTURES TAB
             let fixturesHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                 let playerList = groups[gName] || [];
