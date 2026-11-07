@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ ও স্টোরেজ কানেক্টেড ✅ (নিবন্ধিত খেলোয়াড় ভ্যালিডেশন)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ ও স্টোরেজ কানেক্টেড ✅ (একক খেলোয়াড় টুর্নামেন্ট)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -22,6 +22,7 @@
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
         <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ তালিকা)</button>
         <button onclick="switchTab('fixtures')" id="navFixtures" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">⚔️ গ্রুপ ফিকশ্চার</button>
+        <button onclick="switchTab('knockout')" id="navKnockout" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">🏆 নকআউট পর্ব (২য় রাউন্ড - ফাইনাল)</button>
         <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">খেলোয়াড় তালিকা</button>
         <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
     </nav>
@@ -32,21 +33,27 @@
         <!-- LOADING SPINNER -->
         <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold">🔄 লোড হচ্ছে...</div>
 
-        <!-- HOME TAB: GROUPS SELECTION & INDIVIDUAL GROUP VIEWS -->
+        <!-- HOME TAB: GROUPS SELECTION & DYNAMIC PLAYER LIMIT TOGGLE -->
         <div id="tabHome" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
                 <div>
-                    <h2 class="text-lg font-bold text-yellow-400 mb-1">📢 নোটিশ ও গ্রুপসমূহ (একক খেলোয়াড় ফরম্যাট)</h2>
+                    <h2 class="text-lg font-bold text-yellow-400 mb-1">📢 নোটিশ ও গ্রুপসমূহ</h2>
                     <div id="noticeList" class="text-xs text-gray-300">কোনো নোটিশ নেই।</div>
                 </div>
-                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-yellow-500/40 text-xs font-bold text-yellow-400">
-                    ফরম্যাট: নিবন্ধিত একক খেলোয়াড় টুর্নামেন্ট
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+                    <span class="text-xs font-bold text-yellow-400">মোট খেলোয়াড় সংখ্যা (প্রতি গ্রুপে):</span>
+                    <div class="flex gap-1" id="groupSizeToggles">
+                        <button onclick="setTournamentFormat(12)" id="formatBtn12" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">১২ জন (৩/গ্রুপ)</button>
+                        <button onclick="setTournamentFormat(16)" id="formatBtn16" class="px-2.5 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950">১৬ জন (৪/গ্রুপ)</button>
+                        <button onclick="setTournamentFormat(20)" id="formatBtn20" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">২০ জন (৫/গ্রুপ)</button>
+                        <button onclick="setTournamentFormat(24)" id="formatBtn24" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200">২৪ জন (৬/গ্রুপ)</button>
+                    </div>
                 </div>
             </div>
 
             <!-- MAIN GROUPS SELECTION CARDS (A, B, C, D) -->
             <div id="groupsSelectionView" class="space-y-4">
-                <h3 class="text-sm font-bold text-yellow-400 border-b border-slate-700 pb-2">🏆 গ্রুপ নির্বাচন করুন (গ্রুপের ভেতরে নিবন্ধিত একক খেলোয়াড়দের তালিকা দেখার জন্য ক্লিক করুন):</h3>
+                <h3 class="text-sm font-bold text-yellow-400 border-b border-slate-700 pb-2">🏆 গ্রুপ নির্বাচন করুন (গ্রুপের ভেতরে খেলোয়াড়দের তালিকা দেখার জন্য ক্লিক করুন):</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="groupCardsContainer">
                     <!-- Rendered dynamically -->
                 </div>
@@ -55,11 +62,11 @@
             <!-- SINGLE GROUP DETAIL VIEW -->
             <div id="singleGroupDetailView" class="space-y-4 hidden">
                 <div class="flex justify-between items-center bg-slate-900 p-3 rounded-xl border border-yellow-500/40">
-                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-3 py-1.5 rounded font-bold border border-slate-700">← সকল গ্রুপে ফিরে যান</button>
+                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-750 text-yellow-400 text-xs px-3 py-1.5 rounded font-bold border border-slate-700">← সকল গ্রুপে ফিরে যান</button>
                     <h3 id="detailGroupTitle" class="text-base font-extrabold text-yellow-400">গ্রুপ বিস্তারিত</h3>
                 </div>
                 <div id="detailGroupTeamsContainer" class="space-y-3">
-                    <!-- Registered players inside clicked group -->
+                    <!-- Single players inside clicked group -->
                 </div>
             </div>
         </div>
@@ -68,12 +75,162 @@
         <div id="tabFixtures" class="space-y-6 hidden">
             <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
-                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপ পর্বের একক ম্যাচ ফিকশ্চার</h2>
-                    <p class="text-xs text-gray-400">প্রতিটি গ্রুপের নিবন্ধিত খেলোয়াড়দের মধ্যে রাউন্ড-রবিন ফিকশ্চার</p>
+                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপ পর্বের রাউন্ড-রবিন ম্যাচ ফিকশ্চার</h2>
+                    <p class="text-xs text-gray-400" id="fixtureSubtext">প্রতিটি গ্রুপের নিবন্ধিত খেলোয়াড়দের মধ্যকার ফিকশ্চার</p>
                 </div>
                 <div id="fixturesContainer" class="space-y-6">
                     <!-- Dynamic Fixtures for A, B, C, D -->
                 </div>
+            </div>
+        </div>
+
+        <!-- KNOCKOUT TAB: 2ND ROUND TO FINAL & 3RD PLACE MATCH -->
+        <div id="tabKnockout" class="space-y-6 hidden">
+            <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-6">
+                <div class="border-b border-slate-700 pb-3 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                            <span>🏆</span> নকআউট পর্বের সময়সূচি ও ম্যাচ ফরম্যাট
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">দ্বিতীয় রাউন্ড (কোয়ার্টার ফাইনাল) থেকে ফাইনাল এবং ৩য় স্থান নির্ধারণী ম্যাচ</p>
+                    </div>
+                    <span class="bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full text-xs font-bold">
+                        নকআউট মোড (হারলেই বিদায়)
+                    </span>
+                </div>
+
+                <!-- 1. QUARTER FINALS (2ND ROUND) TABLE -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-500 pl-2">
+                        <span>🔥</span> ২য় রাউন্ড: কোয়ার্টার ফাইনাল (Quarter Finals)
+                    </h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-700">
+                        <table class="w-full text-left text-xs md:text-sm">
+                            <thead class="bg-slate-700 text-yellow-400 uppercase">
+                                <tr>
+                                    <th class="p-3">ম্যাচ নং</th>
+                                    <th class="p-3">ম্যাচ টাইটেল</th>
+                                    <th class="p-3">মুখোমুখি দল/খেলোয়াড়</th>
+                                    <th class="p-3">ফলাফল / বিজয়ী</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700 bg-slate-900">
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-yellow-400">QF-১</td>
+                                    <td class="p-3 font-semibold">১ম কোয়ার্টার ফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-400 font-bold">গ্রুপ এ চ্যাম্পিয়ন</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-400 font-bold">গ্রুপ বি রানার্স-আপ</span></td>
+                                    <td class="p-3 text-gray-400 italic">বিজয় সেমিফাইনাল-১ এ উন্নীত</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-yellow-400">QF-২</td>
+                                    <td class="p-3 font-semibold">২য় কোয়ার্টার ফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-400 font-bold">গ্রুপ বি চ্যাম্পিয়ন</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-400 font-bold">গ্রুপ এ রানার্স-আপ</span></td>
+                                    <td class="p-3 text-gray-400 italic">বিজয় সেমিফাইনাল-১ এ উন্নীত</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-yellow-400">QF-৩</td>
+                                    <td class="p-3 font-semibold">৩য় কোয়ার্টার ফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-400 font-bold">গ্রুপ সি চ্যাম্পিয়ন</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-400 font-bold">গ্রুপ ডি রানার্স-আপ</span></td>
+                                    <td class="p-3 text-gray-400 italic">বিজয় সেমিফাইনাল-২ এ উন্নীত</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-yellow-400">QF-৪</td>
+                                    <td class="p-3 font-semibold">৪র্থ কোয়ার্টার ফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-400 font-bold">গ্রুপ ডি চ্যাম্পিয়ন</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-400 font-bold">গ্রুপ সি রানার্স-আপ</span></td>
+                                    <td class="p-3 text-gray-400 italic">বিজয় সেমিফাইনাল-২ এ উন্নীত</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2. SEMI FINALS TABLE -->
+                <div class="space-y-3 pt-3">
+                    <h3 class="text-base font-extrabold text-orange-400 flex items-center gap-2 border-l-4 border-orange-500 pl-2">
+                        <span>⚡</span> ৩য় রাউন্ড: সেমিফাইনাল (Semi Finals)
+                    </h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-700">
+                        <table class="w-full text-left text-xs md:text-sm">
+                            <thead class="bg-slate-700 text-orange-400 uppercase">
+                                <tr>
+                                    <th class="p-3">ম্যাচ নং</th>
+                                    <th class="p-3">ম্যাচ টাইটেল</th>
+                                    <th class="p-3">মুখোমুখি লড়াই</th>
+                                    <th class="p-3">গন্তব্য / ফলাফল</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700 bg-slate-900">
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-orange-400">SF-১</td>
+                                    <td class="p-3 font-semibold">১ম সেমিফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-300 font-bold">QF-১ বিজয়ী</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-300 font-bold">QF-২ বিজয়ী</span></td>
+                                    <td class="p-3 text-green-400 font-semibold">বিজয় সরাসরি ফাইনালে</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/60">
+                                    <td class="p-3 font-bold text-orange-400">SF-২</td>
+                                    <td class="p-3 font-semibold">২য় সেমিফাইনাল</td>
+                                    <td class="p-3 text-white"><span class="text-yellow-300 font-bold">QF-৩ বিজয়ী</span> <span class="text-gray-400">বনাম</span> <span class="text-yellow-300 font-bold">QF-৪ বিজয়ী</span></td>
+                                    <td class="p-3 text-green-400 font-semibold">বিজয় সরাসরি ফাইনালে</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. 3RD PLACE PLAY-OFF MATCH TABLE -->
+                <div class="space-y-3 pt-3">
+                    <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2 border-l-4 border-blue-500 pl-2">
+                        <span>🥉</span> ৩য় স্থান নির্ধারণী ম্যাচ (Third Place Play-off)
+                    </h3>
+                    <div class="bg-blue-950/40 p-4 rounded-xl border border-blue-500/40">
+                        <div class="overflow-x-auto rounded-lg border border-slate-700">
+                            <table class="w-full text-left text-xs md:text-sm">
+                                <thead class="bg-slate-800 text-blue-300 uppercase">
+                                    <tr>
+                                        <th class="p-3">ম্যাচ</th>
+                                        <th class="p-3">খেলোয়াড় ১ (পরাজিত সেমিফাইনালিস্ট)</th>
+                                        <th class="p-3">VS</th>
+                                        <th class="p-3">খেলোয়াড় ২ (পরাজিত সেমিফাইনালিস্ট)</th>
+                                        <th class="p-3">পুরস্কার / সম্মাননা</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-slate-900">
+                                    <tr>
+                                        <td class="p-3 font-bold text-blue-400">3P-Match</td>
+                                        <td class="p-3 font-bold text-red-300">১ম সেমিফাইনালে পরাজিত দল (SF-১ Runner)</td>
+                                        <td class="p-3 font-extrabold text-yellow-400">বনাম</td>
+                                        <td class="p-3 font-bold text-red-300">২য় সেমিফাইনালে পরাজিত দল (SF-২ Runner)</td>
+                                        <td class="p-3 text-yellow-400 font-bold">🥉 টুর্নামেন্ট ৩য় স্থান ও ট্রফি</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-[11px] text-gray-300 mt-2 italic">* সেমিফাইনালে হেরে যাওয়া দুই প্রতিদ্বন্দ্বীর মধ্যে মুখোমুখি দ্বৈরথে বিজয়ী দল টুর্নামেন্টের ৩য় স্থান অর্জন করবে।</p>
+                    </div>
+                </div>
+
+                <!-- 4. GRAND FINAL MATCH TABLE -->
+                <div class="space-y-3 pt-3">
+                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-400 pl-2">
+                        <span>👑</span> মেগা ফাইনাল (Grand Final Match)
+                    </h3>
+                    <div class="bg-yellow-950/30 p-5 rounded-2xl border-2 border-yellow-500/60 shadow-2xl text-center space-y-4">
+                        <div class="inline-block bg-yellow-500 text-gray-950 text-xs px-3 py-1 rounded-full font-extrabold uppercase">
+                            চ্যাম্পিয়নশিপ ট্রফি ফাইট 🏆
+                        </div>
+                        <div class="flex justify-center items-center gap-4 flex-wrap text-sm md:text-base font-extrabold">
+                            <div class="bg-slate-900 px-5 py-3 rounded-xl border border-yellow-500/40 text-yellow-300">
+                                🥇 সেমিফাইনাল-১ বিজয়ী
+                            </div>
+                            <span class="text-red-500 font-extrabold text-lg">VS</span>
+                            <div class="bg-slate-900 px-5 py-3 rounded-xl border border-yellow-500/40 text-yellow-300">
+                                🥇 সেমিফাইনাল-২ বিজয়ী
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-300">বিজয়ী দল অর্জন করবে: <strong class="text-yellow-400">উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং ট্রফি & রানার্সআপ মেডেল</strong></p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -151,7 +308,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: REGISTERED PLAYER GROUP ASSIGNMENT (STRICT DROPDOWN SELECTION) -->
+            <!-- SECTION 2: REGISTERED PLAYER GROUP ASSIGNMENT -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
@@ -205,7 +362,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Registered Player Enforcement)
+        © 2026 Winter Carram Kings Battle (12/16/20/24 Players & Knockout Bracket)
     </footer>
 
     <!-- App Logic Script -->
@@ -217,15 +374,39 @@
         let globalTeamsData = [];
         let globalPlayersData = [];
         let selectedViewGroup = null;
+        let totalTournamentPlayers = 16; // Options: 12, 16, 20, 24
+        let playersPerGroup = 4; // 12->3, 16->4, 20->5, 24->6
+
+        function setTournamentFormat(totalCount) {
+            totalTournamentPlayers = totalCount;
+            playersPerGroup = totalCount / 4;
+
+            [12, 16, 20, 24].forEach(c => {
+                let btn = document.getElementById('formatBtn' + c);
+                if(btn) {
+                    if(c === totalCount) {
+                        btn.className = "px-2.5 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950";
+                    } else {
+                        btn.className = "px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-gray-200";
+                    }
+                }
+            });
+
+            document.getElementById('fixtureSubtext').innerText = `প্রতি গ্রুপে ${playersPerGroup} জন করে নিবন্ধিত খেলোয়াড়দের মধ্যকার ফিকশ্চার (মোট ${totalTournamentPlayers} জন)`;
+
+            renderData(globalTeamsData, globalPlayersData);
+        }
 
         function switchTab(tab) {
             document.getElementById('tabHome').classList.add('hidden');
             document.getElementById('tabFixtures').classList.add('hidden');
+            document.getElementById('tabKnockout').classList.add('hidden');
             document.getElementById('tabGroups').classList.add('hidden');
             document.getElementById('tabDashboard').classList.add('hidden');
 
             document.getElementById('navHome').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
             document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
+            document.getElementById('navKnockout').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
             document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200";
@@ -236,6 +417,9 @@
             } else if(tab === 'fixtures') {
                 document.getElementById('tabFixtures').classList.remove('hidden');
                 document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+            } else if(tab === 'knockout') {
+                document.getElementById('tabKnockout').classList.remove('hidden');
+                document.getElementById('navKnockout').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'groups') {
                 document.getElementById('tabGroups').classList.remove('hidden');
                 document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
@@ -279,7 +463,7 @@
 
         async function loadData() {
             try {
-                // Fetch Teams (Assigned Group Players) - Excluding PLAYERS_POOL
+                // Fetch Teams (Assigned Group Players)
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=neq.PLAYERS_POOL&select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -288,7 +472,6 @@
                 });
                 const teams = await res.json();
                 if(Array.isArray(teams)) {
-                    // CLEANUP SANITIZATION: Automatically filter out any team entries not backed by a valid registered player ID
                     globalTeamsData = teams;
                 }
 
@@ -306,12 +489,11 @@
                     });
                 }
 
-                // STRICT VALIDATION SANITIZATION: Remove any group assignments where the player is not in globalPlayersData
+                // STRICT SANITIZATION: Remove any group assignments where the player is not in globalPlayersData
                 let validPlayerIds = new Set(globalPlayersData.map(p => String(p.id)));
                 for(let item of globalTeamsData) {
                     let assignedPlayerId = item.data ? (item.data.registeredPlayerId || item.data.id) : null;
                     if(!assignedPlayerId || !validPlayerIds.has(String(assignedPlayerId))) {
-                        // Automatically clean up orphaned/unregistered entries from database
                         await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${item.id}`, {
                             method: 'DELETE',
                             headers: {
@@ -322,7 +504,7 @@
                     }
                 }
 
-                // Re-fetch clean teams data after sanitization
+                // Re-fetch clean teams data
                 const cleanRes = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=neq.PLAYERS_POOL&select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -383,13 +565,11 @@
 
         function renderData(teams, players) {
             let groups = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
-
             let validPlayerIds = new Set(players.map(p => String(p.id)));
 
             teams.forEach(item => {
                 if(item.group_name && item.group_name !== 'PLAYERS_POOL' && item.data) {
                     let pId = item.data.registeredPlayerId || item.data.id;
-                    // Double check validation: only include if player exists in registered pool
                     if(pId && validPlayerIds.has(String(pId))) {
                         if(!groups[item.group_name]) groups[item.group_name] = [];
                         groups[item.group_name].push({ db_id: item.id, ...item.data });
@@ -412,6 +592,7 @@
                 let cardsHtml = '';
                 ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
                     let playerList = groups[gName] || [];
+                    let activeCount = Math.min(playerList.length, playersPerGroup);
 
                     cardsHtml += `
                         <div onclick="openGroupDetail('${gName}')" class="bg-slate-800 hover:bg-slate-750 p-5 rounded-2xl border border-slate-700 hover:border-yellow-500/60 shadow-xl cursor-pointer transition flex justify-between items-center group">
@@ -419,10 +600,10 @@
                                 <h4 class="text-lg font-extrabold text-yellow-400 group-hover:text-yellow-300 flex items-center gap-2">
                                     <span>🏆</span> ${gName}
                                 </h4>
-                                <p class="text-xs text-gray-400">নিবন্ধিত একক খেলোয়াড়: <span class="text-white font-bold">${playerList.length} জন</span></p>
+                                <p class="text-xs text-gray-400">নিবন্ধিত খেলোয়াড় (লিমিট ${playersPerGroup}): <span class="text-white font-bold">${activeCount} / ${playersPerGroup} জন</span></p>
                             </div>
                             <div class="bg-slate-900 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 p-3 rounded-xl border border-slate-700 font-bold text-xs transition">
-                                খেলোয়াড় তালিকা দেখুন →
+                                তালিকা দেখুন →
                             </div>
                         </div>
                     `;
@@ -431,9 +612,9 @@
             } else {
                 document.getElementById('groupsSelectionView').classList.add('hidden');
                 document.getElementById('singleGroupDetailView').classList.remove('hidden');
-                document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - নিবন্ধিত খেলোয়াড় তালিকা`;
+                document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - নিবন্ধিত খেলোয়াড় তালিকা (সর্বোচ্চ ${playersPerGroup} জন)`;
 
-                let playerList = groups[selectedViewGroup] || [];
+                let playerList = (groups[selectedViewGroup] || []).slice(0, playersPerGroup);
 
                 let detailHtml = '';
                 if(playerList.length === 0) {
@@ -454,9 +635,9 @@
                             <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3 shadow-lg">
                                 <div class="flex justify-between items-center border-b border-slate-700 pb-2">
                                     <h5 class="font-bold text-yellow-400 text-sm flex items-center gap-2">
-                                        <span>👤</span> খেলোয়াড়: <span class="text-white">${p.name || 'খেলোয়াড় ' + (pIdx + 1)}</span>
+                                        <span>👤</span> খেলোয়াড় #${pIdx + 1}: <span class="text-white">${p.name}</span>
                                     </h5>
-                                    <span class="text-[10px] bg-slate-900 text-gray-300 px-2.5 py-1 rounded-full border border-slate-700 font-bold">নিবন্ধিত খেলোয়াড়</span>
+                                    <span class="text-[10px] bg-slate-900 text-gray-300 px-2.5 py-1 rounded-full border border-slate-700 font-bold">একক টুর্নামেন্ট</span>
                                 </div>
 
                                 <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-700/50 text-xs">
@@ -477,14 +658,14 @@
                 document.getElementById('detailGroupTeamsContainer').innerHTML = detailHtml;
             }
 
-            // 2. RENDER FIXTURES TAB
+            // 2. RENDER FIXTURES TAB (ROUND ROBIN BASED ON CURRENT PLAYERS PER GROUP LIMIT)
             let fixturesHtml = '';
             ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
-                let playerList = groups[gName] || [];
+                let playerList = (groups[gName] || []).slice(0, playersPerGroup);
                 
                 let matchCards = '';
                 if(playerList.length < 2) {
-                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২ জন নিবন্ধিত খেলোয়াড় প্রয়োজন (বর্তমান গ্রুপে আছেন ${playerList.length} জন)।</p>`;
+                    matchCards = `<p class="text-xs text-gray-400 italic py-2">ফিকশ্চার তৈরির জন্য কমপক্ষে ২ জন নিবন্ধিত খেলোয়াড় প্রয়োজন (বর্তমানে আছে ${playerList.length} জন)।</p>`;
                 } else {
                     let matchNo = 1;
                     for(let i=0; i<playerList.length; i++) {
@@ -510,8 +691,8 @@
                 fixturesHtml += `
                     <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-3">
                         <h3 class="font-bold text-yellow-400 text-sm border-b border-slate-700 pb-1.5 flex justify-between items-center">
-                            <span>🏆 ${gName} - একক ফিকশ্চার</span>
-                            <span class="text-[10px] text-gray-400">খেলোয়াড় সংখ্যা: ${playerList.length}</span>
+                            <span>🏆 ${gName} - গ্রুপ পর্বের ফিকশ্চার</span>
+                            <span class="text-[10px] text-gray-400">খেলোয়াড়: ${playerList.length} / ${playersPerGroup}</span>
                         </h3>
                         <div class="space-y-2">
                             ${matchCards}
@@ -713,7 +894,7 @@
                     }
                 });
 
-                // Also delete any group assignments associated with this player ID
+                // Delete any group assignments associated with this player ID
                 let assignedMatches = globalTeamsData.filter(t => t.data && String(t.data.registeredPlayerId || t.data.id) === String(dbId));
                 for(let m of assignedMatches) {
                     await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${m.id}`, {
@@ -736,7 +917,7 @@
             }
         }
 
-        // SAVE REGISTERED PLAYER GROUP ASSIGNMENT (STRICTLY FROM REGISTERED POOL)
+        // SAVE REGISTERED PLAYER GROUP ASSIGNMENT
         async function saveTeamSetup(e) {
             e.preventDefault();
             const editId = document.getElementById('editRowId').value;
@@ -748,7 +929,6 @@
                 return;
             }
 
-            // Find player details from globalPlayersData
             const regPlayer = globalPlayersData.find(p => String(p.id) === String(selectedPlayerId));
             if(!regPlayer) {
                 alert('নির্বাচিত খেলোয়াড়টি নিবন্ধিত তালিকায় পাওয়া যায়নি!');
