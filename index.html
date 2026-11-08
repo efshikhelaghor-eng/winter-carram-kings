@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (নিবন্ধিত খেলোয়াড় ভ্যালিডেশন সহ)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (স্বয়ংক্রিয় সেলফ-ম্যাচ প্রতিরোধক)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -87,8 +87,8 @@
         <div id="tabFixtures" class="space-y-6 hidden">
             <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
-                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপপর্ব ফিকশ্চার (প্রতি গ্রুপে ৪টি ম্যাচ ও নিবন্ধিত খেলোয়াড় ভ্যালিডেশন)</h2>
-                    <p class="text-xs text-gray-400">শুধুমাত্র নিবন্ধিত খেলোয়াড়দের নামই ম্যাচে ব্যবহার করা যাবে (অবৈধ নাম স্বয়ংক্রিয় ফিল্টার বা রিসেট)</p>
+                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপপর্ব ফিকশ্চার (প্রতি গ্রুপে ৪টি ম্যাচ ও সেলফ-ম্যাচ লকিং)</h2>
+                    <p class="text-xs text-gray-400">একই খেলোয়াড় নিজের বিরুদ্ধে ম্যাচ খেলতে পারবে না (স্বয়ংক্রিয় ও এডমিন লক)</p>
                 </div>
                 <div id="fixturesContainer" class="space-y-6">
                     <!-- Dynamic Group Stage Fixtures -->
@@ -270,7 +270,7 @@
             <div id="adminMatchFormSec" class="bg-slate-800 p-6 rounded-2xl border border-purple-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="matchFormTitle" class="text-base font-bold text-purple-400 flex items-center gap-2">
-                        ⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) স্কোর ও নিবন্ধিত খেলোয়াড় সিলেকশন
+                        ⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) স্কোর ও সেলফ-ম্যাচ ভ্যালিডেশন
                     </h3>
                     <button id="cancelMatchEditBtn" onclick="resetMatchForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
                 </div>
@@ -285,7 +285,7 @@
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">ম্যাচের নাম / টাইটেল *</label>
-                            <input type="text" id="mTitle" placeholder="যেমন: ১ম কোয়ার্টার ফাইনাল / গ্রুপ এ ম্যাচ #১" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            <input type="text" id="mTitle" placeholder="যেমন: ১ম কোয়ার্টার ফাইনাল / গ্রুপ সি ম্যাচ #১" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময়</label>
@@ -293,20 +293,20 @@
                         </div>
                     </div>
 
-                    <!-- STRICT REGISTERED PLAYER SELECTION FOR MATCH 1 & MATCH 2 -->
+                    <!-- STRICT PLAYER SELECTION WITH NO SELF-MATCH CHECK -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-700">
                         <div class="space-y-2">
-                            <label class="text-xs text-yellow-400 block font-bold">খেলোয়াড়/টিম ১ (অবশ্যই নিবন্ধিত খেলোয়াড় হতে হবে)</label>
+                            <label class="text-xs text-yellow-400 block font-bold">খেলোয়াড়/টিম ১ *</label>
                             <select id="mP1RegSelect" required onchange="document.getElementById('mP1Name').value = this.value" class="w-full bg-slate-950 border border-yellow-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত খেলোয়াড় লিস্ট থেকে সিলেক্ট করুন * --</option>
+                                <option value="">-- খেলোয়াড় ১ সিলেক্ট করুন --</option>
                             </select>
                             <input type="hidden" id="mP1Name" value="">
                             <input type="text" id="mP1Points" placeholder="ম্যাচ পয়েন্ট (যেমন: ২ বা ৩-১ সেট)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-300 mt-1">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs text-yellow-400 block font-bold">খেলোয়াড়/টিম ২ (অবশ্যই নিবন্ধিত খেলোয়াড় হতে হবে)</label>
+                            <label class="text-xs text-yellow-400 block font-bold">খেলোয়াড়/টিম ২ *</label>
                             <select id="mP2RegSelect" required onchange="document.getElementById('mP2Name').value = this.value" class="w-full bg-slate-950 border border-yellow-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত খেলোয়াড় লিস্ট থেকে সিলেক্ট করুন * --</option>
+                                <option value="">-- খেলোয়াড় ২ সিলেক্ট করুন --</option>
                             </select>
                             <input type="hidden" id="mP2Name" value="">
                             <input type="text" id="mP2Points" placeholder="ম্যাচ পয়েন্ট (যেমন: ০ বা ১-৩ সেট)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-300 mt-1">
@@ -319,7 +319,7 @@
                     </div>
 
                     <button type="submit" id="mSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg">
-                        💾 ম্যাচের স্কোর ও নিবন্ধিত খেলোয়াড় সেভ করুন
+                        💾 ম্যাচের স্কোর ও ভ্যালিডেটেড টিম সেভ করুন
                     </button>
                 </form>
             </div>
@@ -354,7 +354,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Strict Registered Player Validation)
+        © 2026 Winter Carram Kings Battle (Self-Match Prevention System)
     </footer>
 
     <!-- App Logic Script -->
@@ -485,7 +485,6 @@
                     });
                 }
 
-                // STRICT VALIDATION CLEANUP: Remove orphaned group assignments and sanitize match scores containing un-registered player names (like "শাহিন")
                 let validPlayerNames = new Set(globalPlayersData.map(p => (p.name || '').trim().toLowerCase()));
 
                 for(let item of globalTeamsData) {
@@ -501,21 +500,20 @@
                     }
                 }
 
-                // Clean match scores where p1Name or p2Name are not in registered players pool
+                // Clean match scores where p1Name equals p2Name (Self-Match) or invalid players
                 for(let mCode in globalMatchesData) {
                     let mData = globalMatchesData[mCode];
                     let p1 = (mData.p1Name || '').trim().toLowerCase();
                     let p2 = (mData.p2Name || '').trim().toLowerCase();
                     
-                    let isP1Valid = validPlayerNames.has(p1) || p1.includes('বাকি') || p1.includes('সেটআপ') || p1.includes('চ্যাম্পিয়ন') || p1.includes('বিজয়');
-                    let isP2Valid = validPlayerNames.has(p2) || p2.includes('বাকি') || p2.includes('সেটআপ') || p2.includes('চ্যাম্পিয়ন') || p2.includes('বিজয়');
+                    let isP1Valid = validPlayerNames.has(p1) || p1.includes('বাকি') || p1.includes('সেটআপ') || p1.includes('চ্যাম্পিয়ন') || p1.includes('বিজয়') || p1.includes('পরাজিত');
+                    let isP2Valid = validPlayerNames.has(p2) || p2.includes('বাকি') || p2.includes('সেটআপ') || p2.includes('চ্যাম্পিয়ন') || p2.includes('বিজয়') || p2.includes('পরাজিত');
 
-                    if(!isP1Valid || !isP2Valid) {
-                        mData.p1Name = "নিবন্ধিত খেলোয়াড় সিলেক্ট করুন";
-                        mData.p2Name = "নিবন্ধিত খেলোয়াড় সিলেক্ট করুন";
-                        mData.result = "খেলোয়াড় পরিবর্তন করা হয়েছে - সেটআপ দিন";
+                    if(!isP1Valid || !isP2Valid || (p1 === p2 && p1 !== '' && !p1.includes('সেটআপ'))) {
+                        mData.p1Name = "খেলোয়াড় সিলেক্ট করুন";
+                        mData.p2Name = "খেলোয়াড় সিলেক্ট করুন";
+                        mData.result = "সেলফ-ম্যাচ বা অবৈধ নাম থাকায় রিসেট করা হয়েছে";
                         
-                        // Update in Supabase
                         await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${mCode}`, {
                             method: 'PATCH',
                             headers: {
@@ -598,7 +596,7 @@
             let p1Select = document.getElementById('mP1RegSelect');
             let p2Select = document.getElementById('mP2RegSelect');
 
-            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
+            let html = '<option value="">-- খেলোয়াড় সিলেক্ট করুন --</option>';
             globalPlayersData.forEach(p => {
                 html += `<option value="${p.name}">${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
             });
@@ -782,8 +780,8 @@
                     let info = globalMatchesData[mCode] || {
                         title: `${g.name} - ম্যাচ #${matchNo}`,
                         date: 'নির্ধারিত হয়নি',
-                        p1Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
-                        p2Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
+                        p1Name: `খেলোয়াড় সিলেক্ট করুন`,
+                        p2Name: `খেলোয়াড় সিলেক্ট করুন`,
                         p1Points: '০',
                         p2Points: '০',
                         result: 'ম্যাচ সেটআপ বাকি আছে'
@@ -838,8 +836,8 @@
                 let info = globalMatchesData[code] || {
                     title: `${idx + 1}ম কোয়ার্টার ফাইনাল`,
                     date: 'নির্ধারিত হয়নি',
-                    p1Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
-                    p2Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
+                    p1Name: `খেলোয়াড় সিলেক্ট করুন`,
+                    p2Name: `খেলোয়াড় সিলেক্ট করুন`,
                     p1Points: '০',
                     p2Points: '০',
                     result: 'ম্যাচ সেটআপ বাকি আছে'
@@ -879,8 +877,8 @@
                 let info = globalMatchesData[code] || {
                     title: `${idx + 1}ম সেমিফাইনাল`,
                     date: 'নির্ধারিত হয়নি',
-                    p1Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
-                    p2Name: `নিবন্ধিত খেলোয়াড় সিলেক্ট করুন`,
+                    p1Name: `খেলোয়াড় সিলেক্ট করুন`,
+                    p2Name: `খেলোয়াড় সিলেক্ট করুন`,
                     p1Points: '০',
                     p2Points: '০',
                     result: 'ম্যাচ সেটআপ বাকি আছে'
@@ -917,8 +915,8 @@
             let tpInfo = globalMatchesData['3P-Match'] || {
                 title: '৩য় স্থান নির্ধারণী ম্যাচ',
                 date: 'নির্ধারিত হয়নি',
-                p1Name: 'নিবন্ধিত খেলোয়াড় সিলেক্ট করুন',
-                p2Name: 'নিবন্ধিত খেলোয়াড় সিলেক্ট করুন',
+                p1Name: 'খেলোয়াড় সিলেক্ট করুন',
+                p2Name: 'খেলোয়াড় সিলেক্ট করুন',
                 p1Points: '০',
                 p2Points: '০',
                 result: 'ম্যাচ সেটআপ বাকি আছে'
@@ -952,8 +950,8 @@
             let finalInfo = globalMatchesData['FINAL'] || {
                 title: 'মেগা ফাইনাল ম্যাচ',
                 date: 'নির্ধারিত হয়নি',
-                p1Name: 'নিবন্ধিত খেলোয়াড় সিলেক্ট করুন',
-                p2Name: 'নিবন্ধিত খেলোয়াড় সিলেক্ট করুন',
+                p1Name: 'খেলোয়াড় সিলেক্ট করুন',
+                p2Name: 'খেলোয়াড় সিলেক্ট করুন',
                 p1Points: '০',
                 p2Points: '০',
                 result: 'চ্যাম্পিয়নশিপ ট্রফি নির্ধারণ'
@@ -1291,7 +1289,7 @@
             document.getElementById('mP2Points').value = '';
             document.getElementById('mResult').value = '';
             document.getElementById('mDate').value = '';
-            document.getElementById('matchFormTitle').innerText = "⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) স্কোর ও নিবন্ধিত খেলোয়াড় সিলেকশন";
+            document.getElementById('matchFormTitle').innerText = "⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) স্কোর ও সেলফ-ম্যাচ ভ্যালিডেশন";
             document.getElementById('cancelMatchEditBtn').classList.add('hidden');
         }
 
@@ -1313,13 +1311,18 @@
                 return;
             }
 
-            // STRICT VERIFICATION: Ensure player names exist in globalPlayersData
+            // SELF-MATCH PREVENTION CHECK
+            if(p1Name.toLowerCase() === p2Name.toLowerCase()) {
+                alert(`⛔ ত্রুটি: একই খেলোয়াড় (${p1Name}) নিজের বিরুদ্ধে ম্যাচ খেলতে পারবে না! খেলোয়াড় ১ এবং খেলোয়াড় ২ অবশ্যই আলাদা হতে হবে।`);
+                return;
+            }
+
             let validPlayerNames = new Set(globalPlayersData.map(p => (p.name || '').trim().toLowerCase()));
-            let isP1Valid = validPlayerNames.has(p1Name.toLowerCase()) || p1Name.includes('চ্যাম্পিয়ন') || p1Name.includes('বিজয়');
-            let isP2Valid = validPlayerNames.has(p2Name.toLowerCase()) || p2Name.includes('চ্যাম্পিয়ন') || p2Name.includes('বিজয়');
+            let isP1Valid = validPlayerNames.has(p1Name.toLowerCase()) || p1Name.includes('চ্যাম্পিয়ন') || p1Name.includes('বিজয়') || p1Name.includes('পরাজিত');
+            let isP2Valid = validPlayerNames.has(p2Name.toLowerCase()) || p2Name.includes('চ্যাম্পিয়ন') || p2Name.includes('বিজয়') || p2Name.includes('পরাজিত');
 
             if(!isP1Valid || !isP2Valid) {
-                alert(`⛔ ত্রুটি: "${!isP1Valid ? p1Name : p2Name}" নামটি নিবন্ধিত খেলোয়াড় তালিকার মধ্যে নেই! শুধুমাত্র নিবন্ধিত খেলোয়াড়দের ম্যাচেই সেট করা যাবে।`);
+                alert(`⛔ ত্রুটি: নির্বাচিত খেলোয়াড়ের নাম নিবন্ধিত তালিকায় নেই!`);
                 return;
             }
 
@@ -1367,9 +1370,8 @@
             } catch(err) {
                 alert('নেটওয়ার্ক সমস্যা!');
             } finally {
-                submit_btn_text = "💾 ম্যাচের স্কোর ও নিবন্ধিত খেলোয়াড় সেভ করুন";
                 submitBtn.disabled = false;
-                submitBtn.innerText = submit_btn_text;
+                submitBtn.innerText = "💾 ম্যাচের স্কোর ও ভ্যালিডেটেড টিম সেভ করুন";
             }
         }
 
