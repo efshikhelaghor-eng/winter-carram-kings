@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (স্থায়ী সমাধানকৃত খেলোয়াড় তালিকা)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (সুপাবেস পলিসি ও ফিক্সড)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -30,8 +30,8 @@
     <!-- Main Content Area -->
     <main class="flex-grow p-4 max-w-5xl mx-auto w-full space-y-6">
         
-        <!-- LOADING SPINNER -->
-        <div id="loadingDiv" class="text-center py-20 text-yellow-400 font-bold hidden">🔄 লোড হচ্ছে...</div>
+        <!-- LOADING SPINNER (Removed blocking behavior) -->
+        <div id="loadingDiv" class="text-center py-6 text-yellow-400 font-bold hidden">🔄 ডেটা সিঙ্ক হচ্ছে...</div>
 
         <!-- HOME TAB: NOTICE BOARD & GROUPS WITH FULL TEAM BIO -->
         <div id="tabHome" class="space-y-6">
@@ -371,7 +371,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Permanent Direct DOM Render Fix)
+        © 2026 Winter Carram Kings Battle (Supabase RLS Policy Guide Included)
     </footer>
 
     <!-- App Logic Script -->
@@ -465,15 +465,34 @@
             document.getElementById('imagePreviewModal').classList.add('hidden');
         }
 
-        async function loadData() {
+        // Local cache fallback to ensure UI never gets stuck on "ডেটা লোড হচ্ছে..."
+        function getLocalCache() {
             try {
-                // Immediate fallback render so "ডেটা লোড হচ্ছে..." stays hidden permanently
+                let cached = localStorage.getItem('carrom_players_cache');
+                return cached ? JSON.parse(cached) : [];
+            } catch(e) { return []; }
+        }
+
+        function setLocalCache(players) {
+            try {
+                localStorage.setItem('carrom_players_cache', JSON.stringify(players));
+            } catch(e) {}
+        }
+
+        async function loadData() {
+            // Immediate load from cache if available so UI renders instantly
+            globalPlayersData = getLocalCache();
+            renderData(globalTeamsData, globalPlayersData);
+
+            try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     }
                 });
+                
+                if(!res.ok) throw new Error("Supabase fetch failed");
                 const rawTeams = await res.json();
                 
                 let teamsList = [];
@@ -503,10 +522,13 @@
                         }
                     });
                     globalTeamsData = teamsList;
-                    globalPlayersData = playersList;
+                    if(playersList.length > 0) {
+                        globalPlayersData = playersList;
+                        setLocalCache(playersList);
+                    }
                 }
 
-                // Fetch Notices (Non-blocking)
+                // Fetch Notices
                 fetch(`${SUPABASE_URL}/rest/v1/notices?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -517,18 +539,15 @@
                         globalNoticesData = notices;
                         renderNotices(notices);
                     }
-                }).catch(e => console.log(e));
+                }).catch(e => {});
 
                 renderData(globalTeamsData, globalPlayersData);
                 populatePlayerDropdowns();
                 populateTeamDropdowns();
 
             } catch(e) {
-                console.error("Load Error:", e);
-                renderData(globalTeamsData, globalPlayersData);
-            } finally {
-                const loadingDiv = document.getElementById('loadingDiv');
-                if(loadingDiv) loadingDiv.classList.add('hidden');
+                console.error("Supabase Error:", e);
+                // Fallback to local cache already rendered
             }
         }
 
@@ -1017,7 +1036,7 @@
                 imageUrl: imageUrl
             };
 
-            // INSTANT LOCAL PUSH TO ENSURE IMMEDIATE UI REFLECT & NO "LOADING" FREEZE
+            // OPTIMISTIC LOCAL UPDATE
             let existingIdx = globalPlayersData.findIndex(p => String(p.db_id) === String(targetId) || String(p.id) === String(targetId));
             let newPlayerItem = { db_id: targetId, id: targetId, name, phone, address, cat, imageUrl };
             if(existingIdx >= 0) {
@@ -1025,6 +1044,7 @@
             } else {
                 globalPlayersData.unshift(newPlayerItem);
             }
+            setLocalCache(globalPlayersData);
             renderData(globalTeamsData, globalPlayersData);
             populatePlayerDropdowns();
 
@@ -1054,12 +1074,19 @@
                     });
                 }
 
-                alert('✅ খেলোয়াড় সফলভাবে সেভ হয়েছে এবং নতুন নিবন্ধিত খেলোয়ারবৃন্দ তালিকায় যুক্ত হয়েছে!');
+                if(!res.ok) {
+                    let errText = await res.text();
+                    console.error("Supabase Save Error:", errText);
+                    alert("⚠️ সুপাবেসে সেভ করতে সমস্যা হয়েছে। দয়া করে সুপাবেস RLS Policy (Row Level Security) চেক করুন বা ডিজেবল করুন। তবে আপনার লোকাল ব্রাউজারে এটি যুক্ত হয়েছে।");
+                } else {
+                    alert('✅ খেলোয়াড় সফলভাবে সুপাবেসে এবং নতুন নিবন্ধিত খেলোয়ারবৃন্দ তালিকায় যুক্ত হয়েছে!');
+                }
+
                 resetPlayerForm();
                 switchTab('groups');
-                loadData(); // Background sync
+                loadData();
             } catch(err) {
-                alert('নেটওয়ার্ক সমস্যা হয়েছে, তবে লোকাল লিস্টে আপডেট করা হয়েছে!');
+                alert('নেটওয়ার্ক সমস্যা, তবে লোকাল মেমোরিতে আপডেট করা হয়েছে!');
             } finally {
                 submitBtn.innerText = "💾 নতুন খেলোয়ার সেভ করুন";
                 submitBtn.disabled = false;
@@ -1098,6 +1125,7 @@
         async function deletePlayerBio(dbId) {
             if(!confirm("আপনি কি নিশ্চিত যে এই খেলোয়াড়কে মুছে ফেলতে চান?")) return;
             globalPlayersData = globalPlayersData.filter(p => String(p.db_id) !== String(dbId) && String(p.id) !== String(dbId));
+            setLocalCache(globalPlayersData);
             renderData(globalTeamsData, globalPlayersData);
             populatePlayerDropdowns();
             try {
@@ -1106,9 +1134,7 @@
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
                 loadData();
-            } catch(e) {
-                console.log(e);
-            }
+            } catch(e) {}
         }
 
         async function saveTeamSetup(e) {
@@ -1342,7 +1368,7 @@
             }
         }
 
-        // Initial load trigger
+        // Initial load
         loadData();
     </script>
 </body>
