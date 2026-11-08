@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (খেলোয়াড় পুল লোডিং ফিক্সড)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (সরাসরি রেস্ট এপিআই খেলোয়াড় ফেচ)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -371,7 +371,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Player Pool Fetching Fixed)
+        © 2026 Winter Carram Kings Battle (Direct REST API Player Fetch)
     </footer>
 
     <!-- App Logic Script -->
@@ -467,6 +467,7 @@
 
         async function loadData() {
             try {
+                // Fetch Teams & Matches
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -476,21 +477,31 @@
                 const rawTeams = await res.json();
                 
                 let teamsList = [];
-                let playersList = [];
                 globalMatchesData = {};
 
                 if(Array.isArray(rawTeams)) {
                     rawTeams.forEach(t => {
                         if(t.group_name === 'MATCH_SCORES' || t.group_name === 'KNOCKOUT_MATCHES') {
                             globalMatchesData[t.id] = t.data || {};
-                        } else if(t.group_name === 'PLAYERS_POOL') {
-                            playersList.push({ db_id: t.id, ...(t.data || {}) });
-                        } else {
+                        } else if(t.group_name !== 'PLAYERS_POOL') {
                             teamsList.push(t);
                         }
                     });
                     globalTeamsData = teamsList;
-                    globalPlayersData = playersList;
+                }
+
+                // Explicitly Fetch Players Pool Separately
+                const pRes = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=eq.PLAYERS_POOL&select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const rawPlayers = await pRes.json();
+                if(Array.isArray(rawPlayers)) {
+                    globalPlayersData = rawPlayers.map(p => {
+                        return { db_id: p.id, ...(p.data || {}) };
+                    });
                 }
 
                 let validTeamNames = new Set(globalTeamsData.map(t => (t.data && t.data.teamName ? t.data.teamName : (t.data && t.data.name ? t.data.name : '')).trim().toLowerCase()));
@@ -1351,7 +1362,7 @@
                 title: title,
                 p1Name: p1Name,
                 p2Name: p2Name,
-                p1Points: p1Points,
+                p1Points: p1Pts,
                 p2Points: p2Pts,
                 result: result,
                 date: dateStr
@@ -1374,7 +1385,7 @@
                     body: JSON.stringify({ id: mCode, group_name: 'MATCH_SCORES', data: matchObj })
                 });
 
-                    if(!res.ok) {
+                if(!res.ok) {
                     alert('সেভ হয়নি!');
                 } else {
                     alert(`✅ ${mCode} সফলভাবে সেভ হয়েছে!`);
