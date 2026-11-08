@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (ডুপ্লিকেট প্রতিরোধ ও রিকমেন্ডেড সিকিউরিটি)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (ডুপ্লিকেট প্রতিরোধ ও এডমিন সিকিউরিটি)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -1028,19 +1028,16 @@
                 return;
             }
 
-            // STRICT DUPLICATE PREVENTION CHECK (Name + Phone or Exact Phone Match)
             let duplicateFound = globalPlayersData.find(p => {
                 let pId = p.db_id || p.id;
-                if(editPlayerId && String(pId) === String(editPlayerId)) return false; // Skip current editing record
+                if(editPlayerId && String(pId) === String(editPlayerId)) return false;
                 let existingName = (p.name || "").trim().toLowerCase();
                 let existingPhone = (p.phone || "").trim();
                 return (existingPhone === phone) || (existingName === name.toLowerCase() && existingPhone === phone);
             });
 
             if(duplicateFound) {
-                alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!
-
-"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন। একই তথ্য দিয়ে দ্বিতীয়বার এন্ট্রি দেওয়া যাবে না।`);
+                alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!\n\n"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন। একই তথ্য দিয়ে দ্বিতীয়বার এন্ট্রি দেওয়া যাবে না।`);
                 return;
             }
 
@@ -1186,13 +1183,11 @@
                 return;
             }
 
-            // STRICT SELF-MATCH / SAME PLAYER REPEAT PREVENTION
             if(p1Id === p2Id) {
                 alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না! দুজন আলাদা খেলোয়াড় সিলেক্ট করুন।');
                 return;
             }
 
-            // Check if either player is already assigned in another team (Same player in same stage/different group prevention if needed, or duplicate team assignment)
             let existingTeamAssigned = globalTeamsData.find(t => {
                 if(editId && String(t.id) === String(editId)) return false;
                 if(!t.data) return false;
@@ -1384,7 +1379,6 @@
                 return;
             }
 
-            // SELF-MATCH PREVENTION (Same team cannot play against itself)
             if(p1Name.toLowerCase() === p2Name.toLowerCase()) {
                 alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না! টিম ১ এবং টিম ২ আলাদা হতে হবে।');
                 return;
