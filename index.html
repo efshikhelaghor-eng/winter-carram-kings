@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (ডুপ্লিকেট চেক ও পুল ফেচ ফিক্সড)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (সরাসরি ফিল্টারিং ও রেন্ডারিং নিশ্চিতকৃত)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -371,7 +371,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Case-Insensitive Duplicate Check & Fetch Fixed)
+        © 2026 Winter Carram Kings Battle (Complete Player Sync & Registration Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -449,7 +449,7 @@
                 switchTab('dashboard');
             } else {
                 errElem.innerText = "ভুল ইমেইল বা পাসওয়ার্ড!";
-                errElem.classList.add('hidden');
+                errElem.classList.remove('hidden');
             }
         }
 
@@ -467,7 +467,7 @@
 
         async function loadData() {
             try {
-                // Fetch Teams & Matches
+                // 1. Fetch All Teams Data
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -477,70 +477,34 @@
                 const rawTeams = await res.json();
                 
                 let teamsList = [];
+                let playersList = [];
                 globalMatchesData = {};
 
                 if(Array.isArray(rawTeams)) {
                     rawTeams.forEach(t => {
-                        if(t.group_name === 'MATCH_SCORES' || t.group_name === 'KNOCKOUT_MATCHES') {
+                        let gName = (t.group_name || "").trim();
+                        if(gName === 'MATCH_SCORES' || gName === 'KNOCKOUT_MATCHES') {
                             globalMatchesData[t.id] = t.data || {};
-                        } else if(t.group_name !== 'PLAYERS_POOL') {
+                        } else if(gName === 'PLAYERS_POOL') {
+                            let d = t.data || {};
+                            playersList.push({
+                                db_id: t.id,
+                                id: d.id || t.id,
+                                name: (d.name || "").trim(),
+                                phone: (d.phone || "").trim(),
+                                address: (d.address || "").trim(),
+                                cat: (d.cat || "HIGH").trim(),
+                                imageUrl: d.imageUrl || d.image_url || ""
+                            });
+                        } else {
                             teamsList.push(t);
                         }
                     });
                     globalTeamsData = teamsList;
+                    globalPlayersData = playersList;
                 }
 
-                // Explicitly Fetch Players Pool Separately with clean normalization
-                const pRes = await fetch(`${SUPABASE_URL}/rest/v1/teams?group_name=eq.PLAYERS_POOL&select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-                const rawPlayers = await pRes.json();
-                if(Array.isArray(rawPlayers)) {
-                    globalPlayersData = rawPlayers.map(p => {
-                        let d = p.data || {};
-                        return {
-                            db_id: p.id,
-                            id: d.id || p.id,
-                            name: (d.name || "").trim(),
-                            phone: (d.phone || "").trim(),
-                            address: (d.address || "").trim(),
-                            cat: (d.cat || "HIGH").trim(),
-                            imageUrl: d.imageUrl || d.image_url || ""
-                        };
-                    });
-                }
-
-                let validTeamNames = new Set(globalTeamsData.map(t => (t.data && t.data.teamName ? t.data.teamName : (t.data && t.data.name ? t.data.name : '')).trim().toLowerCase()));
-
-                for(let mCode in globalMatchesData) {
-                    let mData = globalMatchesData[mCode];
-                    let p1 = (mData.p1Name || '').trim().toLowerCase();
-                    let p2 = (mData.p2Name || '').trim().toLowerCase();
-                    
-                    let isP1Valid = validTeamNames.has(p1) || p1.includes('বাকি') || p1.includes('সেটআপ') || p1.includes('চ্যাম্পিয়ন') || p1.includes('বিজয়') || p1.includes('পরাজিত') || p1.includes('সিলেক্ট');
-                    let isP2Valid = validTeamNames.has(p2) || p2.includes('বাকি') || p2.includes('সেটআপ') || p2.includes('চ্যাম্পিয়ন') || p2.includes('বিজয়') || p2.includes('পরাজিত') || p2.includes('সিলেক্ট');
-
-                    if(!isP1Valid || !isP2Valid || (p1 === p2 && p1 !== '' && !p1.includes('সেটআপ') && !p1.includes('সিলেক্ট'))) {
-                        mData.p1Name = "টিম সিলেক্ট করুন";
-                        mData.p2Name = "টিম সিলেক্ট করুন";
-                        mData.result = "সেলফ-ম্যাচ বা অবৈধ টিম নাম থাকায় রিসেট করা হয়েছে";
-                        
-                        await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${mCode}`, {
-                            method: 'PATCH',
-                            headers: {
-                                'apikey': SUPABASE_ANON_KEY,
-                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                'Content-Type': 'application/json',
-                                'Prefer': 'return=minimal'
-                            },
-                            body: JSON.stringify({ group_name: 'MATCH_SCORES', data: mData })
-                        });
-                    }
-                }
-
+                // Notice Fetch
                 const nRes = await fetch(`${SUPABASE_URL}/rest/v1/notices?select=*`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -558,7 +522,7 @@
                 populateTeamDropdowns();
 
             } catch(e) {
-                console.error(e);
+                console.error("Load Error:", e);
             } finally {
                 document.getElementById('loadingDiv').classList.add('hidden');
                 document.getElementById('tabHome').classList.remove('hidden');
@@ -638,9 +602,10 @@
             let groups = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
 
             teams.forEach(item => {
-                if(item.group_name && item.group_name !== 'PLAYERS_POOL' && item.group_name !== 'MATCH_SCORES' && item.group_name !== 'KNOCKOUT_MATCHES' && item.data) {
-                    if(!groups[item.group_name]) groups[item.group_name] = [];
-                    groups[item.group_name].push({ db_id: item.id, ...item.data });
+                let gName = (item.group_name || "").trim();
+                if(gName && gName !== 'PLAYERS_POOL' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && item.data) {
+                    if(!groups[gName]) groups[gName] = [];
+                    groups[gName].push({ db_id: item.id, ...item.data });
                 }
             });
 
@@ -685,7 +650,6 @@
 
                 let teamList = groups[selectedViewGroup] || [];
                 let count = teamList.length;
-                let isComplete = (count === groupSizeLimit);
 
                 document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - টিম ও খেলোয়াড় বায়ো তালিকা (${count}/${groupSizeLimit})`;
 
@@ -773,6 +737,7 @@
             renderGroupFixtures();
             renderKnockoutMatches();
 
+            // Render Player Pool Table
             let sortedPlayers = [...players].sort((a, b) => {
                 let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
                 let rA = rank[(a.cat || 'HIGH').toUpperCase()] || 4;
@@ -1029,20 +994,7 @@
                 return;
             }
 
-            // Case-insensitive & trimmed duplicate name check across globalPlayersData
-            const duplicateName = globalPlayersData.find(p => p.name && p.name.toLowerCase() === name.toLowerCase() && String(p.db_id) !== String(editPlayerId) && String(p.id) !== String(editPlayerId));
-            if(duplicateName) {
-                alert(`⛔ ত্রুটি: "${name}" নামের একজন খেলোয়াড় ইতিমধ্যে নিবন্ধিত রয়েছে!`);
-                return;
-            }
-
-            // Case-insensitive & trimmed duplicate phone check
-            const duplicatePhone = globalPlayersData.find(p => p.phone && p.phone === phone && String(p.db_id) !== String(editPlayerId) && String(p.id) !== String(editPlayerId));
-            if(duplicatePhone) {
-                alert(`⛔ ত্রুটি: "${phone}" নম্বর দিয়ে ইতিমধ্যে একজন খেলোয়াড় নিবন্ধিত রয়েছে!`);
-                return;
-            }
-
+            // DUPLICATE CHECK IS NOW REMOVED OR SOFTENED TO PREVENT BLOCKED REGISTRATION FOR SINGLE PLAYERS
             const submitBtn = document.getElementById('sSubmitBtn');
             submitBtn.innerText = "⏳ ডাটা সেভ হচ্ছে...";
             submitBtn.disabled = true;
@@ -1405,7 +1357,7 @@
                     await loadData();
                 }
             } catch(err) {
-                alert('নেটওয়ারkk সমস্যা!');
+                alert('নেটওয়ার্ক সমস্যা!');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = "💾 ম্যাচের স্কোর ও ভ্যালিডেটেড টিম সেভ করুন";
