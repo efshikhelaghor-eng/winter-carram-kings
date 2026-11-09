@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (সুপাবেস ফুল পারমিশন মোড)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (অটো ডুপ্লিকেট প্রটেকশন ও সিকিউরিটি ফিক্সড)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -136,13 +136,13 @@
         <div id="tabGroups" class="space-y-6 hidden">
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
                 <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-lg font-bold text-yellow-400">📋 নতুন নিবন্ধিত খেলোয়ারবৃন্দ</h2>
+                    <h2 class="text-lg font-bold text-yellow-400">📋 নতুন নিবন্ধিত খেলোয়ারবৃন্দ (অটো ডুপ্লিকেট রিমুভড)</h2>
                     <div class="flex items-center gap-2">
                         <span id="totalCount" class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-yellow-300 font-bold">মোট: ০ জন</span>
                         <button id="quickAddPlayerBtn" onclick="switchTab('dashboard')" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-3 py-1 rounded text-xs hidden">➕ নতুন খেলোয়াড় যোগ করুন</button>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mb-3">💡 পরামর্শ: যেকোনো খেলোয়াড়ের ছবির ওপর ক্লিক করলে ছবিটির বড় প্রিভিউ দেখতে পাবেন। (এডমিন লগইন করলে এডিট ও ডিলেট অপশন পাবেন)</p>
+                <p class="text-xs text-gray-400 mb-3">💡 পরামর্শ: একই খেলোয়াড়ের সেইম নাম ও মোবাইল নম্বর দিয়ে একাধিক এন্ট্রি থাকলে সিস্টেম স্বয়ংক্রিয়ভাবে একটি রেখে বাকিগুলো ক্লিন করে দেয়।</p>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs md:text-sm">
                         <thead>
@@ -157,7 +157,7 @@
                             </tr>
                         </thead>
                         <tbody id="playerTableBody" class="divide-y divide-slate-700">
-                            <tr><td colspan="7" class="p-4 text-center text-gray-400">কোনো নতুন নিবন্ধিত খেলোয়াড় পাওয়া যায়নি। এডমিন প্যানেল থেকে নতুন খেলোয়াড় এন্ট্রি দিন।</td></tr>
+                            <tr><td colspan="7" class="p-4 text-center text-gray-400">কোনো নতুন নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -180,11 +180,11 @@
                 </form>
             </div>
 
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (DUPLICATE PROTECTED) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (STRICT DUPLICATE PREVENTION) -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
-                        নতুন খেলোয়ার নিবন্ধন / এডিটিং ফরম
+                        নতুন খেলোয়ার নিবন্ধন / এডিটিং ফরম (ডুপ্লিকেট প্রটেক্টেড)
                     </h3>
                     <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
                 </div>
@@ -364,7 +364,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Admin Panel Active Mode)
+        © 2026 Winter Carram Kings Battle (Strict Duplicate & Self-Opponent Prevention)
     </footer>
 
     <!-- App Logic Script -->
@@ -506,8 +506,37 @@
             } catch(e) {}
         }
 
+        // AUTO DETECT & REMOVE DUPLICATE PLAYERS (Same Name + Phone)
+        function sanitizeAndDedupPlayers(playersList) {
+            let uniqueMap = new Map();
+            let cleaned = [];
+            
+            playersList.forEach(p => {
+                let nameKey = (p.name || "").trim().toLowerCase();
+                let phoneKey = (p.phone || "").trim();
+                let uniqueKey = nameKey + "_" + phoneKey;
+                
+                if(!nameKey && !phoneKey) return;
+                
+                if(!uniqueMap.has(uniqueKey)) {
+                    uniqueMap.set(uniqueKey, true);
+                    cleaned.push(p);
+                } else {
+                    // Duplicate found in memory, clean up from Supabase in background if db_id exists
+                    if(p.db_id) {
+                        fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${p.db_id}`, {
+                            method: 'DELETE',
+                            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                        }).catch(e => {});
+                    }
+                }
+            });
+            return cleaned;
+        }
+
         async function loadData() {
-            globalPlayersData = getLocalCache();
+            let cachedPlayers = getLocalCache();
+            globalPlayersData = sanitizeAndDedupPlayers(cachedPlayers);
             renderData(globalTeamsData, globalPlayersData);
 
             try {
@@ -547,10 +576,11 @@
                             teamsList.push(t);
                         }
                     });
+                    
                     globalTeamsData = teamsList;
                     if(playersList.length > 0) {
-                        globalPlayersData = playersList;
-                        setLocalCache(playersList);
+                        globalPlayersData = sanitizeAndDedupPlayers(playersList);
+                        setLocalCache(globalPlayersData);
                     }
                 }
 
@@ -767,7 +797,6 @@
                         let cat1Color = (p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : (p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
                         let cat2Color = (p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : (p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
 
-                        // ENSURE ADMIN BUTTONS ALWAYS RENDER WHEN isAdmin IS TRUE
                         let adminBtns = isAdmin ? `
                             <div class="flex gap-2 mt-3 justify-end border-t border-slate-700/60 pt-2">
                                 <button onclick="editTeamSetup('${t.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-xs font-bold cursor-pointer">✏️ এডিট টিম</button>
@@ -835,7 +864,7 @@
 
             let tableHtml = '';
             if(sortedPlayers.length === 0) {
-                tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নতুন নিবন্ধিত খেলোয়াড় পাওয়া যায়নি। এডমিন প্যানেল থেকে নতুন খেলোয়াড় এন্ট্রি দিন।</td></tr>`;
+                tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নতুন নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
             } else {
                 sortedPlayers.forEach((p, idx) => {
                     let badgeColor = p.cat === 'HIGH' ? "bg-red-500/20 text-red-400" : p.cat === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
@@ -1077,6 +1106,7 @@
             });
         }
 
+        // STRICT PLAYER REGISTRATION WITH EXACT NAME + PHONE DUPLICATE CHECK & AUTO DEDUP
         async function savePlayerBio(e) {
             e.preventDefault();
             if(!isAdmin) {
@@ -1094,6 +1124,22 @@
 
             if(!name || !phone) {
                 alert('খেলোয়াড়ের নাম এবং মোবাইল নম্বর দুটিই আবশ্যক!');
+                return;
+            }
+
+            // EXACT DUPLICATE CHECK: SAME NAME + SAME PHONE
+            let duplicateFound = globalPlayersData.find(p => {
+                let pId = p.db_id || p.id;
+                if(editPlayerId && String(pId) === String(editPlayerId)) return false;
+                let existingName = (p.name || "").trim().toLowerCase();
+                let existingPhone = (p.phone || "").trim();
+                return (existingName === name.toLowerCase() && existingPhone === phone);
+            });
+
+            if(duplicateFound) {
+                alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!
+
+"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন। একই খেলোয়াড়ের সেইম নাম ও মোবাইল নম্বর দিয়ে একাধিকবার এন্ট্রি দেওয়া যাবে না।`);
                 return;
             }
 
@@ -1124,6 +1170,9 @@
             } else {
                 globalPlayersData.unshift(newPlayerItem);
             }
+
+            // Sanitize all players array to auto-remove any accidental duplicate
+            globalPlayersData = sanitizeAndDedupPlayers(globalPlayersData);
 
             setLocalCache(globalPlayersData);
             renderData(globalTeamsData, globalPlayersData);
@@ -1205,6 +1254,7 @@
             } catch(e) {}
         }
 
+        // STRICT TEAM SETUP WITH NO SELF-OPPONENT & DUAL PLACEMENT RESTRICTION
         async function saveTeamSetup(e) {
             e.preventDefault();
             if(!isAdmin) {
@@ -1226,7 +1276,22 @@
             }
 
             if(p1Id === p2Id) {
-                alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না!');
+                alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না! নিজে নিজের প্রতিপক্ষ হতে পারবে না।');
+                return;
+            }
+
+            // Check if player is already assigned to another team
+            let existingTeamAssigned = globalTeamsData.find(t => {
+                if(editId && String(t.id) === String(editId)) return false;
+                if(!t.data) return false;
+                let tData = t.data;
+                let tp1 = String(tData.player1Id);
+                let tp2 = String(tData.player2Id);
+                return (tp1 === p1Id || tp1 === p2Id || tp2 === p1Id || tp2 === p2Id);
+            });
+
+            if(existingTeamAssigned) {
+                alert(`⛔ সতর্কতা: নির্বাচিত খেলোয়াড়দের মধ্যে কেউ একজন ইতিমধ্যে "${existingTeamAssigned.data.teamName}" (${existingTeamAssigned.group_name})-এ নিবন্ধিত আছেন। একই খেলোয়াড় টুর্নামেন্টের অন্য কোনো জায়গায় একই সাথে থাকতে পারবেন না।`);
                 return;
             }
 
@@ -1388,6 +1453,11 @@
 
             if(!mCode || !title || !p1Name || !p2Name || !result) {
                 alert('সকল তথ্য পূরণ করুন!');
+                return;
+            }
+
+            if(p1Name.toLowerCase() === p2Name.toLowerCase()) {
+                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না! নিজে নিজের প্রতিপক্ষ হতে পারবে না।');
                 return;
             }
 
