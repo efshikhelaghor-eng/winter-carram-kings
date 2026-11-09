@@ -5,13 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), 0 0 30px rgba(234, 179, 8, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.8), 0 0 50px rgba(234, 179, 8, 0.5); }
+        }
+        .live-glow {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
 </head>
 <body class="bg-gray-950 text-white font-sans min-h-screen flex flex-col">
     <!-- Header -->
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (গ্রুপ ম্যাক্স ৪ টিম ও স্ট্রিক্ট খেলোয়াড় ভ্যালিডেশন)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (লাইভ স্কোর ও রিসেন্ট/আপকামিং ফিচারযুক্ত)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -20,18 +29,38 @@
 
     <!-- Nav Tabs -->
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
-        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">হোম (গ্রুপ তালিকা ও টিম বায়ো)</button>
+        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">🏠 হোম (লাইভ স্কোর ও বায়ো)</button>
         <button onclick="switchTab('fixtures')" id="navFixtures" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">⚔️ গ্রুপপর্ব ফিকশ্চার (৪টি ম্যাচ)</button>
         <button onclick="switchTab('knockout')" id="navKnockout" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">🏆 নকআউট পর্ব ও ফাইনাল</button>
-        <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">খেলোয়াড় তালিকা</button>
+        <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">📋 খেলোয়াড় তালিকা</button>
         <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
     </nav>
 
     <!-- Main Content Area -->
     <main class="flex-grow p-4 max-w-5xl mx-auto w-full space-y-6">
         
-        <!-- HOME TAB: NOTICE BOARD & GROUPS WITH FULL TEAM BIO -->
+        <!-- HOME TAB: LIVE MATCH, NOTICE BOARD, RECENT/UPCOMING & GROUPS -->
         <div id="tabHome" class="space-y-6">
+
+            <!-- PREMIUM LIVE MATCH SCORE HIGHLIGHT CARD -->
+            <div id="liveMatchSection" class="relative bg-gradient-to-r from-red-950 via-slate-900 to-amber-950 p-5 rounded-3xl border-2 border-red-500/80 shadow-2xl live-glow space-y-4">
+                <div class="flex justify-between items-center border-b border-red-500/30 pb-3 flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-3.5 w-3.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
+                        </span>
+                        <h2 class="text-base md:text-xl font-extrabold text-red-400 tracking-wider">🔴 সরাসরি লাইভ ম্যাচ স্কোর (LIVE)</h2>
+                    </div>
+                    <span id="liveMatchStage" class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-xs px-3 py-1 rounded-full font-bold">
+                        টুর্নামেন্ট লাইভ মোড
+                    </span>
+                </div>
+
+                <div id="liveMatchContent" class="space-y-3">
+                    <p class="text-center text-gray-400 italic text-sm py-4">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
+                </div>
+            </div>
             
             <!-- NOTICE BOARD SECTION -->
             <div class="bg-slate-900 p-5 rounded-2xl border-2 border-yellow-500/50 shadow-2xl space-y-3">
@@ -48,10 +77,39 @@
                 </div>
             </div>
 
+            <!-- RECENT MATCHES & UPCOMING MATCHES GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- RECENT MATCHES CARD -->
+                <div class="bg-slate-900 p-5 rounded-2xl border border-green-500/40 shadow-xl space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-base font-extrabold text-green-400 flex items-center gap-2">
+                            <span>🏁</span> সাম্প্রতিক সমাপ্ত ম্যাচসমূহ
+                        </h3>
+                        <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded font-bold">ফলাফল</span>
+                    </div>
+                    <div id="recentMatchesList" class="space-y-3">
+                        <p class="text-xs text-gray-400 italic">কোনো সম্প্রতি সমাপ্ত ম্যাচের তথ্য নেই।</p>
+                    </div>
+                </div>
+
+                <!-- UPCOMING MATCHES CARD -->
+                <div class="bg-slate-900 p-5 rounded-2xl border border-blue-500/40 shadow-xl space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2">
+                            <span>📅</span> আগামী/আপকামিং ম্যাচসমূহ
+                        </h3>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-bold">সময়সূচী</span>
+                    </div>
+                    <div id="upcomingMatchesList" class="space-y-3">
+                        <p class="text-xs text-gray-400 italic">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- FORMAT HEADER -->
             <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
                 <div>
-                    <h2 class="text-lg font-bold text-yellow-400 mb-1">টুর্নামেন্টের গ্রুপসমূহ (প্রতি গ্রুপে কড়াভাবে সর্বোচ্চ ৪টি টিম)</h2>
+                    <h2 class="text-lg font-bold text-yellow-400 mb-1">টুর্নামেন্টের গ্রুপসমূহ (প্রতি গ্রুপে সর্বোচ্চ ৪টি টিম)</h2>
                     <p class="text-xs text-gray-300">দ্বৈত খেলোয়াড় ফরম্যাট: প্রতিটি টিমে ২ জন করে নিবন্ধিত খেলোয়াড় ও পূর্ণাঙ্গ বায়ো</p>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
@@ -95,7 +153,7 @@
                         <h2 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
                             <span>🏆</span> নকআউট পর্ব ও ফাইনাল ম্যাচসমূহ (কোয়ার্টার থেকে ফাইনাল)
                         </h2>
-                        <p class="text-xs text-gray-400 mt-1">কোয়ার্টার ফাইনাল (৪টি), সেমিফাইনাল (২টি), ৩য় স্থান নির্ধারণী ও মেগা ফাইনাল ম্যাচ (নিবন্ধিত টিম সিলেকশন সহ)</p>
+                        <p class="text-xs text-gray-400 mt-1">কোয়ার্টার ফাইনাল (৪টি), সেমিফাইনাল (২টি), ৩য় স্থান নির্ধারণী ও মেগা ফাইনাল ম্যাচ</p>
                     </div>
                     <span class="bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full text-xs font-bold">
                         নকআউট টিম বায়ো মোড ✅
@@ -167,6 +225,81 @@
         <!-- ADMIN DASHBOARD TAB (RESTRICTED TO ADMIN ONLY) -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
+            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL -->
+            <div class="bg-slate-800 p-6 rounded-2xl border-2 border-red-500/50 space-y-4 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+                    <h3 class="text-base font-extrabold text-red-400 flex items-center gap-2">
+                        🔴 লাইভ ম্যাচ স্কোর ও হোমপেজ আপডেট কন্ট্রোল (এডমিন প্যানেল)
+                    </h3>
+                    <span class="text-xs bg-red-950 text-red-300 border border-red-500/40 px-3 py-1 rounded-full font-bold">
+                        সরাসরি ব্রডকাস্ট মোড
+                    </span>
+                </div>
+
+                <form onsubmit="saveLiveMatchInfo(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">ম্যাচ পর্যায় / শিরোনাম *</label>
+                            <input type="text" id="adminLiveTitle" placeholder="যেমন: ২য় কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">লাইভ স্ট্যাটাস / রানিং সেট</label>
+                            <input type="text" id="adminLiveStatus" placeholder="যেমন: ৩য় সেট চলছে | পয়েন্ট ২৭-২৫" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <div class="space-y-2">
+                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ১ (নিবন্ধিত টিম) *</label>
+                            <select id="adminLiveP1Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                                <option value="">-- নিবন্ধিত টিম ১ সিলেক্ট করুন --</option>
+                            </select>
+                            <input type="text" id="adminLiveP1Score" placeholder="টিম ১ চলতি পয়েন্ট/সেট (যেমন: ২)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white font-extrabold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ২ (নিবন্ধিত টিম) *</label>
+                            <select id="adminLiveP2Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                                <option value="">-- নিবন্ধিত টিম ২ সিলেক্ট করুন --</option>
+                            </select>
+                            <input type="text" id="adminLiveP2Score" placeholder="টিম ২ চলতি পয়েন্ট/সেট (যেমন: ১)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white font-extrabold">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 flex-wrap">
+                        <button type="submit" id="saveLiveBtn" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-lg flex-1">
+                            🔴 লাইভ স্কোর হোমপেজে ব্রডকাস্ট করুন
+                        </button>
+                        <button type="button" onclick="clearLiveMatch()" class="bg-slate-700 hover:bg-slate-600 text-gray-300 font-bold px-4 py-2.5 rounded-xl text-xs transition">
+                            ⏹️ লাইভ ম্যাচ সমাপ্ত/বন্ধ করুন
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ADMIN SECTION: UPCOMING MATCH CREATOR -->
+            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-4 shadow-xl">
+                <h3 class="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-700 pb-2">
+                    📅 আগামী/আপকামিং ম্যাচের সময়সূচী ম্যানেজমেন্ট
+                </h3>
+                <form onsubmit="saveUpcomingMatch(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">ম্যাচ শিরোনাম *</label>
+                        <input type="text" id="upTitle" placeholder="যেমন: ৩য় কোয়ার্টার ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">টিম ১ vs টিম ২ *</label>
+                        <input type="text" id="upTeams" placeholder="যেমন: রয়েল ফাইটার্স vs কিং কিংস" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময় *</label>
+                        <input type="text" id="upTime" placeholder="যেমন: আজ রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                    </div>
+                    <button type="submit" id="saveUpBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs md:col-span-3 transition shadow">
+                        ➕ নতুন আপকামিং ম্যাচ যোগ করুন
+                    </button>
+                </form>
+            </div>
+
             <!-- SECTION 0: NOTICE BOARD MANAGER -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4 shadow-xl">
                 <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-700 pb-2">
@@ -365,7 +498,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Strict Max 4 Teams Per Group & Registered Players Only Fix)
+        © 2026 Winter Carram Kings Battle (Live Match & Homepage Recent/Upcoming Update Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -378,6 +511,8 @@
         let globalPlayersData = [];
         let globalNoticesData = [];
         let globalMatchesData = {};
+        let globalLiveMatchData = null;
+        let globalUpcomingMatchesData = [];
         let selectedViewGroup = null;
         const groupSizeLimit = 4;
 
@@ -574,6 +709,8 @@
                 let teamsList = [];
                 let playersList = [];
                 globalMatchesData = {};
+                globalUpcomingMatchesData = [];
+                globalLiveMatchData = null;
 
                 if(Array.isArray(rawTeams)) {
                     rawTeams.forEach(t => {
@@ -581,6 +718,10 @@
                         let gName = safeStr(t.group_name).trim();
                         if(gName === 'MATCH_SCORES' || gName === 'KNOCKOUT_MATCHES') {
                             globalMatchesData[t.id] = t.data || {};
+                        } else if(gName === 'LIVE_MATCH') {
+                            globalLiveMatchData = t.data || null;
+                        } else if(gName === 'UPCOMING_MATCHES') {
+                            if(t.data) globalUpcomingMatchesData.push({ db_id: t.id, ...t.data });
                         } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!gName && t.data && t.data.phone)) {
                             let d = t.data || {};
                             if(d.name || d.phone) {
@@ -702,7 +843,7 @@
             }
         }
 
-        // POPULATE DOUBLES TEAM SETUP PLAYER DROPDOWNS STRICTLY FROM REGISTERED PLAYERS
+        // POPULATE DROPDOWNS
         function populatePlayerDropdowns() {
             let p1Select = document.getElementById('tPlayer1Select');
             let p2Select = document.getElementById('tPlayer2Select');
@@ -720,6 +861,8 @@
         function populateTeamDropdowns() {
             let p1Select = document.getElementById('mP1RegSelect');
             let p2Select = document.getElementById('mP2RegSelect');
+            let l1Select = document.getElementById('adminLiveP1Select');
+            let l2Select = document.getElementById('adminLiveP2Select');
 
             let html = '<option value="">-- নিবন্ধিত টিম বেছে নিন --</option>';
             globalTeamsData.forEach(t => {
@@ -732,6 +875,8 @@
 
             if(p1Select) p1Select.innerHTML = html;
             if(p2Select) p2Select.innerHTML = html;
+            if(l1Select) l1Select.innerHTML = html;
+            if(l2Select) l2Select.innerHTML = html;
         }
 
         function openGroupDetail(gName) {
@@ -751,7 +896,7 @@
                 teams.forEach(item => {
                     if(!item) return;
                     let gName = safeStr(item.group_name).trim();
-                    if(gName && gName !== 'PLAYERS_POOL' && gName !== 'NEW_REGISTERED_PLAYERS' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && item.data) {
+                    if(gName && gName !== 'PLAYERS_POOL' && gName !== 'NEW_REGISTERED_PLAYERS' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && gName !== 'LIVE_MATCH' && gName !== 'UPCOMING_MATCHES' && item.data) {
                         if(!groups[gName]) groups[gName] = [];
                         groups[gName].push({ db_id: item.id, ...item.data });
                     }
@@ -763,6 +908,12 @@
                 if(isAdmin) el.classList.remove('hidden');
                 else el.classList.add('hidden');
             });
+
+            // RENDER HOMEPAGE LIVE MATCH WIDGET
+            renderLiveMatchWidget();
+
+            // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES
+            renderHomepageRecentAndUpcoming();
 
             if(selectedViewGroup === null) {
                 let viewElem = document.getElementById('groupsSelectionView');
@@ -948,6 +1099,251 @@
 
         function safeUpper(val) {
             return safeStr(val).trim().toUpperCase();
+        }
+
+        // RENDER PREMIUM HIGHLIGHTED LIVE MATCH SCORE WIDGET ON HOMEPAGE
+        function renderLiveMatchWidget() {
+            let container = document.getElementById('liveMatchContent');
+            let stageBadge = document.getElementById('liveMatchStage');
+            if(!container) return;
+
+            if(!globalLiveMatchData || !globalLiveMatchData.active) {
+                container.innerHTML = `
+                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-center space-y-1">
+                        <p class="text-sm font-semibold text-gray-300">বর্তমানে কোনো সরাসরি ম্যাচ চলমান নেই</p>
+                        <p class="text-xs text-gray-500">পরবর্তী লাইভ ড্রাইভের স্কোর ও আপডেট এই সেকশনে সরাসরি সম্প্রচার করা হবে।</p>
+                    </div>
+                `;
+                if(stageBadge) stageBadge.innerText = "লাইভ ম্যাচ স্থগিত";
+                return;
+            }
+
+            let live = globalLiveMatchData;
+            if(stageBadge) stageBadge.innerText = live.title || "সরাসরি সম্প্রচার";
+
+            container.innerHTML = `
+                <div class="bg-slate-950/90 p-4 md:p-6 rounded-2xl border border-red-500/40 space-y-4">
+                    <div class="text-center space-y-1">
+                        <span class="bg-red-600/30 text-red-300 border border-red-500/60 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
+                            🔥 ${live.status || 'ম্যাচ চলছে'}
+                        </span>
+                        <h3 class="text-lg md:text-2xl font-extrabold text-yellow-400 mt-2">${live.title || 'লাইভ ম্যাচ'}</h3>
+                    </div>
+
+                    <div class="grid grid-cols-5 items-center gap-2 py-2">
+                        <!-- Team 1 -->
+                        <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
+                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ১</span>
+                            <h4 class="text-base md:text-xl font-extrabold text-white">${live.p1Name}</h4>
+                            <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
+                                <span class="text-2xl md:text-4xl font-black text-red-400">${live.p1Score || '০'}</span>
+                            </div>
+                        </div>
+
+                        <!-- VS Badge -->
+                        <div class="col-span-1 text-center">
+                            <span class="bg-yellow-500 text-gray-950 font-black px-3 py-2 rounded-full text-xs md:text-sm shadow-xl inline-block">
+                                VS
+                            </span>
+                        </div>
+
+                        <!-- Team 2 -->
+                        <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
+                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ২</span>
+                            <h4 class="text-base md:text-xl font-extrabold text-white">${live.p2Name}</h4>
+                            <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
+                                <span class="text-2xl md:text-4xl font-black text-red-400">${live.p2Score || '০'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // RENDER HOMEPAGE RECENT AND UPCOMING MATCHES
+        function renderHomepageRecentAndUpcoming() {
+            let recentElem = document.getElementById('recentMatchesList');
+            let upcomingElem = document.getElementById('upcomingMatchesList');
+
+            // Collect Recent Finished Matches from globalMatchesData
+            let completedMatches = [];
+            Object.keys(globalMatchesData).forEach(mCode => {
+                let m = globalMatchesData[mCode];
+                if(m && m.result && m.result !== 'ম্যাচ সেটআপ বাকি আছে' && m.result !== 'অপেক্ষমাণ') {
+                    completedMatches.push(m);
+                }
+            });
+
+            if(recentElem) {
+                if(completedMatches.length === 0) {
+                    recentElem.innerHTML = `<p class="text-xs text-gray-400 italic">কোনো সম্প্রতি সমাপ্ত ম্যাচের ফলাফল প্রকাশিত হয়নি।</p>`;
+                } else {
+                    let recentHtml = '';
+                    completedMatches.slice(-3).reverse().forEach(m => {
+                        recentHtml += `
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+                                <div class="flex justify-between text-yellow-400 font-bold">
+                                    <span>${m.title || m.matchCode}</span>
+                                    <span class="text-gray-400 text-[10px]">📅 ${m.date || ''}</span>
+                                </div>
+                                <p class="text-white font-semibold">${m.p1Name} vs ${m.p2Name}</p>
+                                <p class="text-green-400 font-bold text-[11px]">🏆 ${m.result}</p>
+                            </div>
+                        `;
+                    });
+                    recentElem.innerHTML = recentHtml;
+                }
+            }
+
+            if(upcomingElem) {
+                if(!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
+                    upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
+                } else {
+                    let upHtml = '';
+                    globalUpcomingMatchesData.forEach(u => {
+                        let adminDelBtn = isAdmin ? `<button onclick="deleteUpcomingMatch('${u.db_id}')" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
+                        upHtml += `
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+                                <div class="flex justify-between text-blue-400 font-bold">
+                                    <span>${u.title}</span>
+                                    <span class="text-yellow-300 text-[10px]">${u.time} ${adminDelBtn}</span>
+                                </div>
+                                <p class="text-white font-extrabold">${u.teams}</p>
+                            </div>
+                        `;
+                    });
+                    upcomingElem.innerHTML = upHtml;
+                }
+            }
+        }
+
+        async function saveLiveMatchInfo(e) {
+            e.preventDefault();
+            if(!isAdmin) {
+                alert('শুধুমাত্র এডমিন লাইভ স্কোর আপডেট করতে পারবেন!');
+                return;
+            }
+
+            let title = safeStr(document.getElementById('adminLiveTitle').value).trim();
+            let status = safeStr(document.getElementById('adminLiveStatus').value).trim();
+            let p1Name = safeStr(document.getElementById('adminLiveP1Select').value).trim();
+            let p2Name = safeStr(document.getElementById('adminLiveP2Select').value).trim();
+            let p1Score = safeStr(document.getElementById('adminLiveP1Score').value).trim();
+            let p2Score = safeStr(document.getElementById('adminLiveP2Score').value).trim();
+
+            if(!title || !p1Name || !p2Name) {
+                alert('লাইভ ম্যাচের নাম ও ২টি নিবন্ধিত টিম সিলেক্ট করুন!');
+                return;
+            }
+
+            let liveObj = {
+                active: true,
+                title: title,
+                status: status || 'ম্যাচ চলছে',
+                p1Name: p1Name,
+                p2Name: p2Name,
+                p1Score: p1Score || '০',
+                p2Score: p2Score || '০'
+            };
+
+            let btn = document.getElementById('saveLiveBtn');
+            btn.innerText = "⏳ ব্রডকাস্ট সেভ হচ্ছে...";
+            btn.disabled = true;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
+                });
+
+                alert('✅ লাইভ ম্যাচ স্কোর সফলভাবে হোমপেজে ব্রডকাস্ট হয়েছে!');
+                switchTab('home');
+                loadData();
+            } catch(err) {
+                alert('লাইভ ব্রডকাস্ট আপডেট হয়েছে।');
+            } finally {
+                btn.innerText = "🔴 লাইভ স্কোর হোমপেজে ব্রডকাস্ট করুন";
+                btn.disabled = false;
+            }
+        }
+
+        async function clearLiveMatch() {
+            if(!isAdmin) return;
+            if(!confirm("আপনি কি লাইভ ম্যাচটি বন্ধ/সম্পন্ন করতে চান?")) return;
+
+            let liveObj = { active: false };
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
+                });
+                alert('✅ লাইভ সম্প্রচার বন্ধ করা হয়েছে!');
+                loadData();
+            } catch(e) {}
+        }
+
+        async function saveUpcomingMatch(e) {
+            e.preventDefault();
+            if(!isAdmin) return;
+
+            let title = safeStr(document.getElementById('upTitle').value).trim();
+            let teams = safeStr(document.getElementById('upTeams').value).trim();
+            let time = safeStr(document.getElementById('upTime').value).trim();
+
+            if(!title || !teams || !time) return;
+
+            let targetId = "UP_" + Date.now();
+            let upObj = { title: title, teams: teams, time: time };
+
+            let btn = document.getElementById('saveUpBtn');
+            btn.innerText = "⏳ সেভ হচ্ছে...";
+            btn.disabled = true;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({ id: targetId, group_name: 'UPCOMING_MATCHES', data: upObj })
+                });
+
+                alert('✅ আগামী ম্যাচের সময়সূচী সেভ হয়েছে!');
+                document.getElementById('upTitle').value = '';
+                document.getElementById('upTeams').value = '';
+                document.getElementById('upTime').value = '';
+                loadData();
+            } catch(e) {} finally {
+                btn.innerText = "➕ নতুন আপকামিং ম্যাচ যোগ করুন";
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteUpcomingMatch(dbId) {
+            if(!isAdmin) return;
+            if(!confirm("আপকামিং ম্যাচের তথ্য মুছে ফেলতে চান?")) return;
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                loadData();
+            } catch(e) {}
         }
 
         function renderGroupFixtures() {
@@ -1346,7 +1742,6 @@
             }
         }
 
-        // STRICTLY ENFORCE MAX 4 TEAMS PER GROUP & REGISTERED PLAYERS ONLY
         async function saveTeamSetup(e) {
             e.preventDefault();
             if(!isAdmin) {
@@ -1367,21 +1762,19 @@
                 return;
             }
 
-            // STRICT VALIDATION: BOTH PLAYERS MUST BE FROM REGISTERED PLAYERS POOL
             const p1 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p1Id) || String(p.db_id) === String(p1Id))) : null;
             const p2 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p2Id) || String(p.db_id) === String(p2Id))) : null;
 
             if(!p1 || !p2) {
-                alert('⛔ সিকিউরিটি ত্রুটি: শুধুমাত্র নিবন্ধিত খেলোয়াড় পুল থেকে খেলোয়াড় বেছে নিতে হবে। নিবন্ধিত খেলোয়াড়ের বাইরে নতুন কোনো খেলোয়াড় দিয়ে টিম গঠন করা নিষিদ্ধ!');
+                alert('⛔ সিকিউরিটি ত্রুটি: শুধুমাত্র নিবন্ধিত খেলোয়াড় পুল থেকে খেলোয়াড় বেছে নিতে হবে।');
                 return;
             }
 
             if(p1Id === p2Id) {
-                alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না! নিজে নিজের প্রতিপক্ষ হতে পারবে না।');
+                alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না!');
                 return;
             }
 
-            // STRICT LIMIT: MAXIMUM 4 TEAMS PER GROUP CHECK
             let currentGroupTeams = globalTeamsData.filter(t => {
                 if(!t || !t.group_name) return false;
                 if(editId && String(t.id) === String(editId)) return false;
@@ -1391,7 +1784,7 @@
             if(currentGroupTeams.length >= groupSizeLimit) {
                 alert(`⛔ এন্ট্রি সীমাবদ্ধতা ত্রুটি (${group}):
 
-প্রতিটি গ্রুপে সর্বোচ্চ ৪টি টিম এন্ট্রি হতে পারে। "${group}"-এ ইতিমধ্যে ৪টি টিম নিবন্ধিত রয়েছে। তাই ৪টির বেশি টিম এই গ্রুপে এন্ট্রি নেওয়া সম্ভব নয়!`);
+প্রতিটি গ্রুপে সর্বোচ্চ ৪টি টিম এন্ট্রি হতে পারে। "${group}"-এ ইতিমধ্যে ৪টি টিম নিবন্ধিত রয়েছে।`);
                 return;
             }
 
@@ -1405,7 +1798,7 @@
             }) : null;
 
             if(existingTeamAssigned) {
-                alert(`⛔ সতর্কতা: নির্বাচিত খেলোয়াড়দের মধ্যে কেউ একজন ইতিমধ্যে "${existingTeamAssigned.data.teamName}" (${existingTeamAssigned.group_name})-এ নিবন্ধিত আছেন। একই খেলোয়াড় টুর্নামেন্টের অন্য কোনো জায়গায় একই সাথে থাকতে পারবেন না।`);
+                alert(`⛔ সতর্কতা: নির্বাচিত খেলোয়াড়দের মধ্যে কেউ একজন ইতিমধ্যে "${existingTeamAssigned.data.teamName}"-এ নিবন্ধিত আছেন।`);
                 return;
             }
 
@@ -1567,7 +1960,7 @@
             }
 
             if(safeLower(p1Name) === safeLower(p2Name)) {
-                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না! নিজে নিজের প্রতিপক্ষ হতে পারবে না।');
+                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না!');
                 return;
             }
 
