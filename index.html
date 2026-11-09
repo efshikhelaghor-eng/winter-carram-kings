@@ -20,7 +20,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (লাইভ স্কোর ও রিসেন্ট/আপকামিং ফিচারযুক্ত)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (লাইভ স্কোর পার্মানেন্ট টিম স্ট্যান্ডবাই এডিট)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -225,14 +225,14 @@
         <!-- ADMIN DASHBOARD TAB (RESTRICTED TO ADMIN ONLY) -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL -->
+            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL (STANDBY TEAM NAMES) -->
             <div class="bg-slate-800 p-6 rounded-2xl border-2 border-red-500/50 space-y-4 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-extrabold text-red-400 flex items-center gap-2">
-                        🔴 লাইভ ম্যাচ স্কোর ও হোমপেজ আপডেট কন্ট্রোল (এডমিন প্যানেল)
+                        🔴 লাইভ ম্যাচ স্কোর ও স্ট্যান্ডবাই টিম কন্ট্রোল (এডমিন প্যানেল)
                     </h3>
-                    <span class="text-xs bg-red-950 text-red-300 border border-red-500/40 px-3 py-1 rounded-full font-bold">
-                        সরাসরি ব্রডকাস্ট মোড
+                    <span id="liveStatusIndicatorBadge" class="text-xs bg-red-950 text-red-300 border border-red-500/40 px-3 py-1 rounded-full font-bold">
+                        টিম লকড ও স্ট্যান্ডবাই মোড ✅
                     </span>
                 </div>
 
@@ -250,14 +250,14 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-700">
                         <div class="space-y-2">
-                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ১ (নিবন্ধিত টিম) *</label>
+                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ১ (স্ট্যান্ডবাই / লকড) *</label>
                             <select id="adminLiveP1Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ১ সিলেক্ট করুন --</option>
                             </select>
                             <input type="text" id="adminLiveP1Score" placeholder="টিম ১ চলতি পয়েন্ট/সেট (যেমন: ২)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white font-extrabold">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ২ (নিবন্ধিত টিম) *</label>
+                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ২ (স্ট্যান্ডবাই / লকড) *</label>
                             <select id="adminLiveP2Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ২ সিলেক্ট করুন --</option>
                             </select>
@@ -267,7 +267,7 @@
 
                     <div class="flex gap-3 flex-wrap">
                         <button type="submit" id="saveLiveBtn" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-lg flex-1">
-                            🔴 লাইভ স্কোর হোমপেজে ব্রডকাস্ট করুন
+                            🔴 লাইভ স্কোর আপডেট ও সেভ করুন (টিম স্ট্যান্ডবাই)
                         </button>
                         <button type="button" onclick="clearLiveMatch()" class="bg-slate-700 hover:bg-slate-600 text-gray-300 font-bold px-4 py-2.5 rounded-xl text-xs transition">
                             ⏹️ লাইভ ম্যাচ সমাপ্ত/বন্ধ করুন
@@ -357,7 +357,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 2: DOUBLES TEAM SETUP (STRICTLY FROM REGISTERED PLAYERS, MAX 4 TEAMS PER GROUP) -->
+            <!-- SECTION 2: DOUBLES TEAM SETUP -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
@@ -498,7 +498,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Live Match & Homepage Recent/Upcoming Update Fix)
+        © 2026 Winter Carram Kings Battle (Live Match Standby Team Names Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -761,8 +761,9 @@
                 }).catch(e => {});
 
                 renderData(globalTeamsData, globalPlayersData);
-                populatePlayerDropdowns();
                 populateTeamDropdowns();
+                populatePlayerDropdowns();
+                populateLiveMatchFormStandby();
 
             } catch(e) {
                 console.error("Supabase Error (using fallback cache):", e);
@@ -843,7 +844,6 @@
             }
         }
 
-        // POPULATE DROPDOWNS
         function populatePlayerDropdowns() {
             let p1Select = document.getElementById('tPlayer1Select');
             let p2Select = document.getElementById('tPlayer2Select');
@@ -877,6 +877,36 @@
             if(p2Select) p2Select.innerHTML = html;
             if(l1Select) l1Select.innerHTML = html;
             if(l2Select) l2Select.innerHTML = html;
+
+            populateLiveMatchFormStandby();
+        }
+
+        // AUTO-POPULATE (STANDBY) LIVE MATCH FORM IF ACTIVE
+        function populateLiveMatchFormStandby() {
+            let titleInput = document.getElementById('adminLiveTitle');
+            let statusInput = document.getElementById('adminLiveStatus');
+            let l1Select = document.getElementById('adminLiveP1Select');
+            let l2Select = document.getElementById('adminLiveP2Select');
+            let s1Input = document.getElementById('adminLiveP1Score');
+            let s2Input = document.getElementById('adminLiveP2Score');
+            let badge = document.getElementById('liveStatusIndicatorBadge');
+
+            if(!titleInput || !l1Select) return;
+
+            if(globalLiveMatchData && globalLiveMatchData.active) {
+                if(titleInput && !titleInput.value) titleInput.value = globalLiveMatchData.title || '';
+                if(statusInput && !statusInput.value) statusInput.value = globalLiveMatchData.status || '';
+                if(l1Select) l1Select.value = globalLiveMatchData.p1Name || '';
+                if(l2Select) l2Select.value = globalLiveMatchData.p2Name || '';
+                if(s1Input && !s1Input.value) s1Input.value = globalLiveMatchData.p1Score || '০';
+                if(s2Input && !s2Input.value) s2Input.value = globalLiveMatchData.p2Score || '০';
+
+                if(badge) {
+                    badge.innerText = `🔴 লাইভ রানিং: ${globalLiveMatchData.p1Name} vs ${globalLiveMatchData.p2Name} (টিম স্ট্যান্ডবাই)`;
+                }
+            } else {
+                if(badge) badge.innerText = "টিম লকড ও স্ট্যান্ডবাই মোড ✅";
+            }
         }
 
         function openGroupDetail(gName) {
@@ -1133,7 +1163,7 @@
                     <div class="grid grid-cols-5 items-center gap-2 py-2">
                         <!-- Team 1 -->
                         <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
-                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ১</span>
+                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ১ (স্ট্যান্ডবাই)</span>
                             <h4 class="text-base md:text-xl font-extrabold text-white">${live.p1Name}</h4>
                             <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
                                 <span class="text-2xl md:text-4xl font-black text-red-400">${live.p1Score || '০'}</span>
@@ -1149,7 +1179,7 @@
 
                         <!-- Team 2 -->
                         <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
-                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ২</span>
+                            <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ২ (স্ট্যান্ডবাই)</span>
                             <h4 class="text-base md:text-xl font-extrabold text-white">${live.p2Name}</h4>
                             <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
                                 <span class="text-2xl md:text-4xl font-black text-red-400">${live.p2Score || '০'}</span>
@@ -1165,7 +1195,6 @@
             let recentElem = document.getElementById('recentMatchesList');
             let upcomingElem = document.getElementById('upcomingMatchesList');
 
-            // Collect Recent Finished Matches from globalMatchesData
             let completedMatches = [];
             Object.keys(globalMatchesData).forEach(mCode => {
                 let m = globalMatchesData[mCode];
@@ -1247,7 +1276,7 @@
             };
 
             let btn = document.getElementById('saveLiveBtn');
-            btn.innerText = "⏳ ব্রডকাস্ট সেভ হচ্ছে...";
+            btn.innerText = "⏳ স্ট্যান্ডবাই স্কোর সেভ হচ্ছে...";
             btn.disabled = true;
 
             try {
@@ -1262,20 +1291,19 @@
                     body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
                 });
 
-                alert('✅ লাইভ ম্যাচ স্কোর সফলভাবে হোমপেজে ব্রডকাস্ট হয়েছে!');
-                switchTab('home');
+                alert('✅ লাইভ স্কোর ও স্ট্যান্ডবাই টিম সফলভাবে আপডেট ও সেভ হয়েছে!');
                 loadData();
             } catch(err) {
-                alert('লাইভ ব্রডকাস্ট আপডেট হয়েছে।');
+                alert('লাইভ স্কোর আপডেট হয়েছে।');
             } finally {
-                btn.innerText = "🔴 লাইভ স্কোর হোমপেজে ব্রডকাস্ট করুন";
+                btn.innerText = "🔴 লাইভ স্কোর আপডেট ও সেভ করুন (টিম স্ট্যান্ডবাই)";
                 btn.disabled = false;
             }
         }
 
         async function clearLiveMatch() {
             if(!isAdmin) return;
-            if(!confirm("আপনি কি লাইভ ম্যাচটি বন্ধ/সম্পন্ন করতে চান?")) return;
+            if(!confirm("আপনি কি লাইভ ম্যাচটি বন্ধ করতে চান?")) return;
 
             let liveObj = { active: false };
             try {
@@ -1290,6 +1318,12 @@
                     body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
                 });
                 alert('✅ লাইভ সম্প্রচার বন্ধ করা হয়েছে!');
+                document.getElementById('adminLiveTitle').value = '';
+                document.getElementById('adminLiveStatus').value = '';
+                document.getElementById('adminLiveP1Select').value = '';
+                document.getElementById('adminLiveP2Select').value = '';
+                document.getElementById('adminLiveP1Score').value = '';
+                document.getElementById('adminLiveP2Score').value = '';
                 loadData();
             } catch(e) {}
         }
@@ -1623,7 +1657,7 @@
             if(duplicateFound) {
                 alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!
 
-"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন। একই খেলোয়াড়ের সেইম নাম ও মোবাইল নম্বর দিয়ে একাধিকবার এন্ট্রি দেওয়া যাবে না।`);
+"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন।`);
                 return;
             }
 
@@ -1782,9 +1816,7 @@
             });
 
             if(currentGroupTeams.length >= groupSizeLimit) {
-                alert(`⛔ এন্ট্রি সীমাবদ্ধতা ত্রুটি (${group}):
-
-প্রতিটি গ্রুপে সর্বোচ্চ ৪টি টিম এন্ট্রি হতে পারে। "${group}"-এ ইতিমধ্যে ৪টি টিম নিবন্ধিত রয়েছে।`);
+                alert(`⛔ এন্ট্রি সীমাবদ্ধতা ত্রুটি (${group}): প্রতিটি গ্রুপে সর্বোচ্চ ৪টি টিম এন্ট্রি হতে পারে।`);
                 return;
             }
 
