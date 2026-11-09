@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (ফুল সেফ ফলব্যাক মোড)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (টোটাল সেফ ফিক্সড)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -365,7 +365,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Fail-Safe Instant Render Fix)
+        © 2026 Winter Carram Kings Battle (Safe String Operations & Null-Safety Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -380,6 +380,16 @@
         let globalMatchesData = {};
         let selectedViewGroup = null;
         const groupSizeLimit = 4;
+
+        // SAFE STRING HELPERS TO PREVENT "Cannot read properties of undefined (reading 'toLowerCase')"
+        function safeStr(val) {
+            if (val === null || val === undefined) return "";
+            return String(val);
+        }
+
+        function safeLower(val) {
+            return safeStr(val).trim().toLowerCase();
+        }
 
         function checkAdminSession() {
             try {
@@ -482,7 +492,7 @@
         }
 
         function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
+            const email = safeStr(document.getElementById('loginEmail').value).trim();
             const pass = document.getElementById('loginPass').value;
             const errElem = document.getElementById('loginError');
 
@@ -526,12 +536,14 @@
         }
 
         function sanitizeAndDedupPlayers(playersList) {
+            if(!Array.isArray(playersList)) return [];
             let uniqueMap = new Map();
             let cleaned = [];
             
             playersList.forEach(p => {
-                let nameKey = (p.name || "").trim().toLowerCase();
-                let phoneKey = (p.phone || "").trim();
+                if(!p || typeof p !== 'object') return;
+                let nameKey = safeLower(p.name);
+                let phoneKey = safeStr(p.phone).trim();
                 let uniqueKey = nameKey + "_" + phoneKey;
                 
                 if(!nameKey && !phoneKey) return;
@@ -544,7 +556,6 @@
             return cleaned;
         }
 
-        // INSTANT RENDER ON STARTUP WITH LOCAL CACHE FIRST, THEN SUPABASE SYNC IN BACKGROUND
         async function loadData() {
             let cachedPlayers = getLocalCache();
             globalPlayersData = sanitizeAndDedupPlayers(cachedPlayers);
@@ -567,19 +578,20 @@
 
                 if(Array.isArray(rawTeams)) {
                     rawTeams.forEach(t => {
-                        let gName = (t.group_name || "").trim();
+                        if(!t) return;
+                        let gName = safeStr(t.group_name).trim();
                         if(gName === 'MATCH_SCORES' || gName === 'KNOCKOUT_MATCHES') {
                             globalMatchesData[t.id] = t.data || {};
-                        } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!t.group_name && t.data && t.data.phone)) {
+                        } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!gName && t.data && t.data.phone)) {
                             let d = t.data || {};
                             if(d.name || d.phone) {
                                 playersList.push({
                                     db_id: t.id,
                                     id: d.id || t.id,
-                                    name: (d.name || "").trim(),
-                                    phone: (d.phone || "").trim(),
-                                    address: (d.address || "").trim(),
-                                    cat: (d.cat || "HIGH").trim(),
+                                    name: safeStr(d.name).trim(),
+                                    phone: safeStr(d.phone).trim(),
+                                    address: safeStr(d.address).trim(),
+                                    cat: safeStr(d.cat || "HIGH").trim(),
                                     imageUrl: d.imageUrl || d.image_url || ""
                                 });
                             }
@@ -634,10 +646,11 @@
             notices.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
             notices.forEach((n, idx) => {
+                if(!n) return;
                 if(idx === 0) latestText = n.text || '';
                 html += `
                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
-                        <p class="text-white font-medium whitespace-pre-wrap">${n.text}</p>
+                        <p class="text-white font-medium whitespace-pre-wrap">${n.text || ''}</p>
                         <span class="text-[10px] text-yellow-400 block">${n.date ? 'প্রকাশিত: ' + n.date : ''}</span>
                     </div>
                 `;
@@ -656,7 +669,7 @@
                 return;
             }
 
-            let text = document.getElementById('adminNoticeInput').value.trim();
+            let text = safeStr(document.getElementById('adminNoticeInput').value).trim();
             if(!text) return;
 
             let submitBtn = document.getElementById('noticeSaveBtn');
@@ -696,6 +709,7 @@
 
             let html = '<option value="">-- খেলোয়াড় বেছে নিন --</option>';
             globalPlayersData.forEach(p => {
+                if(!p) return;
                 html += `<option value="${p.id}">${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
             });
 
@@ -709,6 +723,7 @@
 
             let html = '<option value="">-- টিম সিলেক্ট করুন --</option>';
             globalTeamsData.forEach(t => {
+                if(!t) return;
                 let tName = t.data && t.data.teamName ? t.data.teamName : (t.data && t.data.name ? t.data.name : '');
                 if(tName) {
                     html += `<option value="${tName}">${tName} (${t.group_name})</option>`;
@@ -732,13 +747,16 @@
         function renderData(teams, players) {
             let groups = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
 
-            teams.forEach(item => {
-                let gName = (item.group_name || "").trim();
-                if(gName && gName !== 'PLAYERS_POOL' && gName !== 'NEW_REGISTERED_PLAYERS' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && item.data) {
-                    if(!groups[gName]) groups[gName] = [];
-                    groups[gName].push({ db_id: item.id, ...item.data });
-                }
-            });
+            if(Array.isArray(teams)) {
+                teams.forEach(item => {
+                    if(!item) return;
+                    let gName = safeStr(item.group_name).trim();
+                    if(gName && gName !== 'PLAYERS_POOL' && gName !== 'NEW_REGISTERED_PLAYERS' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && item.data) {
+                        if(!groups[gName]) groups[gName] = [];
+                        groups[gName].push({ db_id: item.id, ...item.data });
+                    }
+                });
+            }
 
             const actionHeaders = document.querySelectorAll('.actionHeader');
             actionHeaders.forEach(el => {
@@ -795,13 +813,14 @@
                     detailHtml = `<div class="bg-slate-800 p-6 rounded-xl text-center text-xs text-gray-400 italic">এই গ্রুপে এখনো কোনো দ্বৈত টিম অ্যাসাইন করা হয়নি।</div>`;
                 } else {
                     teamList.forEach((t, tIdx) => {
+                        if(!t) return;
                         let teamImgUrl = t.teamImageUrl || '';
                         let teamLogoHtml = teamImgUrl 
                             ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${t.teamName}', 'টিম লোগো: ${t.teamName}')" class="w-14 h-14 rounded-xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
                             : `<div class="w-14 h-14 rounded-xl bg-slate-700 flex items-center justify-center text-lg font-bold text-yellow-400 shadow">🛡️</div>`;
 
-                        let p1Obj = players.find(p => String(p.id) === String(t.player1Id)) || { name: t.player1Name, cat: t.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-                        let p2Obj = players.find(p => String(p.id) === String(t.player2Id)) || { name: t.player2Name, cat: t.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
+                        let p1Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player1Id)) : null) || { name: t.player1Name, cat: t.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
+                        let p2Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player2Id)) : null) || { name: t.player2Name, cat: t.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
 
                         let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
                         let p1ImgHtml = p1ImgUrl 
@@ -813,8 +832,8 @@
                             ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-11 h-11 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
                             : `<div class="w-11 h-11 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>`;
 
-                        let cat1Color = (p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : (p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
-                        let cat2Color = (p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : (p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
+                        let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
+                        let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
 
                         let adminBtns = isAdmin ? `
                             <div class="flex gap-2 mt-3 justify-end border-t border-slate-700/60 pt-2">
@@ -829,7 +848,7 @@
                                     <div class="flex items-center gap-3">
                                         ${teamLogoHtml}
                                         <div>
-                                            <h5 class="font-extrabold text-yellow-400 text-base md:text-lg">🛡️ টিম: ${t.teamName}</h5>
+                                            <h5 class="font-extrabold text-yellow-400 text-base md:text-lg">🛡️ টিম: ${t.teamName || 'N/A'}</h5>
                                             <span class="text-[10px] text-gray-400">গ্রুপ: ${selectedViewGroup} | দ্বৈত ফরম্যাট</span>
                                         </div>
                                     </div>
@@ -875,10 +894,11 @@
             renderGroupFixtures();
             renderKnockoutMatches();
 
-            let sortedPlayers = [...players].sort((a, b) => {
+            let validPlayers = Array.isArray(players) ? players.filter(p => p && typeof p === 'object') : [];
+            let sortedPlayers = [...validPlayers].sort((a, b) => {
                 let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
-                let rA = rank[(a.cat || 'HIGH').toUpperCase()] || 4;
-                let rB = rank[(b.cat || 'HIGH').toUpperCase()] || 4;
+                let rA = rank[safeUpper(a.cat || 'HIGH')] || 4;
+                let rB = rank[safeUpper(b.cat || 'HIGH')] || 4;
                 return rA - rB;
             });
 
@@ -887,7 +907,7 @@
                 tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নতুন নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
             } else {
                 sortedPlayers.forEach((p, idx) => {
-                    let badgeColor = p.cat === 'HIGH' ? "bg-red-500/20 text-red-400" : p.cat === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
+                    let badgeColor = safeUpper(p.cat) === 'HIGH' ? "bg-red-500/20 text-red-400" : safeUpper(p.cat) === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
                     let imgUrl = p.imageUrl || p.image_url || '';
                     let imgHtml = imgUrl 
                         ? `<img src="${imgUrl}" onclick="openImagePreview('${imgUrl}', '${p.name}', 'ক্যাটাগরি: ${p.cat || 'HIGH'} | মোবাইল: ${p.phone || 'N/A'}')" class="w-9 h-9 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-110 transition shadow" title="ছবি বড় দেখতে ক্লিক করুন">`
@@ -920,6 +940,10 @@
             let totalCount = document.getElementById('totalCount');
             if(totalCount) totalCount.innerText = `মোট: ${sortedPlayers.length} জন`;
             populateTeamDropdowns();
+        }
+
+        function safeUpper(val) {
+            return safeStr(val).trim().toUpperCase();
         }
 
         function renderGroupFixtures() {
@@ -992,11 +1016,13 @@
 
         function renderKnockoutMatches() {
             let allAssignedTeams = [];
-            globalTeamsData.forEach(t => {
-                if(t.data && t.group_name && t.group_name !== 'NEW_REGISTERED_PLAYERS' && t.group_name !== 'PLAYERS_POOL') {
-                    allAssignedTeams.push(t.data);
-                }
-            });
+            if(Array.isArray(globalTeamsData)) {
+                globalTeamsData.forEach(t => {
+                    if(t && t.data && t.group_name && t.group_name !== 'NEW_REGISTERED_PLAYERS' && t.group_name !== 'PLAYERS_POOL') {
+                        allAssignedTeams.push(t.data);
+                    }
+                });
+            }
 
             function renderMatchCardWithBios(code, defaultTitle, defaultBadgeColor) {
                 let info = globalMatchesData[code] || {
@@ -1009,14 +1035,14 @@
                     result: 'ম্যাচ সেটআপ বাকি আছে'
                 };
 
-                let t1Obj = allAssignedTeams.find(t => t.teamName.toLowerCase() === info.p1Name.toLowerCase()) || null;
-                let t2Obj = allAssignedTeams.find(t => t.teamName.toLowerCase() === info.p2Name.toLowerCase()) || null;
+                let t1Obj = allAssignedTeams.find(t => t && t.teamName && safeLower(t.teamName) === safeLower(info.p1Name)) || null;
+                let t2Obj = allAssignedTeams.find(t => t && t.teamName && safeLower(t.teamName) === safeLower(info.p2Name)) || null;
 
                 function getTeamBioSnippet(tObj, fallbackName) {
                     if(!tObj) return `<p class="font-bold text-white text-sm">${fallbackName}</p>`;
                     
-                    let p1Obj = globalPlayersData.find(p => String(p.id) === String(tObj.player1Id)) || { name: tObj.player1Name, cat: tObj.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-                    let p2Obj = globalPlayersData.find(p => String(p.id) === String(tObj.player2Id)) || { name: tObj.player2Name, cat: tObj.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
+                    let p1Obj = (Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && String(p.id) === String(tObj.player1Id)) : null) || { name: tObj.player1Name, cat: tObj.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
+                    let p2Obj = (Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && String(p.id) === String(tObj.player2Id)) : null) || { name: tObj.player2Name, cat: tObj.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
 
                     let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
                     let p2ImgUrl = p2Obj.imageUrl || p2Obj.image_url || '';
@@ -1135,7 +1161,7 @@
             });
         }
 
-        // FAIL-SAFE SUPABASE UPSERT & EDIT FIX
+        // 100% NULL-SAFE PLAYER BIO SAVE
         async function savePlayerBio(e) {
             e.preventDefault();
             if(!isAdmin) {
@@ -1143,28 +1169,29 @@
                 return;
             }
 
-            const editPlayerId = document.getElementById('editPlayerId').value.trim();
-            const existingDbId = document.getElementById('existingPlayerDbId').value.trim();
-            const name = document.getElementById('sName').value.trim();
-            const phone = document.getElementById('sPhone').value.trim();
-            const address = document.getElementById('sAddress').value.trim();
-            const cat = document.getElementById('sCat').value;
+            const editPlayerId = safeStr(document.getElementById('editPlayerId').value).trim();
+            const existingDbId = safeStr(document.getElementById('existingPlayerDbId').value).trim();
+            const name = safeStr(document.getElementById('sName').value).trim();
+            const phone = safeStr(document.getElementById('sPhone').value).trim();
+            const address = safeStr(document.getElementById('sAddress').value).trim();
+            const cat = safeStr(document.getElementById('sCat').value || 'HIGH');
             const imgFile = document.getElementById('sImage').files[0];
-            let existingImg = document.getElementById('existingPlayerImgUrl').value;
+            let existingImg = safeStr(document.getElementById('existingPlayerImgUrl').value);
 
             if(!name || !phone) {
                 alert('খেলোয়াড়ের নাম এবং মোবাইল নম্বর দুটিই আবশ্যক!');
                 return;
             }
 
-            // EXACT DUPLICATE CHECK: SAME NAME + SAME PHONE
-            let duplicateFound = globalPlayersData.find(p => {
+            // FULLY SAFE DUPLICATE CHECK
+            let duplicateFound = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => {
+                if(!p || typeof p !== 'object') return false;
                 let targetCheckId = existingDbId || editPlayerId;
                 if(targetCheckId && (String(p.db_id) === String(targetCheckId) || String(p.id) === String(targetCheckId))) return false;
-                let existingName = (p.name || "").trim().toLowerCase();
-                let existingPhone = (p.phone || "").trim();
-                return (existingName === name.toLowerCase() && existingPhone === phone);
-            });
+                let existingName = safeLower(p.name);
+                let existingPhone = safeStr(p.phone).trim();
+                return (existingName === safeLower(name) && existingPhone === phone);
+            }) : null;
 
             if(duplicateFound) {
                 alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!
@@ -1236,9 +1263,9 @@
                 alert('শুধুমাত্র এডমিন এডিট করতে পারবেন!');
                 return;
             }
-            const player = globalPlayersData.find(p => String(p.db_id) === String(dbId) || String(p.id) === String(dbId));
+            const player = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.db_id) === String(dbId) || String(p.id) === String(dbId))) : null;
             if(!player) return;
-            document.getElementById('editPlayerId').value = player.id || player.db_id;
+            document.getElementById('editPlayerId').value = player.id || player.db_id || '';
             document.getElementById('existingPlayerDbId').value = player.db_id || '';
             document.getElementById('sName').value = player.name || '';
             document.getElementById('sPhone').value = player.phone || '';
@@ -1295,13 +1322,13 @@
                 return;
             }
 
-            const editId = document.getElementById('editRowId').value;
-            const group = document.getElementById('tGroup').value;
-            const teamName = document.getElementById('tTeamName').value.trim();
-            const p1Id = document.getElementById('tPlayer1Select').value;
-            const p2Id = document.getElementById('tPlayer2Select').value;
+            const editId = safeStr(document.getElementById('editRowId').value);
+            const group = safeStr(document.getElementById('tGroup').value);
+            const teamName = safeStr(document.getElementById('tTeamName').value).trim();
+            const p1Id = safeStr(document.getElementById('tPlayer1Select').value);
+            const p2Id = safeStr(document.getElementById('tPlayer2Select').value);
             const teamImgFile = document.getElementById('tTeamImage').files[0];
-            let existingTeamImg = document.getElementById('existingTeamImgUrl').value;
+            let existingTeamImg = safeStr(document.getElementById('existingTeamImgUrl').value);
 
             if(!teamName || !p1Id || !p2Id) {
                 alert('টিমের নাম এবং দুজন খেলোয়াড় সিলেক্ট করা আবশ্যক!');
@@ -1313,22 +1340,22 @@
                 return;
             }
 
-            let existingTeamAssigned = globalTeamsData.find(t => {
+            let existingTeamAssigned = Array.isArray(globalTeamsData) ? globalTeamsData.find(t => {
+                if(!t || !t.data) return false;
                 if(editId && String(t.id) === String(editId)) return false;
-                if(!t.data) return false;
                 let tData = t.data;
                 let tp1 = String(tData.player1Id);
                 let tp2 = String(tData.player2Id);
                 return (tp1 === p1Id || tp1 === p2Id || tp2 === p1Id || tp2 === p2Id);
-            });
+            }) : null;
 
             if(existingTeamAssigned) {
                 alert(`⛔ সতর্কতা: নির্বাচিত খেলোয়াড়দের মধ্যে কেউ একজন ইতিমধ্যে "${existingTeamAssigned.data.teamName}" (${existingTeamAssigned.group_name})-এ নিবন্ধিত আছেন। একই খেলোয়াড় টুর্নামেন্টের অন্য কোনো জায়গায় একই সাথে থাকতে পারবেন না।`);
                 return;
             }
 
-            const p1 = globalPlayersData.find(p => String(p.id) === String(p1Id) || String(p.db_id) === String(p1Id));
-            const p2 = globalPlayersData.find(p => String(p.id) === String(p2Id) || String(p.db_id) === String(p2Id));
+            const p1 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p1Id) || String(p.db_id) === String(p1Id))) : null;
+            const p2 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p2Id) || String(p.db_id) === String(p2Id))) : null;
             if(!p1 || !p2) return;
 
             const submitBtn = document.getElementById('teamSubmitBtn');
@@ -1383,7 +1410,7 @@
                 alert('শুধুমাত্র এডমিন এডিট করতে পারবেন!');
                 return;
             }
-            const item = globalTeamsData.find(t => String(t.id) === String(dbId));
+            const item = Array.isArray(globalTeamsData) ? globalTeamsData.find(t => t && String(t.id) === String(dbId)) : null;
             if(!item || !item.data) return;
             document.getElementById('editRowId').value = item.id;
             document.getElementById('tGroup').value = item.group_name || 'গ্রুপ এ';
@@ -1474,21 +1501,21 @@
                 return;
             }
 
-            let mCode = document.getElementById('mCode').value.trim();
-            let title = document.getElementById('mTitle').value.trim();
-            let p1Name = document.getElementById('mP1Name').value.trim();
-            let p2Name = document.getElementById('mP2Name').value.trim();
-            let p1Pts = document.getElementById('mP1Points').value.trim();
-            let p2Pts = document.getElementById('mP2Points').value.trim();
-            let result = document.getElementById('mResult').value.trim();
-            let dateStr = document.getElementById('mDate').value.trim();
+            let mCode = safeStr(document.getElementById('mCode').value).trim();
+            let title = safeStr(document.getElementById('mTitle').value).trim();
+            let p1Name = safeStr(document.getElementById('mP1Name').value).trim();
+            let p2Name = safeStr(document.getElementById('mP2Name').value).trim();
+            let p1Pts = safeStr(document.getElementById('mP1Points').value).trim();
+            let p2Pts = safeStr(document.getElementById('mP2Points').value).trim();
+            let result = safeStr(document.getElementById('mResult').value).trim();
+            let dateStr = safeStr(document.getElementById('mDate').value).trim();
 
             if(!mCode || !title || !p1Name || !p2Name || !result) {
                 alert('সকল তথ্য পূরণ করুন!');
                 return;
             }
 
-            if(p1Name.toLowerCase() === p2Name.toLowerCase()) {
+            if(safeLower(p1Name) === safeLower(p2Name)) {
                 alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না! নিজে নিজের প্রতিপক্ষ হতে পারবে না।');
                 return;
             }
