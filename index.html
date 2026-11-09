@@ -20,7 +20,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (লাইভ স্কোর পার্মানেন্ট টিম স্ট্যান্ডবাই এডিট)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (প্রিমিয়াম ২x২ গ্রুপ বক্স ডিজাইন)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -29,7 +29,7 @@
 
     <!-- Nav Tabs -->
     <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
-        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">🏠 হোম (লাইভ স্কোর ও বায়ো)</button>
+        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">🏠 হোম (গ্রুপ বক্স ও লাইভ)</button>
         <button onclick="switchTab('fixtures')" id="navFixtures" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">⚔️ গ্রুপপর্ব ফিকশ্চার (৪টি ম্যাচ)</button>
         <button onclick="switchTab('knockout')" id="navKnockout" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">🏆 নকআউট পর্ব ও ফাইনাল</button>
         <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">📋 খেলোয়াড় তালিকা</button>
@@ -39,7 +39,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow p-4 max-w-5xl mx-auto w-full space-y-6">
         
-        <!-- HOME TAB: LIVE MATCH, NOTICE BOARD, RECENT/UPCOMING & GROUPS -->
+        <!-- HOME TAB: LIVE MATCH, NOTICE BOARD, 2X2 GROUP BOXES -->
         <div id="tabHome" class="space-y-6">
 
             <!-- PREMIUM LIVE MATCH SCORE HIGHLIGHT CARD -->
@@ -118,9 +118,14 @@
                 </div>
             </div>
 
-            <!-- MAIN GROUPS SELECTION CARDS (A, B, C, D) -->
+            <!-- MAIN GROUPS SELECTION CARDS (2X2 PREMIUM GRID BOX SYSTEM) -->
             <div id="groupsSelectionView" class="space-y-4">
-                <h3 class="text-sm font-bold text-yellow-400 border-b border-slate-700 pb-2">🏆 গ্রুপ নির্বাচন করুন:</h3>
+                <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                    <h3 class="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                        <span>🏆</span> গ্রুপ নির্বাচন করুন (প্রিমিয়াম বক্স ফরম্যাট):
+                    </h3>
+                    <span class="text-xs text-gray-400">পাশাপাশি ও উপর-নিচ ২টা করে বক্স</span>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="groupCardsContainer"></div>
             </div>
 
@@ -225,7 +230,7 @@
         <!-- ADMIN DASHBOARD TAB (RESTRICTED TO ADMIN ONLY) -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL (STANDBY TEAM NAMES) -->
+            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL -->
             <div class="bg-slate-800 p-6 rounded-2xl border-2 border-red-500/50 space-y-4 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-extrabold text-red-400 flex items-center gap-2">
@@ -498,7 +503,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Live Match Standby Team Names Fix)
+        © 2026 Winter Carram Kings Battle (2X2 Premium Group Boxes Grid Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -848,7 +853,7 @@
             let p1Select = document.getElementById('tPlayer1Select');
             let p2Select = document.getElementById('tPlayer2Select');
 
-            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
+            let html = '<option value="">-- ১ম নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
             globalPlayersData.forEach(p => {
                 if(!p) return;
                 html += `<option value="${p.id}">👤 ${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
@@ -881,7 +886,6 @@
             populateLiveMatchFormStandby();
         }
 
-        // AUTO-POPULATE (STANDBY) LIVE MATCH FORM IF ACTIVE
         function populateLiveMatchFormStandby() {
             let titleInput = document.getElementById('adminLiveTitle');
             let statusInput = document.getElementById('adminLiveStatus');
@@ -959,22 +963,33 @@
                     let isOverLimit = (count > groupSizeLimit);
                     
                     let statusBadge = isComplete 
-                        ? `<span class="bg-green-500/20 text-green-400 border border-green-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">✅ গ্রুপ সম্পন্ন (${count}/${groupSizeLimit})</span>`
+                        ? `<span class="bg-green-500/20 text-green-400 border border-green-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">✅ সম্পন্ন (${count}/${groupSizeLimit})</span>`
                         : isOverLimit
-                        ? `<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">⛔ অতিরিক্ত টিম (${count}/${groupSizeLimit})</span>`
-                        : `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold">⚠️ অসম্পূর্ণ (${count}/${groupSizeLimit})</span>`;
+                        ? `<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">⛔ অতিরিক্ত (${count}/${groupSizeLimit})</span>`
+                        : `<span class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">⚠️ অসম্পূর্ণ (${count}/${groupSizeLimit})</span>`;
 
+                    // Premium 2x2 Grid Box Card Design
                     cardsHtml += `
-                        <div onclick="openGroupDetail('${gName}')" class="bg-slate-800 hover:bg-slate-750 p-5 rounded-2xl border ${isComplete ? 'border-green-500/40' : isOverLimit ? 'border-red-500/60' : 'border-yellow-500/40'} shadow-xl cursor-pointer transition flex justify-between items-center group">
-                            <div class="space-y-1.5">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="text-lg font-extrabold text-yellow-400 group-hover:text-yellow-300">🏆 ${gName}</h4>
+                        <div onclick="openGroupDetail('${gName}')" class="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 hover:from-slate-850 hover:to-slate-800 p-5 rounded-2xl border-2 ${isComplete ? 'border-green-500/50 shadow-green-500/10' : isOverLimit ? 'border-red-500/60 shadow-red-500/10' : 'border-yellow-500/40 shadow-yellow-500/10'} shadow-2xl cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between space-y-4 group">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-2xl group-hover:scale-110 transition">🏆</span>
+                                        <h4 class="text-lg md:text-xl font-extrabold text-yellow-400 group-hover:text-yellow-300 tracking-wide">${gName}</h4>
+                                    </div>
+                                    <p class="text-xs text-gray-300 font-medium">টিম সংখ্যা: <strong class="text-white">${count} / ${groupSizeLimit} টিম</strong> (সর্বোচ্চ)</p>
+                                </div>
+                                <div>
                                     ${statusBadge}
                                 </div>
-                                <p class="text-xs text-gray-300">নিবন্ধিত টিমের সংখ্যা: <span class="text-white font-bold">${count} / ${groupSizeLimit} টিম (সর্বোচ্চ)</span></p>
                             </div>
-                            <div class="bg-slate-900 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 p-3 rounded-xl border border-slate-700 font-bold text-xs transition">
-                                বিস্তারিত বায়ো দেখুন →
+                            
+                            <div class="pt-2 border-t border-slate-700/60 flex justify-between items-center">
+                                <span class="text-[11px] text-gray-400 group-hover:text-gray-200 transition">দ্বৈত ফরম্যাট ও বায়ো</span>
+                                <div class="bg-slate-950 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 px-3 py-1.5 rounded-xl border border-slate-700 font-bold text-xs transition shadow flex items-center gap-1">
+                                    <span>বায়ো দেখুন</span>
+                                    <span>→</span>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1131,7 +1146,6 @@
             return safeStr(val).trim().toUpperCase();
         }
 
-        // RENDER PREMIUM HIGHLIGHTED LIVE MATCH SCORE WIDGET ON HOMEPAGE
         function renderLiveMatchWidget() {
             let container = document.getElementById('liveMatchContent');
             let stageBadge = document.getElementById('liveMatchStage');
@@ -1190,7 +1204,6 @@
             `;
         }
 
-        // RENDER HOMEPAGE RECENT AND UPCOMING MATCHES
         function renderHomepageRecentAndUpcoming() {
             let recentElem = document.getElementById('recentMatchesList');
             let upcomingElem = document.getElementById('upcomingMatchesList');
