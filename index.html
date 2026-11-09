@@ -11,7 +11,7 @@
     <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
         <div>
             <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (সুপাবেস পার্মানেন্ট এডিট ও আপসার্ট ফিক্সড)</p>
+            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (ফুল সেফ ফলব্যাক মোড)</p>
         </div>
         <div>
             <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
@@ -180,7 +180,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM (DIRECT SUPABASE PERSISTENCE) -->
+            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM -->
             <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
@@ -365,7 +365,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (Permanent Player Edit & Supabase Upsert Fix)
+        © 2026 Winter Carram Kings Battle (Fail-Safe Instant Render Fix)
     </footer>
 
     <!-- App Logic Script -->
@@ -398,51 +398,69 @@
         }
 
         function applyAdminUIState() {
-            document.getElementById('authBtn').innerText = "লগআউট (এডমিন)";
-            document.getElementById('authBtn').className = "bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded text-xs font-bold shadow transition";
-            document.getElementById('navDashboard').classList.remove('hidden');
-            document.getElementById('noticeAdminIndicator').classList.remove('hidden');
+            const authBtn = document.getElementById('authBtn');
+            if(authBtn) {
+                authBtn.innerText = "লগআউট (এডমিন)";
+                authBtn.className = "bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded text-xs font-bold shadow transition";
+            }
+            const navDash = document.getElementById('navDashboard');
+            if(navDash) navDash.classList.remove('hidden');
+            const noticeInd = document.getElementById('noticeAdminIndicator');
+            if(noticeInd) noticeInd.classList.remove('hidden');
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.remove('hidden');
         }
 
         function applyPublicUIState() {
-            document.getElementById('authBtn').innerText = "এডমিন লগইন";
-            document.getElementById('authBtn').className = "bg-yellow-500 hover:bg-yellow-400 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow transition";
-            document.getElementById('navDashboard').classList.add('hidden');
-            document.getElementById('noticeAdminIndicator').classList.add('hidden');
+            const authBtn = document.getElementById('authBtn');
+            if(authBtn) {
+                authBtn.innerText = "এডমিন লগইন";
+                authBtn.className = "bg-yellow-500 hover:bg-yellow-400 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow transition";
+            }
+            const navDash = document.getElementById('navDashboard');
+            if(navDash) navDash.classList.add('hidden');
+            const noticeInd = document.getElementById('noticeAdminIndicator');
+            if(noticeInd) noticeInd.classList.add('hidden');
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.add('hidden');
         }
 
         function switchTab(tab) {
-            document.getElementById('tabHome').classList.add('hidden');
-            document.getElementById('tabFixtures').classList.add('hidden');
-            document.getElementById('tabKnockout').classList.add('hidden');
-            document.getElementById('tabGroups').classList.add('hidden');
-            document.getElementById('tabDashboard').classList.add('hidden');
+            ['tabHome', 'tabFixtures', 'tabKnockout', 'tabGroups', 'tabDashboard'].forEach(id => {
+                let el = document.getElementById(id);
+                if(el) el.classList.add('hidden');
+            });
 
-            document.getElementById('navHome').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
-            document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
-            document.getElementById('navKnockout').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
-            document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
+            ['navHome', 'navFixtures', 'navKnockout', 'navGroups'].forEach(id => {
+                let el = document.getElementById(id);
+                if(el) el.className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
+            });
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200";
 
             if(tab === 'home') {
-                document.getElementById('tabHome').classList.remove('hidden');
-                document.getElementById('navHome').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                let el = document.getElementById('tabHome');
+                if(el) el.classList.remove('hidden');
+                let nav = document.getElementById('navHome');
+                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'fixtures') {
-                document.getElementById('tabFixtures').classList.remove('hidden');
-                document.getElementById('navFixtures').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                let el = document.getElementById('tabFixtures');
+                if(el) el.classList.remove('hidden');
+                let nav = document.getElementById('navFixtures');
+                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'knockout') {
-                document.getElementById('tabKnockout').classList.remove('hidden');
-                document.getElementById('navKnockout').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                let el = document.getElementById('tabKnockout');
+                if(el) el.classList.remove('hidden');
+                let nav = document.getElementById('navKnockout');
+                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'groups') {
-                document.getElementById('tabGroups').classList.remove('hidden');
-                document.getElementById('navGroups').className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                let el = document.getElementById('tabGroups');
+                if(el) el.classList.remove('hidden');
+                let nav = document.getElementById('navGroups');
+                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
             } else if(tab === 'dashboard' && isAdmin) {
-                document.getElementById('tabDashboard').classList.remove('hidden');
+                let el = document.getElementById('tabDashboard');
+                if(el) el.classList.remove('hidden');
                 if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-600 text-white";
             }
         }
@@ -521,18 +539,12 @@
                 if(!uniqueMap.has(uniqueKey)) {
                     uniqueMap.set(uniqueKey, true);
                     cleaned.push(p);
-                } else {
-                    if(p.db_id) {
-                        fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${p.db_id}`, {
-                            method: 'DELETE',
-                            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                        }).catch(e => {});
-                    }
                 }
             });
             return cleaned;
         }
 
+        // INSTANT RENDER ON STARTUP WITH LOCAL CACHE FIRST, THEN SUPABASE SYNC IN BACKGROUND
         async function loadData() {
             let cachedPlayers = getLocalCache();
             globalPlayersData = sanitizeAndDedupPlayers(cachedPlayers);
@@ -562,7 +574,7 @@
                             let d = t.data || {};
                             if(d.name || d.phone) {
                                 playersList.push({
-                                    db_id: t.id, // Supabase primary key ID (crucial for edits!)
+                                    db_id: t.id,
                                     id: d.id || t.id,
                                     name: (d.name || "").trim(),
                                     phone: (d.phone || "").trim(),
@@ -601,13 +613,15 @@
                 populateTeamDropdowns();
 
             } catch(e) {
-                console.error("Supabase Error:", e);
+                console.error("Supabase Error (using fallback cache):", e);
+                renderData(globalTeamsData, globalPlayersData);
             }
         }
 
         function renderNotices(notices) {
             let boardElem = document.getElementById('noticeBoardContent');
             let adminInputElem = document.getElementById('adminNoticeInput');
+            if(!boardElem) return;
 
             if(!notices || notices.length === 0) {
                 boardElem.innerHTML = `<p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>`;
@@ -733,8 +747,10 @@
             });
 
             if(selectedViewGroup === null) {
-                document.getElementById('groupsSelectionView').classList.remove('hidden');
-                document.getElementById('singleGroupDetailView').classList.add('hidden');
+                let viewElem = document.getElementById('groupsSelectionView');
+                let detailElem = document.getElementById('singleGroupDetailView');
+                if(viewElem) viewElem.classList.remove('hidden');
+                if(detailElem) detailElem.classList.add('hidden');
 
                 let cardsHtml = '';
                 ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
@@ -760,15 +776,19 @@
                         </div>
                     `;
                 });
-                document.getElementById('groupCardsContainer').innerHTML = cardsHtml;
+                let container = document.getElementById('groupCardsContainer');
+                if(container) container.innerHTML = cardsHtml;
             } else {
-                document.getElementById('groupsSelectionView').classList.add('hidden');
-                document.getElementById('singleGroupDetailView').classList.remove('hidden');
+                let viewElem = document.getElementById('groupsSelectionView');
+                let detailElem = document.getElementById('singleGroupDetailView');
+                if(viewElem) viewElem.classList.add('hidden');
+                if(detailElem) detailElem.classList.remove('hidden');
 
                 let teamList = groups[selectedViewGroup] || [];
                 let count = teamList.length;
 
-                document.getElementById('detailGroupTitle').innerText = `${selectedViewGroup} - টিম ও খেলোয়াড় বায়ো তালিকা (${count}/${groupSizeLimit})`;
+                let titleElem = document.getElementById('detailGroupTitle');
+                if(titleElem) titleElem.innerText = `${selectedViewGroup} - টিম ও খেলোয়াড় বায়ো তালিকা (${count}/${groupSizeLimit})`;
 
                 let detailHtml = '';
                 if(teamList.length === 0) {
@@ -848,7 +868,8 @@
                         `;
                     });
                 }
-                document.getElementById('detailGroupTeamsContainer').innerHTML = detailHtml;
+                let detailContainer = document.getElementById('detailGroupTeamsContainer');
+                if(detailContainer) detailContainer.innerHTML = detailHtml;
             }
 
             renderGroupFixtures();
@@ -894,12 +915,17 @@
                     `;
                 });
             }
-            document.getElementById('playerTableBody').innerHTML = tableHtml;
-            document.getElementById('totalCount').innerText = `মোট: ${sortedPlayers.length} জন`;
+            let tableBody = document.getElementById('playerTableBody');
+            if(tableBody) tableBody.innerHTML = tableHtml;
+            let totalCount = document.getElementById('totalCount');
+            if(totalCount) totalCount.innerText = `মোট: ${sortedPlayers.length} জন`;
             populateTeamDropdowns();
         }
 
         function renderGroupFixtures() {
+            let fixturesContainer = document.getElementById('fixturesContainer');
+            if(!fixturesContainer) return;
+
             let fixturesHtml = '';
             let groupMeta = [
                 { name: 'গ্রুপ এ', prefix: 'G1', matches: ['G1_M1', 'G1_M2', 'G1_M3', 'G1_M4'] },
@@ -961,7 +987,7 @@
                     </div>
                 `;
             });
-            document.getElementById('fixturesContainer').innerHTML = fixturesHtml;
+            fixturesContainer.innerHTML = fixturesHtml;
         }
 
         function renderKnockoutMatches() {
@@ -1063,17 +1089,21 @@
             qfCodes.forEach((code, idx) => {
                 qfHtml += renderMatchCardWithBios(code, `${idx + 1}ম কোয়ার্টার ফাইনাল`, 'text-yellow-400');
             });
-            document.getElementById('qfMatchesContainer').innerHTML = qfHtml;
+            let qfElem = document.getElementById('qfMatchesContainer');
+            if(qfElem) qfElem.innerHTML = qfHtml;
 
             const sfCodes = ['SF-1', 'SF-2'];
             let sfHtml = '';
             sfCodes.forEach((code, idx) => {
                 sfHtml += renderMatchCardWithBios(code, `${idx + 1}ম সেমিফাইনাল`, 'text-orange-400');
             });
-            document.getElementById('sfMatchesContainer').innerHTML = sfHtml;
+            let sfElem = document.getElementById('sfMatchesContainer');
+            if(sfElem) sfElem.innerHTML = sfHtml;
 
-            document.getElementById('tpMatchesContainer').innerHTML = renderMatchCardWithBios('3P-Match', '৩য় স্থান নির্ধারণী ম্যাচ', 'text-blue-400');
-            document.getElementById('finalMatchContainer').innerHTML = renderMatchCardWithBios('FINAL', 'মেগা ফাইনাল ম্যাচ', 'text-yellow-300 font-extrabold text-sm');
+            let tpElem = document.getElementById('tpMatchesContainer');
+            if(tpElem) tpElem.innerHTML = renderMatchCardWithBios('3P-Match', '৩য় স্থান নির্ধারণী ম্যাচ', 'text-blue-400');
+            let finalElem = document.getElementById('finalMatchContainer');
+            if(finalElem) finalElem.innerHTML = renderMatchCardWithBios('FINAL', 'মেগা ফাইনাল ম্যাচ', 'text-yellow-300 font-extrabold text-sm');
         }
 
         function compressImageToBase64(file) {
@@ -1105,7 +1135,7 @@
             });
         }
 
-        // PERMANENT SUPABASE UPSERT & EDIT FIX
+        // FAIL-SAFE SUPABASE UPSERT & EDIT FIX
         async function savePlayerBio(e) {
             e.preventDefault();
             if(!isAdmin) {
@@ -1129,7 +1159,6 @@
 
             // EXACT DUPLICATE CHECK: SAME NAME + SAME PHONE
             let duplicateFound = globalPlayersData.find(p => {
-                let pId = p.db_id || p.id;
                 let targetCheckId = existingDbId || editPlayerId;
                 if(targetCheckId && (String(p.db_id) === String(targetCheckId) || String(p.id) === String(targetCheckId))) return false;
                 let existingName = (p.name || "").trim().toLowerCase();
@@ -1154,7 +1183,6 @@
                 if(compressedUrl) imageUrl = compressedUrl;
             }
 
-            // CRITICAL FIX: If editing, use the existing Supabase row `db_id` so upsert updates the exact row instead of creating duplicate or failing
             const targetDbId = existingDbId ? existingDbId : (editPlayerId ? editPlayerId : String(Date.now()));
             const targetPlayerId = editPlayerId ? editPlayerId : String(Date.now());
 
@@ -1174,7 +1202,6 @@
             };
 
             try {
-                // Direct Supabase UPSERT
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
                     method: 'POST',
                     headers: {
@@ -1194,7 +1221,7 @@
                 alert('✅ খেলোয়াড়ের তথ্য সফলভাবে ডাটাবেজে পার্মানেন্টলি সেভ হয়েছে!');
                 resetPlayerForm();
                 switchTab('groups');
-                await loadData(); // Reload fresh from Supabase
+                await loadData();
             } catch(err) {
                 console.error("Save error:", err);
                 alert('ডাটা সেভ করতে সমস্যা হয়েছে: ' + err.message);
@@ -1457,7 +1484,7 @@
             let dateStr = document.getElementById('mDate').value.trim();
 
             if(!mCode || !title || !p1Name || !p2Name || !result) {
-                `সকল তথ্য পূরণ করুন!`;
+                alert('সকল তথ্য পূরণ করুন!');
                 return;
             }
 
@@ -1501,7 +1528,7 @@
             } catch(err) {
                 alert('স্কোর সফলভাবে সেভ হয়েছে।');
             } finally {
-                submitBtn.disabled: false;
+                submitBtn.disabled = false;
                 submitBtn.innerText = "💾 ম্যাচের স্কোর ও বিজয়ী সেভ করুন";
             }
         }
