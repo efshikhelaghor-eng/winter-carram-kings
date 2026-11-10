@@ -639,6 +639,7 @@
                     <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
                         💾 নোটিশ আপডেট ও প্রকাশ করুন
                     </button>
+                <button type="button" id="noticeCancelBtn" onclick="cancelNoticeEdit()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">বাতিল</button>
                 </form>
             </div>
 
@@ -846,6 +847,7 @@
             if(navDash) navDash.classList.remove('hidden');
             const noticeInd = document.getElementById('noticeAdminIndicator');
             if(noticeInd) noticeInd.classList.remove('hidden');
+            if(typeof renderNotices === 'function') renderNotices(globalNoticesData);
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.remove('hidden');
         }
@@ -860,6 +862,7 @@
             if(navDash) navDash.classList.add('hidden');
             const noticeInd = document.getElementById('noticeAdminIndicator');
             if(noticeInd) noticeInd.classList.add('hidden');
+            if(typeof renderNotices === 'function') renderNotices(globalNoticesData);
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.add('hidden');
         }
@@ -1087,35 +1090,110 @@
             }
         }
 
+        // ---------- Helpers: uniform date + HTML escape ----------
+        function escHtml(v) {
+            return safeStr(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+        function formatBnDate(ts) {
+            let d = new Date(ts);
+            if(isNaN(d.getTime())) return '';
+            return d.toLocaleString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        function noticeTimestamp(n) {
+            let idNum = Number(n && n.id);
+            if(idNum > 1e12 && idNum < 4e12) return idNum; // id = Date.now()
+            let t = new Date(n && n.date).getTime();
+            return isNaN(t) ? 0 : t;
+        }
+        function noticeDateLabel(n) {
+            let ts = noticeTimestamp(n);
+            if(ts) return formatBnDate(ts);
+            return safeStr(n && n.date);
+        }
+        function noticeHeaders(extra) {
+            return Object.assign({
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+            }, extra || {});
+        }
+
+        let editingNoticeId = null;
+
         function renderNotices(notices) {
             let boardElem = document.getElementById('noticeBoardContent');
-            let adminInputElem = document.getElementById('adminNoticeInput');
             if(!boardElem) return;
 
             if(!notices || notices.length === 0) {
-                boardElem.innerHTML = `<p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>`;
-                if(adminInputElem) adminInputElem.value = "";
+                boardElem.innerHTML = `<p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>`;
                 return;
             }
 
+            let sorted = [...notices].filter(n => n).sort((a, b) => noticeTimestamp(b) - noticeTimestamp(a));
             let html = '';
-            let latestText = "";
-            notices.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-            notices.forEach((n, idx) => {
-                if(!n) return;
-                if(idx === 0) latestText = n.text || '';
+            sorted.forEach(n => {
+                let idAttr = escHtml(n.id);
+                let adminBtns = isAdmin ? `
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="editNotice('${idAttr}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-lg text-[11px] font-bold">✏️ এডিট</button>
+                        <button type="button" onclick="deleteNotice('${idAttr}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-[11px] font-bold">🗑️ মুছুন</button>
+                    </div>` : '';
+                let label = noticeDateLabel(n);
                 html += `
                     <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-1">
-                        <p class="text-white font-medium whitespace-pre-wrap">${n.text || ''}</p>
-                        <span class="text-[10px] text-yellow-400 block font-semibold">${n.date ? 'প্রকাশিত: ' + n.date : ''}</span>
+                        <p class="text-white font-medium whitespace-pre-wrap">${escHtml(n.text)}</p>
+                        <span class="text-[10px] text-yellow-400 block font-semibold">${label ? 'প্রকাশিত: ' + escHtml(label) : ''}</span>
+                        ${adminBtns}
                     </div>
                 `;
             });
-
             boardElem.innerHTML = html;
-            if(adminInputElem && !adminInputElem.value) {
-                adminInputElem.value = latestText;
+        }
+
+        function editNotice(id) {
+            if(!isAdmin) return;
+            let n = globalNoticesData.find(x => String(x.id) === String(id));
+            if(!n) return;
+            editingNoticeId = String(n.id);
+            let input = document.getElementById('adminNoticeInput');
+            input.value = n.text || '';
+            input.focus();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            let btn = document.getElementById('noticeSaveBtn');
+            btn.innerText = '💾 নোটিশ এডিট সেভ করুন';
+            showNoticeCancel(true);
+        }
+
+        function showNoticeCancel(show) {
+            let c = document.getElementById('noticeCancelBtn');
+            if(c) c.classList.toggle('hidden', !show);
+        }
+
+        function cancelNoticeEdit() {
+            editingNoticeId = null;
+            document.getElementById('adminNoticeInput').value = '';
+            document.getElementById('noticeSaveBtn').innerText = '💾 নোটিশ আপডেট ও প্রকাশ করুন';
+            showNoticeCancel(false);
+        }
+
+        async function deleteNotice(id) {
+            if(!isAdmin) return;
+            if(!confirm('এই নোটিশটি স্থায়ীভাবে মুছে ফেলতে চান?')) return;
+            try {
+                let res = await fetch(`${SUPABASE_URL}/rest/v1/notices?id=eq.${encodeURIComponent(id)}`, {
+                    method: 'DELETE',
+                    headers: noticeHeaders({ 'Prefer': 'return=representation' })
+                });
+                let rows = res.ok ? await res.json().catch(() => []) : null;
+                if(!res.ok || (Array.isArray(rows) && rows.length === 0)) {
+                    alert('❌ নোটিশ মোছা যায়নি। Supabase-এ notices টেবিলে DELETE পলিসি (RLS) চালু আছে কিনা দেখুন।');
+                    return;
+                }
+                globalNoticesData = globalNoticesData.filter(n => String(n.id) !== String(id));
+                if(editingNoticeId === String(id)) cancelNoticeEdit();
+                renderNotices(globalNoticesData);
+            } catch(err) {
+                alert('❌ ইন্টারনেট সমস্যার কারণে মোছা যায়নি।');
             }
         }
 
@@ -1130,32 +1208,49 @@
             if(!text) return;
 
             let submitBtn = document.getElementById('noticeSaveBtn');
+            if(submitBtn.disabled) return; // double-tap guard
+
+            // Duplicate guard (same text already published, not the one being edited)
+            let dup = globalNoticesData.find(n => n && safeStr(n.text).trim() === text && String(n.id) !== String(editingNoticeId));
+            if(dup) {
+                alert('⚠️ এই একই নোটিশ আগে থেকেই প্রকাশিত আছে। নতুন কিছু লিখুন বা পুরনোটি এডিট করুন।');
+                return;
+            }
+
+            let originalLabel = editingNoticeId ? "💾 নোটিশ এডিট সেভ করুন" : "💾 নোটিশ আপডেট ও প্রকাশ করুন";
             submitBtn.innerText = "⏳ সেভ হচ্ছে...";
             submitBtn.disabled = true;
 
-            let noticeObj = {
-                id: String(Date.now()),
-                text: text,
-                date: new Date().toLocaleString('bn-BD')
-            };
-
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/notices`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify(noticeObj)
-                });
-                alert('✅ নোটিশ সফলভাবে ডাটাবেজে আপডেট হয়েছে!');
-                loadData();
+                let res;
+                if(editingNoticeId) {
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/notices?id=eq.${encodeURIComponent(editingNoticeId)}`, {
+                        method: 'PATCH',
+                        headers: noticeHeaders({ 'Prefer': 'return=representation' }),
+                        body: JSON.stringify({ text: text })
+                    });
+                } else {
+                    let now = Date.now();
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/notices`, {
+                        method: 'POST',
+                        headers: noticeHeaders({ 'Prefer': 'return=representation' }),
+                        body: JSON.stringify({ id: String(now), text: text, date: formatBnDate(now) })
+                    });
+                }
+                if(!res.ok) {
+                    alert('❌ নোটিশ সেভ হয়নি। (Supabase পলিসি বা ইন্টারনেট চেক করুন)');
+                } else {
+                    alert(editingNoticeId ? '✅ নোটিশ এডিট হয়েছে!' : '✅ নোটিশ সফলভাবে প্রকাশিত হয়েছে!');
+                    editingNoticeId = null;
+                    document.getElementById('adminNoticeInput').value = '';
+                    showNoticeCancel(false);
+                    originalLabel = "💾 নোটিশ আপডেট ও প্রকাশ করুন";
+                    loadData();
+                }
             } catch(err) {
-                alert('নোটিশ সফলভাবে সেভ হয়েছে।');
+                alert('❌ ইন্টারনেট সমস্যার কারণে নোটিশ সেভ হয়নি।');
             } finally {
-                submitBtn.innerText = "💾 নোটিশ আপডেট ও প্রকাশ করুন";
+                submitBtn.innerText = originalLabel;
                 submitBtn.disabled = false;
             }
         }
@@ -1760,7 +1855,7 @@
                         p1Points: String(p1Score),
                         p2Points: String(p2Score),
                         result: resultTag,
-                        date: new Date().toLocaleString('bn-BD')
+                        date: formatBnDate(Date.now())
                     };
 
                     await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
@@ -2499,6 +2594,15 @@
             if(safeLower(p1Name) === safeLower(p2Name)) {
                 alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না!');
                 return;
+            }
+
+            for (let [label, v] of [['টিম ১', p1Pts], ['টিম ২', p2Pts]]) {
+                if(v === '') continue;
+                let n = Number(v);
+                if(!Number.isInteger(n) || n < 0 || n > WINNING_SCORE) {
+                    alert(`⛔ ${label}-এর পয়েন্ট ০ থেকে ${WINNING_SCORE}-এর মধ্যে একটি পূর্ণসংখ্যা হতে হবে!`);
+                    return;
+                }
             }
 
             let submitBtn = document.getElementById('mSubmitBtn');
