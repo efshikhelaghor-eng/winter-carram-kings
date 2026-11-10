@@ -174,20 +174,7 @@
                 </div>
             </div>
 
-            <!-- OFFICIAL NOTICE BOARD -->
-            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
-                        <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
-                    </h2>
-                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">
-                        ⚙️ এডমিন মোড সক্রিয়
-                    </span>
-                </div>
-                <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
-                    <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
-                </div>
-            </div>
+
 
             <!-- FORMAT BANNER & GROUPS HEADER -->
             <div class="bg-gradient-to-r from-slate-900 to-slate-850 p-5 rounded-2xl border border-yellow-500/30 shadow-lg flex justify-between items-center flex-wrap gap-4">
@@ -222,6 +209,21 @@
             </div>
 
         </div>
+
+                    <!-- OFFICIAL NOTICE BOARD -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+                    <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
+                        <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
+                    </h2>
+                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">
+                        ⚙️ এডমিন মোড সক্রিয়
+                    </span>
+                </div>
+                <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
+                    <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
+                </div>
+            </div>
 
         <!-- ==================== FIXTURES TAB ==================== -->
         <div id="tabFixtures" class="space-y-6 hidden">
@@ -437,18 +439,7 @@
                 </form>
             </div>
 
-            <!-- SECTION 0: NOTICE BOARD MANAGER -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📢 নোটিশ বোর্ড ম্যানেজমেন্ট (এডমিন প্যানেল)
-                </h3>
-                <form onsubmit="saveNotice(event)" class="space-y-3">
-                    <textarea id="adminNoticeInput" rows="3" placeholder="এখানে অফিশিয়াল নোটিশ লিখুন..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-yellow-500"></textarea>
-                    <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
-                        💾 নোটিশ আপডেট ও প্রকাশ করুন
-                    </button>
-                </form>
-            </div>
+
 
             <!-- SECTION 1: NEW PLAYER REGISTRATION FORM -->
             <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-6 shadow-xl">
@@ -601,6 +592,19 @@
 
                     <button type="submit" id="mSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
                         💾 ম্যাচের স্কোর ও বিজয়ী সেভ করুন
+                    </button>
+                </form>
+            </div>
+
+                        <!-- SECTION 0: NOTICE BOARD MANAGER -->
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-4 shadow-xl">
+                <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                    📢 নোটিশ বোর্ড ম্যানেজমেন্ট (এডমিন প্যানেল)
+                </h3>
+                <form onsubmit="saveNotice(event)" class="space-y-3">
+                    <textarea id="adminNoticeInput" rows="3" placeholder="এখানে অফিশিয়াল নোটিশ লিখুন..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-yellow-500"></textarea>
+                    <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
+                        💾 নোটিশ আপডেট ও প্রকাশ করুন
                     </button>
                 </form>
             </div>
