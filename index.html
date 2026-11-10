@@ -380,23 +380,59 @@
             <!-- ADMIN SECTION: UPCOMING MATCH CREATOR -->
             <div class="bg-slate-900 p-6 rounded-3xl border border-blue-500/40 space-y-4 shadow-xl">
                 <h3 class="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📅 আগামী/আপকামিং ম্যাচের সময়সূচী ম্যানেজমেন্ট
+                    📅 আগামী/আপকামিং ম্যাচের সময়সূচী ম্যানেজমেন্ট (অটো ড্রপডাউন সিস্টেম)
                 </h3>
-                <form onsubmit="saveUpcomingMatch(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ম্যাচ শিরোনাম *</label>
-                        <input type="text" id="upTitle" placeholder="যেমন: ৩য় কোয়ার্টার ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                <form onsubmit="saveUpcomingMatch(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">ম্যাচ শিরোনাম (গ্রুপপর্ব থেকে ফাইনাল) *</label>
+                            <select id="upTitle" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
+                                <option value="">-- ম্যাচের শিরোনাম সিলেক্ট করুন --</option>
+                                <optgroup label="গ্রুপপর্ব ম্যাচসমূহ">
+                                    <option value="গ্রুপ এ - ম্যাচ ১ (G1_M1)">গ্রুপ এ - ম্যাচ ১ (G1_M1)</option>
+                                    <option value="গ্রুপ এ - ম্যাচ ২ (G1_M2)">গ্রুপ এ - ম্যাচ ২ (G1_M2)</option>
+                                    <option value="গ্রুপ এ - ম্যাচ ৩ (G1_M3)">গ্রুপ এ - ম্যাচ ৩ (G1_M3)</option>
+                                    <option value="গ্রুপ বি - ম্যাচ ১ (G2_M1)">গ্রুপ বি - ম্যাচ ১ (G2_M1)</option>
+                                    <option value="গ্রুপ বি - ম্যাচ ২ (G2_M2)">গ্রুপ বি - ম্যাচ ২ (G2_M2)</option>
+                                    <option value="গ্রুপ বি - ম্যাচ ৩ (G2_M3)">গ্রুপ বি - ম্যাচ ৩ (G2_M3)</option>
+                                    <option value="গ্রুপ সি - ম্যাচ ১ (G3_M1)">গ্রুপ সি - ম্যাচ ১ (G3_M1)</option>
+                                    <option value="গ্রুপ সি - ম্যাচ ২ (G3_M2)">গ্রুপ সি - ম্যাচ ২ (G3_M2)</option>
+                                    <option value="গ্রুপ সি - ম্যাচ ৩ (G3_M3)">গ্রুপ সি - ম্যাচ ৩ (G3_M3)</option>
+                                    <option value="গ্রুপ ডি - ম্যাচ ১ (G4_M1)">গ্রুপ ডি - ম্যাচ ১ (G4_M1)</option>
+                                    <option value="গ্রুপ ডি - ম্যাচ ২ (G4_M2)">গ্রুপ ডি - ম্যাচ ২ (G4_M2)</option>
+                                    <option value="গ্রুপ ডি - ম্যাচ ৩ (G4_M3)">গ্রুপ ডি - ম্যাচ ৩ (G4_M3)</option>
+                                </optgroup>
+                                <optgroup label="নকআউট ও ফাইনাল ম্যাচসমূহ">
+                                    <option value="১ম কোয়ার্টার ফাইনাল (QF-1)">১ম কোয়ার্টার ফাইনাল (QF-1)</option>
+                                    <option value="২য় কোয়ার্টার ফাইনাল (QF-2)">২য় কোয়ার্টার ফাইনাল (QF-2)</option>
+                                    <option value="৩য় কোয়ার্টার ফাইনাল (QF-3)">৩য় কোয়ার্টার ফাইনাল (QF-3)</option>
+                                    <option value="৪র্থ কোয়ার্টার ফাইনাল (QF-4)">৪র্থ কোয়ার্টার ফাইনাল (QF-4)</option>
+                                    <option value="১ম সেমিফাইনাল (SF-1)">১ম সেমিফাইনাল (SF-1)</option>
+                                    <option value="২য় সেমিফাইনাল (SF-2)">২য় সেমিফাইনাল (SF-2)</option>
+                                    <option value="৩য় স্থান নির্ধারণী ম্যাচ (3P-Match)">৩য় স্থান নির্ধারণী ম্যাচ (3P-Match)</option>
+                                    <option value="মেগা ফাইনাল ম্যাচ (FINAL)">মেগা ফাইনাল ম্যাচ (FINAL)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">টিম ১ (নিবন্ধিত টিম) *</label>
+                            <select id="upTeam1Select" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
+                                <option value="">-- টিম ১ সিলেক্ট করুন --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">টিম ২ (নিবন্ধিত টিম) *</label>
+                            <select id="upTeam2Select" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
+                                <option value="">-- টিম ২ সিলেক্ট করুন --</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
-                        <label class="text-xs text-gray-400 block mb-1">টিম ১ vs টিম ২ *</label>
-                        <input type="text" id="upTeams" placeholder="যেমন: রয়েল ফাইটার্স vs কিং কিংস" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
+                        <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময় (ম্যানুয়াল ইনপুট) *</label>
+                        <input type="text" id="upTime" placeholder="যেমন: ১০ নভেম্বর, ২০২৬ - রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                     </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময় *</label>
-                        <input type="text" id="upTime" placeholder="যেমন: আজ রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                    </div>
-                    <button type="submit" id="saveUpBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs md:col-span-3 transition shadow-lg">
-                        ➕ নতুন আপকামিং ম্যাচ যোগ করুন
+                    <button type="submit" id="saveUpBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg">
+                        ➕ নতুন আপকামিং ম্যাচ সময়সূচী যোগ করুন
                     </button>
                 </form>
             </div>
@@ -998,6 +1034,8 @@
             let p2Select = document.getElementById('mP2RegSelect');
             let l1Select = document.getElementById('adminLiveP1Select');
             let l2Select = document.getElementById('adminLiveP2Select');
+            let upT1Select = document.getElementById('upTeam1Select');
+            let upT2Select = document.getElementById('upTeam2Select');
 
             let html = '<option value="">-- নিবন্ধিত টিম বেছে নিন --</option>';
             globalTeamsData.forEach(t => {
@@ -1012,6 +1050,8 @@
             if(p2Select) p2Select.innerHTML = html;
             if(l1Select) l1Select.innerHTML = html;
             if(l2Select) l2Select.innerHTML = html;
+            if(upT1Select) upT1Select.innerHTML = html;
+            if(upT2Select) upT2Select.innerHTML = html;
 
             populateLiveMatchFormStandby();
         }
@@ -1601,11 +1641,21 @@
             if(!isAdmin) return;
 
             let title = safeStr(document.getElementById('upTitle').value).trim();
-            let teams = safeStr(document.getElementById('upTeams').value).trim();
+            let t1 = safeStr(document.getElementById('upTeam1Select').value).trim();
+            let t2 = safeStr(document.getElementById('upTeam2Select').value).trim();
             let time = safeStr(document.getElementById('upTime').value).trim();
 
-            if(!title || !teams || !time) return;
+            if(!title || !t1 || !t2 || !time) {
+                alert('সকল তথ্য ও দুটি টিম সিলেক্ট করুন!');
+                return;
+            }
 
+            if(safeLower(t1) === safeLower(t2)) {
+                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে খেলতে পারে না!');
+                return;
+            }
+
+            let teams = `${t1} vs ${t2}`;
             let targetId = "UP_" + Date.now();
             let upObj = { title: title, teams: teams, time: time };
 
@@ -1625,13 +1675,16 @@
                     body: JSON.stringify({ id: targetId, group_name: 'UPCOMING_MATCHES', data: upObj })
                 });
 
-                alert('✅ আগামী ম্যাচের সময়সূচী সেভ হয়েছে!');
+                alert('✅ আগামী ম্যাচের সময়সূচী সফলভাবে সেভ হয়েছে!');
                 document.getElementById('upTitle').value = '';
-                document.getElementById('upTeams').value = '';
+                document.getElementById('upTeam1Select').value = '';
+                document.getElementById('upTeam2Select').value = '';
                 document.getElementById('upTime').value = '';
                 loadData();
-            } catch(e) {} finally {
-                btn.innerText = "➕ নতুন আপকামিং ম্যাচ যোগ করুন";
+            } catch(e) {
+                alert('সেভ করতে সমস্যা হয়েছে।');
+            } finally {
+                btn.innerText = "➕ নতুন আপকামিং ম্যাচ সময়সূচী যোগ করুন";
                 btn.disabled = false;
             }
         }
