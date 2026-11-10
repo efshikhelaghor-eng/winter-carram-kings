@@ -1440,10 +1440,24 @@
             Object.keys(globalMatchesData).forEach(mCode => {
                 let m = globalMatchesData[mCode];
                 if(m && m.result) {
-                    let resLower = safeLower(m.result);
-                    let isSetupOrPending = resLower.includes('সেটআপ') || resLower.includes('অপেক্ষমাণ') || resLower.includes('নির্ধারিত হয়নি');
-                    // Ensure only finished or suspended match entries are included
-                    if(!isSetupOrPending) {
+                    let resStr = safeStr(m.result).trim();
+                    let resLower = resStr.toLowerCase();
+
+                    // Strict validation: Must explicitly contain winner info or suspended tag, and MUST NOT contain unplayed/pending tags
+                    let isUnplayed = resLower.includes('শুরু হয় নাই') || 
+                                     resLower.includes('সেটআপ') || 
+                                     resLower.includes('অপেক্ষমাণ') || 
+                                     resLower.includes('নির্ধারিত হয়নি') ||
+                                     resStr === '০-০' ||
+                                     resStr === '0-0';
+
+                    let isFinishedOrSuspended = resLower.includes('বিজয়ী') || 
+                                                resLower.includes('স্থগিত') || 
+                                                resLower.includes('সমাপ্ত') || 
+                                                resLower.includes('জয়ী') ||
+                                                resLower.includes('ড্র');
+
+                    if(!isUnplayed && isFinishedOrSuspended) {
                         completedMatches.push(m);
                     }
                 }
