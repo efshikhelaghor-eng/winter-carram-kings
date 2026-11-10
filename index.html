@@ -5,66 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), 0 0 30px rgba(234, 179, 8, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.8), 0 0 50px rgba(234, 179, 8, 0.5); }
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(234, 179, 8, 0.2); }
+            50% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), 0 0 60px rgba(234, 179, 8, 0.5); }
         }
         .live-glow {
-            animation: pulse-glow 2s infinite;
+            animation: pulse-glow 2.5s infinite;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FDE047 0%, #EAB308 50%, #CA8A04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border-glow {
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.15);
         }
     </style>
 </head>
-<body class="bg-gray-950 text-white font-sans min-h-screen flex flex-col">
-    <!-- Header -->
-    <header class="bg-slate-900 p-4 border-b border-yellow-500/40 flex justify-between items-center sticky top-0 z-50 shadow-lg">
-        <div>
-            <h1 class="text-base md:text-xl font-bold text-yellow-400">👑 উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</h1>
-            <p class="text-xs text-green-400">সরাসরি ডাটাবেজ কানেক্টড ✅ (প্রতি গ্রুপে ৩টি টিম ফরম্যাট)</p>
-        </div>
-        <div>
-            <button id="authBtn" onclick="toggleAdminModal()" class="bg-yellow-500 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow">এডমিন লগইন</button>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col selection:bg-yellow-500 selection:text-gray-950">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-gray-950 font-bold text-xs py-1.5 px-4 text-center tracking-wide shadow-md flex justify-center items-center gap-2">
+        <span>🔥 অফিশিয়াল টুর্নামেন্ট পোর্টাল-২০২৬</span>
+        <span class="hidden md:inline">•</span>
+        <span class="hidden md:inline">সরাসরি ডাটাবেজ কানেক্টেড রিয়েল-টাইম আপডেট ✅</span>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="bg-slate-900/90 backdrop-blur-xl border-b border-yellow-500/30 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-red-600 p-0.5 flex justify-center items-center shadow-lg shadow-yellow-500/20">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-xl md:text-2xl">
+                        👑
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        উইন্টার কিংস <span class="gold-gradient-text font-black">ক্যারাম ব্যাটল</span>
+                    </h1>
+                    <p class="text-[11px] text-yellow-400/90 font-medium flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        লাইভ সিঙ্ক মোড সক্রিয় (প্রতি গ্রুপে ৩টি টিম)
+                    </p>
+                </div>
+            </div>
+            <div>
+                <button id="authBtn" onclick="toggleAdminModal()" class="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg shadow-yellow-500/20 transition transform hover:scale-105">
+                    এডমিন লগইন
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Nav Tabs -->
-    <nav class="flex justify-center bg-slate-800 p-2 gap-2 border-b border-slate-700 flex-wrap">
-        <button onclick="switchTab('home')" id="navHome" class="px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950">🏠 হোম (গ্রুপ বক্স ও লাইভ)</button>
-        <button onclick="switchTab('fixtures')" id="navFixtures" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">⚔️ গ্রুপপর্ব ফিকশ্চার</button>
-        <button onclick="switchTab('knockout')" id="navKnockout" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">🏆 নকআউট পর্ব ও ফাইনাল</button>
-        <button onclick="switchTab('groups')" id="navGroups" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200">📋 খেলোয়াড় তালিকা</button>
-        <button onclick="switchTab('dashboard')" id="navDashboard" class="px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200 hidden">⚙️ এডমিন প্যানেল</button>
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-slate-900 border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 flex justify-start md:justify-center gap-2 overflow-x-auto py-2.5 no-scrollbar">
+            <button onclick="switchTab('home')" id="navHome" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20">
+                <span>🏠</span> হোম (ম্যাচ সেন্টার ও ড্যাশবোর্ড)
+            </button>
+            <button onclick="switchTab('fixtures')" id="navFixtures" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
+                <span>⚔️</span> গ্রুপ ফিকশ্চার
+            </button>
+            <button onclick="switchTab('knockout')" id="navKnockout" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
+                <span>🏆</span> নকআউট ও ফাইনাল
+            </button>
+            <button onclick="switchTab('groups')" id="navGroups" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
+                <span>📋</span> নিবন্ধিত খেলোয়াড়
+            </button>
+            <button onclick="switchTab('dashboard')" id="navDashboard" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-950/80 text-red-300 border border-red-500/30 hover:bg-red-900 hidden">
+                <span>⚙️</span> এডমিন প্যানেল
+            </button>
+        </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow p-4 max-w-5xl mx-auto w-full space-y-6">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-8">
         
-        <!-- HOME TAB: LIVE MATCH, NOTICE BOARD, 2X2 GROUP BOXES -->
-        <div id="tabHome" class="space-y-6">
+        <!-- ==================== HOME TAB ==================== -->
+        <div id="tabHome" class="space-y-8">
 
-            <!-- PREMIUM LIVE MATCH SCORE HIGHLIGHT CARD -->
-            <div id="liveMatchSection" class="relative bg-gradient-to-r from-red-950 via-slate-900 to-amber-950 p-5 rounded-3xl border-2 border-red-500/80 shadow-2xl live-glow space-y-4">
-                <div class="flex justify-between items-center border-b border-red-500/30 pb-3 flex-wrap gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="relative flex h-3.5 w-3.5">
+            <!-- HERO BROADCAST BANNER / LIVE SCORE CENTER -->
+            <div id="liveMatchSection" class="relative bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 p-6 md:p-8 rounded-3xl border-2 border-red-500/60 shadow-2xl live-glow space-y-5 overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="flex justify-between items-center border-b border-red-500/25 pb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="relative flex h-4 w-4">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
+                          <span class="relative inline-flex rounded-full h-4 w-4 bg-red-600"></span>
                         </span>
-                        <h2 class="text-base md:text-xl font-extrabold text-red-400 tracking-wider">🔴 সরাসরি লাইভ ম্যাচ স্কোর</h2>
+                        <div>
+                            <h2 class="text-lg md:text-2xl font-black text-red-400 tracking-wide uppercase">🔴 সরাসরি লাইভ ব্রডকাস্ট স্কোর</h2>
+                            <p class="text-[11px] text-gray-400 font-medium">Winter Carrom Kings Championship Live Center</p>
+                        </div>
                     </div>
-                    <span id="liveMatchStage" class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-xs px-3 py-1 rounded-full font-bold">
+                    <span id="liveMatchStage" class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/40 text-xs px-3.5 py-1.5 rounded-full font-bold shadow-inner">
                         টুর্নামেন্ট লাইভ মোড
                     </span>
                 </div>
 
-                <div id="liveMatchContent" class="space-y-3">
-                    <p class="text-center text-gray-400 italic text-sm py-4">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
+                <div id="liveMatchContent" class="space-y-4">
+                    <p class="text-center text-gray-400 italic text-sm py-6">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
                 </div>
             </div>
-            
-            <!-- NOTICE BOARD SECTION -->
-            <div class="bg-slate-900 p-5 rounded-2xl border-2 border-yellow-500/50 shadow-2xl space-y-3">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2 flex-wrap gap-2">
+
+            <!-- PREMIUM MATCH CENTER DASHBOARD (সাম্প্রতিক সমাপ্ত ও আপকামিং ম্যাচসমূহ ড্যাশবোর্ড) -->
+            <div class="bg-slate-900/90 rounded-3xl border border-yellow-500/40 p-6 shadow-2xl gold-border-glow space-y-6">
+                <!-- Dashboard Header -->
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl">
+                            📊
+                        </div>
+                        <div>
+                            <h2 class="text-lg md:text-xl font-extrabold gold-gradient-text">ম্যাচ সেন্টার ড্যাশবোর্ড (Match Center Dashboard)</h2>
+                            <p class="text-xs text-gray-400">সাম্প্রতিক ফলাফল ও আগামী সময়সূচীর রিয়েল-টাইম সেন্ট্রাল হাব</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Dashboard Tabs Control -->
+                    <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button onclick="switchDashboardTab('recent')" id="dashBtnRecent" class="px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow">
+                            🏁 সমাপ্ত ম্যাচসমূহ
+                        </button>
+                        <button onclick="switchDashboardTab('upcoming')" id="dashBtnUpcoming" class="px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white">
+                            📅 আগামী ম্যাচসমূহ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tab 1: Recent Matches -->
+                <div id="dashContentRecent" class="space-y-4">
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
+                        <span class="font-semibold text-green-400 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            সাম্প্রতিক সমাপ্ত হওয়া ম্যাচসমূহ (অটো-আপডেটেড)
+                        </span>
+                        <span class="text-[11px] bg-green-500/10 text-green-300 border border-green-500/30 px-2.5 py-0.5 rounded-full font-bold">ফলাফল তালিকা</span>
+                    </div>
+                    <div id="recentMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো সম্প্রতি সমাপ্ত ম্যাচের তথ্য নেই।</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tab 2: Upcoming Matches -->
+                <div id="dashContentUpcoming" class="space-y-4 hidden">
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
+                        <span class="font-semibold text-blue-400 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            আগামী/আপকামিং ম্যাচ সময়সূচী
+                        </span>
+                        <span class="text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full font-bold">ফিকশ্চার শিডিউল</span>
+                    </div>
+                    <div id="upcomingMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OFFICIAL NOTICE BOARD -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
                     <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
                         <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
                     </h2>
@@ -77,117 +189,91 @@
                 </div>
             </div>
 
-            <!-- RECENT MATCHES & UPCOMING MATCHES GRID -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- RECENT MATCHES CARD -->
-                <div class="bg-slate-900 p-5 rounded-2xl border border-green-500/40 shadow-xl space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <h3 class="text-base font-extrabold text-green-400 flex items-center gap-2">
-                            <span>🏁</span> সাম্প্রতিক সমাপ্ত ম্যাচসমূহ (অটো-আপডেটেড)
-                        </h3>
-                        <span class="text-[10px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded font-bold">ফলাফল</span>
-                    </div>
-                    <div id="recentMatchesList" class="space-y-3">
-                        <p class="text-xs text-gray-400 italic">কোনো সম্প্রতি সমাপ্ত ম্যাচের তথ্য নেই।</p>
-                    </div>
-                </div>
-
-                <!-- UPCOMING MATCHES CARD -->
-                <div class="bg-slate-900 p-5 rounded-2xl border border-blue-500/40 shadow-xl space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2">
-                            <span>📅</span> আগামী/আপকামিং ম্যাচসমূহ
-                        </h3>
-                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-bold">সময়সূচী</span>
-                    </div>
-                    <div id="upcomingMatchesList" class="space-y-3">
-                        <p class="text-xs text-gray-400 italic">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORMAT HEADER -->
-            <div class="bg-slate-800 p-4 rounded-xl border border-yellow-500/30 shadow flex justify-between items-center flex-wrap gap-3">
-                <div>
-                    <h2 class="text-lg font-bold text-yellow-400 mb-1">টুর্নামেন্টের গ্রুপসমূহ (প্রতি গ্রুপে সর্বোচ্চ ৩টি টিম)</h2>
+            <!-- FORMAT BANNER & GROUPS HEADER -->
+            <div class="bg-gradient-to-r from-slate-900 to-slate-850 p-5 rounded-2xl border border-yellow-500/30 shadow-lg flex justify-between items-center flex-wrap gap-4">
+                <div class="space-y-1">
+                    <h2 class="text-lg md:text-xl font-black text-yellow-400">টুর্নামেন্টের গ্রুপসমূহ (প্রতি গ্রুপে সর্বোচ্চ ৩টি টিম)</h2>
                     <p class="text-xs text-gray-300">দ্বৈত খেলোয়াড় ফরম্যাট: প্রতিটি টিমে ২ জন করে নিবন্ধিত খেলোয়াড় ও পূর্ণাঙ্গ বায়ো</p>
                 </div>
-                <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
                     <span class="text-xs font-bold text-yellow-400">সীমাবদ্ধতা:</span>
-                    <span class="px-3 py-1 rounded text-xs font-bold bg-yellow-500 text-gray-950">প্রতি গ্রুপে সর্বোচ্চ ৩ টিম</span>
+                    <span class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-yellow-500 text-gray-950 shadow">প্রতি গ্রুপে ৩টি টিম</span>
                 </div>
             </div>
 
             <!-- MAIN GROUPS SELECTION CARDS (2X2 PREMIUM GRID BOX SYSTEM) -->
             <div id="groupsSelectionView" class="space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                    <h3 class="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <h3 class="text-sm font-extrabold text-yellow-400 flex items-center gap-2">
                         <span>🏆</span> গ্রুপ নির্বাচন করুন (প্রতি গ্রুপে ৩টি টিম ফরম্যাট):
                     </h3>
-                    <span class="text-xs text-gray-400">পাশাপাশি ও উপর-নিচ ২টা করে বক্স</span>
+                    <span class="text-xs text-gray-400">পাশাপাশি ও উপর-নিচ ২টা করে প্রফেশনাল বক্স</span>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="groupCardsContainer"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="groupCardsContainer"></div>
             </div>
 
             <!-- SINGLE GROUP DETAIL VIEW WITH FULL TEAM BIO & PREVIEW -->
             <div id="singleGroupDetailView" class="space-y-4 hidden">
-                <div class="flex justify-between items-center bg-slate-900 p-3 rounded-xl border border-yellow-500/40">
-                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-750 text-yellow-400 text-xs px-3 py-1.5 rounded font-bold border border-slate-700">← সকল গ্রুপে ফিরে যান</button>
+                <div class="flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-yellow-500/40 shadow-lg">
+                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-4 py-2 rounded-xl font-bold border border-slate-700 transition">← সকল গ্রুপে ফিরে যান</button>
                     <h3 id="detailGroupTitle" class="text-base font-extrabold text-yellow-400">গ্রুপ বিস্তারিত</h3>
                 </div>
-                <div id="detailGroupTeamsContainer" class="space-y-4"></div>
+                <div id="detailGroupTeamsContainer" class="space-y-5"></div>
             </div>
+
         </div>
 
-        <!-- FIXTURES TAB: GROUP STAGE MATCH FIXTURES -->
+        <!-- ==================== FIXTURES TAB ==================== -->
         <div id="tabFixtures" class="space-y-6 hidden">
-            <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
-                    <h2 class="text-lg font-bold text-yellow-400">⚔️ গ্রুপপর্ব ফিকশ্চার (প্রতি গ্রুপে ৩টি টিমের ফরম্যাট)</h2>
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-2xl space-y-5">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
+                    <h2 class="text-xl font-extrabold text-yellow-400 flex items-center gap-2">
+                        <span>⚔️</span> গ্রুপপর্ব ফিকশ্চার (প্রতি গ্রুপে ৩টি টিমের ফরম্যাট)
+                    </h2>
                     <p class="text-xs text-gray-400">সাধারণ ইউজাররা শুধু দেখতে পারবেন। এডমিন লগইন করলে এডিট অপশন পাবেন।</p>
                 </div>
                 <div id="fixturesContainer" class="space-y-6"></div>
             </div>
         </div>
 
-        <!-- KNOCKOUT TAB WITH FULL TEAM & PLAYER BIOS -->
+        <!-- ==================== KNOCKOUT TAB ==================== -->
         <div id="tabKnockout" class="space-y-6 hidden">
-            <div class="bg-slate-800 p-5 rounded-2xl border border-yellow-500/40 shadow-xl space-y-6">
-                <div class="border-b border-slate-700 pb-3 flex justify-between items-center flex-wrap gap-2">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-2xl space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex justify-between items-center flex-wrap gap-2">
                     <div>
-                        <h2 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                        <h2 class="text-xl font-extrabold text-yellow-400 flex items-center gap-2">
                             <span>🏆</span> নকআউট পর্ব ও ফাইনাল ম্যাচসমূহ (কোয়ার্টার থেকে ফাইনাল)
                         </h2>
                         <p class="text-xs text-gray-400 mt-1">কোয়ার্টার ফাইনাল, সেমিফাইনাল, ৩য় স্থান নির্ধারণী ও মেগা ফাইনাল ম্যাচ</p>
                     </div>
-                    <span class="bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full text-xs font-bold">
+                    <span class="bg-red-500/20 text-red-400 border border-red-500/40 px-3.5 py-1 rounded-full text-xs font-bold">
                         নকআউট টিম বায়ো মোড ✅
                     </span>
                 </div>
 
-                <div class="space-y-3">
-                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-500 pl-2">
+                <div class="space-y-4">
+                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-500 pl-3">
                         <span>🔥</span> কোয়ার্টার ফাইনাল ম্যাচসমূহ
                     </h3>
                     <div id="qfMatchesContainer" class="space-y-4"></div>
                 </div>
 
-                <div class="space-y-3 pt-3">
-                    <h3 class="text-base font-extrabold text-orange-400 flex items-center gap-2 border-l-4 border-orange-500 pl-2">
+                <div class="space-y-4 pt-4">
+                    <h3 class="text-base font-extrabold text-orange-400 flex items-center gap-2 border-l-4 border-orange-500 pl-3">
                         <span>⚡</span> সেমিফাইনাল ম্যাচসমূহ
                     </h3>
                     <div id="sfMatchesContainer" class="space-y-4"></div>
                 </div>
 
-                <div class="space-y-3 pt-3">
-                    <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2 border-l-4 border-blue-500 pl-2">
+                <div class="space-y-4 pt-4">
+                    <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2 border-l-4 border-blue-500 pl-3">
                         <span>🥉</span> ৩য় স্থান নির্ধারণী ম্যাচ (Third Place Play-off)
                     </h3>
                     <div id="tpMatchesContainer" class="space-y-4"></div>
                 </div>
 
-                <div class="space-y-3 pt-3">
-                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-400 pl-2">
+                <div class="space-y-4 pt-4">
+                    <h3 class="text-base font-extrabold text-yellow-300 flex items-center gap-2 border-l-4 border-yellow-400 pl-3">
                         <span>👑</span> মেগা ফাইনাল (Grand Final Match)
                     </h3>
                     <div id="finalMatchContainer" class="space-y-4"></div>
@@ -195,31 +281,31 @@
             </div>
         </div>
 
-        <!-- PLAYERS / NEW REGISTERED PLAYERS LIST TAB -->
+        <!-- ==================== PLAYERS TAB ==================== -->
         <div id="tabGroups" class="space-y-6 hidden">
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-lg font-bold text-yellow-400">📋 নিবন্ধিত খেলোয়াড়বৃন্দ (টুর্নামেন্টের একমাত্র অনুমোদিত পুল)</h2>
-                    <div class="flex items-center gap-2">
-                        <span id="totalCount" class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-yellow-300 font-bold">মোট: ০ জন</span>
-                        <button id="quickAddPlayerBtn" onclick="switchTab('dashboard')" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-3 py-1 rounded text-xs hidden">➕ নতুন খেলোয়াড় যোগ করুন</button>
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+                    <h2 class="text-lg font-extrabold text-yellow-400">📋 নিবন্ধিত খেলোয়াড়বৃন্দ (টুর্নামেন্টের একমাত্র অনুমোদিত পুল)</h2>
+                    <div class="flex items-center gap-3">
+                        <span id="totalCount" class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-yellow-300 font-extrabold border border-slate-700">মোট: ০ জন</span>
+                        <button id="quickAddPlayerBtn" onclick="switchTab('dashboard')" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-3.5 py-1.5 rounded-xl text-xs shadow hidden">➕ নতুন খেলোয়াড় যোগ করুন</button>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mb-3">💡 এই নিবন্ধিত খেলোয়াড়দের বাইরে বাইরের কোনো খেলোয়াড় দিয়ে টুর্নামেন্টের কোনো টিম বা ফরম্যাট সেট করা যাবে না।</p>
-                <div class="overflow-x-auto">
+                <p class="text-xs text-gray-400">💡 এই নিবন্ধিত খেলোয়াড়দের বাইরে বাইরের কোনো খেলোয়াড় দিয়ে টুর্নামেন্টের কোনো টিম বা ফরম্যাট সেট করা যাবে না।</p>
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
                     <table class="w-full text-left text-xs md:text-sm">
                         <thead>
-                            <tr class="bg-slate-700 text-yellow-400 border-b border-slate-600">
-                                <th class="p-2">ছবি</th>
-                                <th class="p-2">ক্রমিক</th>
-                                <th class="p-2">খেলোয়াড়ের নাম</th>
-                                <th class="p-2">ঠিকানা</th>
-                                <th class="p-2">ক্যাটাগরি</th>
-                                <th class="p-2">মোবাইল</th>
-                                <th class="p-2 actionHeader hidden">অ্যাকশন</th>
+                            <tr class="bg-slate-800 text-yellow-400 border-b border-slate-700">
+                                <th class="p-3">ছবি</th>
+                                <th class="p-3">ক্রমিক</th>
+                                <th class="p-3">খেলোয়াড়ের নাম</th>
+                                <th class="p-3">ঠিকানা</th>
+                                <th class="p-3">ক্যাটাগরি</th>
+                                <th class="p-3">মোবাইল</th>
+                                <th class="p-3 actionHeader hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
-                        <tbody id="playerTableBody" class="divide-y divide-slate-700">
+                        <tbody id="playerTableBody" class="divide-y divide-slate-800 bg-slate-950/60">
                             <tr><td colspan="7" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>
                         </tbody>
                     </table>
@@ -227,12 +313,12 @@
             </div>
         </div>
 
-        <!-- ADMIN DASHBOARD TAB (RESTRICTED TO ADMIN ONLY) -->
+        <!-- ==================== ADMIN DASHBOARD TAB ==================== -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            <!-- ADMIN SECTION: LIVE MATCH & HOMEPAGE MATCH CONTROL WITH DROPDOWN ACTION SYSTEM -->
-            <div class="bg-slate-800 p-6 rounded-2xl border-2 border-red-500/50 space-y-4 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+            <!-- ADMIN SECTION: LIVE MATCH CONTROL -->
+            <div class="bg-slate-900 p-6 rounded-3xl border-2 border-red-500/50 space-y-5 shadow-2xl">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
                     <h3 class="text-base font-extrabold text-red-400 flex items-center gap-2">
                         🔴 লাইভ ম্যাচ স্কোর ও স্টেট ড্রপডাউন কন্ট্রোল (এডমিন প্যানেল)
                     </h3>
@@ -242,14 +328,14 @@
                 </div>
 
                 <form onsubmit="saveLiveMatchInfo(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div>
                             <label class="text-xs text-yellow-400 block mb-1 font-bold">ম্যাচ পর্যায় / শিরোনাম *</label>
-                            <input type="text" id="adminLiveTitle" placeholder="যেমন: ২য় কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                            <input type="text" id="adminLiveTitle" placeholder="যেমন: ২য় কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                         </div>
                         <div>
                             <label class="text-xs text-yellow-400 block mb-1 font-bold">লাইভ অ্যাকশন / স্ট্যাটাস ড্রপডাউন (সমাপ্ত / স্থগিত) *</label>
-                            <select id="adminLiveStateDropdown" required class="w-full bg-slate-950 border border-yellow-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                            <select id="adminLiveStateDropdown" required class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="RUNNING">🔴 ম্যাচ চলমান (Live Running)</option>
                                 <option value="FINISHED">🏁 ম্যাচ সমাপ্ত (Match Finished - Req 29 Pts)</option>
                                 <option value="SUSPENDED">⏸️ ম্যাচ স্থগিত (Match Suspended)</option>
@@ -257,34 +343,34 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div class="space-y-2">
                             <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ১ (স্ট্যান্ডবাই / লকড) *</label>
-                            <select id="adminLiveP1Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                            <select id="adminLiveP1Select" required class="w-full bg-slate-900 border border-red-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ১ সিলেক্ট করুন --</option>
                             </select>
-                            <input type="number" id="adminLiveP1Score" placeholder="টিম ১ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white font-extrabold">
+                            <input type="number" id="adminLiveP1Score" placeholder="টিম ১ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-extrabold">
                         </div>
                         <div class="space-y-2">
                             <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ২ (স্ট্যান্ডবাই / লকড) *</label>
-                            <select id="adminLiveP2Select" required class="w-full bg-slate-950 border border-red-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                            <select id="adminLiveP2Select" required class="w-full bg-slate-900 border border-red-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ২ সিলেক্ট করুন --</option>
                             </select>
-                            <input type="number" id="adminLiveP2Score" placeholder="টিম ২ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white font-extrabold">
+                            <input type="number" id="adminLiveP2Score" placeholder="টিম ২ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-extrabold">
                         </div>
                     </div>
 
-                    <div class="bg-amber-950/60 p-3 rounded-xl border border-amber-500/40 text-xs text-amber-200 space-y-1">
-                        <p class="font-bold flex items-center gap-1"><span>💡</span> <strong>রুলস ও অটোমেশন গাইডলাইন:</strong></p>
-                        <p>• <strong>ম্যাচ সমাপ্ত:</strong> ড্রপডাউনে "ম্যাচ সমাপ্ত" সিলেক্ট করলে যেকোনো একটি টিমের স্কোর অবশ্যই **২৯ পয়েন্ট** হতে হবে। ২৯ পয়েন্ট না দিলে সেভ সফল হবে না! সফল হলে নতুন ম্যাচ লাইভ না হওয়া পর্যন্ত লাইভ প্যানেলে রেজাল্ট ফ্লোটিং থাকবে এবং সাম্প্রতিক সমাপ্ত ম্যাচে এন্ট্রি হবে।</p>
+                    <div class="bg-amber-950/60 p-4 rounded-2xl border border-amber-500/40 text-xs text-amber-200 space-y-1.5">
+                        <p class="font-bold flex items-center gap-1.5"><span>💡</span> <strong>রুলস ও অটোমেশন গাইডলাইন:</strong></p>
+                        <p>• <strong>ম্যাচ সমাপ্ত:</strong> ড্রপডাউনে "ম্যাচ সমাপ্ত" সিলেক্ট করলে যেকোনো একটি টিমের স্কোর অবশ্যই **২৯ পয়েন্ট** হতে হবে। ২৯ পয়েন্ট না দিলে সেভ সফল হবে না!</p>
                         <p>• <strong>ম্যাচ স্থগিত:</strong> ড্রপডাউনে "ম্যাচ স্থগিত" সিলেক্ট করলে স্ক্রিনে ম্যাচ স্থগিত লেখাটি সেট হয়ে যাবে এবং সাম্প্রতিক সমাপ্ত ম্যাচে অটো সেভ হয়ে যাবে।</p>
                     </div>
 
                     <div class="flex gap-3 flex-wrap">
-                        <button type="submit" id="saveLiveBtn" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-lg flex-1">
+                        <button type="submit" id="saveLiveBtn" class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg flex-1">
                             💾 লাইভ তথ্য সেভ ও আপডেট করুন (ড্রপডাউন সিস্টেম)
                         </button>
-                        <button type="button" onclick="clearLiveMatch()" class="bg-slate-700 hover:bg-slate-600 text-gray-300 font-bold px-4 py-2.5 rounded-xl text-xs transition">
+                        <button type="button" onclick="clearLiveMatch()" class="bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold px-4 py-3 rounded-xl text-xs transition border border-slate-700">
                             ⏹️ রিসেট / লাইভ বন্ধ করুন
                         </button>
                     </div>
@@ -292,70 +378,70 @@
             </div>
 
             <!-- ADMIN SECTION: UPCOMING MATCH CREATOR -->
-            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-700 pb-2">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-blue-500/40 space-y-4 shadow-xl">
+                <h3 class="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-3">
                     📅 আগামী/আপকামিং ম্যাচের সময়সূচী ম্যানেজমেন্ট
                 </h3>
                 <form onsubmit="saveUpcomingMatch(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">ম্যাচ শিরোনাম *</label>
-                        <input type="text" id="upTitle" placeholder="যেমন: ৩য় কোয়ার্টার ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                        <input type="text" id="upTitle" placeholder="যেমন: ৩য় কোয়ার্টার ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">টিম ১ vs টিম ২ *</label>
-                        <input type="text" id="upTeams" placeholder="যেমন: রয়েল ফাইটার্স vs কিং কিংস" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                        <input type="text" id="upTeams" placeholder="যেমন: রয়েল ফাইটার্স vs কিং কিংস" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময় *</label>
-                        <input type="text" id="upTime" placeholder="যেমন: আজ রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-xs text-white">
+                        <input type="text" id="upTime" placeholder="যেমন: আজ রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                     </div>
-                    <button type="submit" id="saveUpBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs md:col-span-3 transition shadow">
+                    <button type="submit" id="saveUpBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs md:col-span-3 transition shadow-lg">
                         ➕ নতুন আপকামিং ম্যাচ যোগ করুন
                     </button>
                 </form>
             </div>
 
             <!-- SECTION 0: NOTICE BOARD MANAGER -->
-            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-700 pb-2">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-4 shadow-xl">
+                <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-800 pb-3">
                     📢 নোটিশ বোর্ড ম্যানেজমেন্ট (এডমিন প্যানেল)
                 </h3>
                 <form onsubmit="saveNotice(event)" class="space-y-3">
-                    <textarea id="adminNoticeInput" rows="3" placeholder="এখানে অফিশিয়াল নোটিশ লিখুন..." required class="w-full bg-slate-950 border border-slate-700 rounded p-3 text-sm text-white focus:outline-none focus:border-yellow-500"></textarea>
-                    <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-5 py-2.5 rounded-xl text-xs transition shadow">
+                    <textarea id="adminNoticeInput" rows="3" placeholder="এখানে অফিশিয়াল নোটিশ লিখুন..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-yellow-500"></textarea>
+                    <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
                         💾 নোটিশ আপডেট ও প্রকাশ করুন
                     </button>
                 </form>
             </div>
 
             <!-- SECTION 1: NEW PLAYER REGISTRATION FORM -->
-            <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 space-y-6 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-6 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
                     <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
                         নতুন খেলোয়ার নিবন্ধন / এডিটিং ফরম
                     </h3>
-                    <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
+                    <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
                 </div>
 
-                <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="hidden" id="editPlayerId" value="">
                     <input type="hidden" id="existingPlayerDbId" value="">
                     <input type="hidden" id="existingPlayerImgUrl" value="">
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
-                        <input type="text" id="sName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                        <input type="text" id="sName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর *</label>
-                        <input type="text" id="sPhone" placeholder="মোবাইল নম্বর *" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                        <input type="text" id="sPhone" placeholder="মোবাইল নম্বর *" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
-                        <input type="text" id="sAddress" placeholder="ঠিকানা" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-white">
+                        <input type="text" id="sAddress" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
-                        <select id="sCat" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                        <select id="sCat" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-yellow-400 font-bold">
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
@@ -363,31 +449,31 @@
                     </div>
                     <div class="md:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (ঐচ্ছিক - অটো কম্প্রেসড)</label>
-                        <input type="file" id="sImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-gray-300">
+                        <input type="file" id="sImage" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-gray-300">
                     </div>
                     
-                    <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded-xl text-sm md:col-span-2 transition">
+                    <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold py-3 rounded-xl text-sm md:col-span-2 transition shadow-lg">
                         💾 নতুন খেলোয়ার সেভ করুন
                     </button>
                 </form>
             </div>
 
             <!-- SECTION 2: DOUBLES TEAM SETUP -->
-            <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/40 space-y-5 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-blue-500/40 space-y-5 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
                     <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
                         🛡️ ২. দ্বৈত টিম সেটআপ ও এডিটিং (সর্বোচ্চ ৩ টিম প্রতি গ্রুপ)
                     </h3>
-                    <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
+                    <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
                 </div>
                 
                 <form onsubmit="saveTeamSetup(event)" class="space-y-4">
                     <input type="hidden" id="editRowId" value="">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">গ্রুপ সিলেক্ট করুন * (সর্বোচ্চ ৩ টিম)</label>
-                            <select id="tGroup" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-yellow-400 font-bold">
+                            <select id="tGroup" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-yellow-400 font-bold">
                                 <option value="গ্রুপ এ">গ্রুপ এ</option>
                                 <option value="গ্রুপ বি">গ্রুপ বি</option>
                                 <option value="গ্রুপ সি">গ্রুপ সি</option>
@@ -396,88 +482,88 @@
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">টিমের নাম * (যেমন: রয়েল ফাইটার্স)</label>
-                            <input type="text" id="tTeamName" placeholder="টিমের নাম *" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white font-bold">
+                            <input type="text" id="tTeamName" placeholder="টিমের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">টিম লোগো / ছবি (ঐচ্ছিক)</label>
-                            <input type="file" id="tTeamImage" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded p-1 text-xs text-gray-300 mt-0.5">
+                            <input type="file" id="tTeamImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-1.5 text-xs text-gray-300">
                             <input type="hidden" id="existingTeamImgUrl" value="">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">১ম নিবন্ধিত খেলোয়াড় সিলেক্ট করুন *</label>
-                            <select id="tPlayer1Select" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white font-bold">
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">১ম নিবন্ধিত খেলোয়াড় সিলেক্ট করুন * (HIGH➔MEDIUM➔LOW সিরিয়াল)</label>
+                            <select id="tPlayer1Select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
                                 <option value="">-- ১ম নিবন্ধিত খেলোয়াড় বেছে নিন --</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">২য় নিবন্ধিত খেলোয়াড় সিলেক্ট করুন *</label>
-                            <select id="tPlayer2Select" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white font-bold">
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">২য় নিবন্ধিত খেলোয়াড় সিলেক্ট করুন * (HIGH➔MEDIUM➔LOW সিরিয়াল)</label>
+                            <select id="tPlayer2Select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
                                 <option value="">-- ২য় নিবন্ধিত খেলোয়াড় বেছে নিন --</option>
                             </select>
                         </div>
                     </div>
                     
-                    <button type="submit" id="teamSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg">
+                    <button type="submit" id="teamSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
                         💾 দ্বৈত টিম সেভ ও গ্রুপে অ্যাসাইন করুন (সর্বোচ্চ ৩ টিম লিমিট চেক)
                     </button>
                 </form>
             </div>
 
-            <!-- SECTION 3: ALL MATCHES MANUAL SCORE & RESULT EDITOR -->
-            <div id="adminMatchFormSec" class="bg-slate-800 p-6 rounded-2xl border border-purple-500/40 space-y-5 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-700 pb-3 flex-wrap gap-2">
+            <!-- SECTION 3: ALL MATCHES MANUAL SCORE EDITOR -->
+            <div id="adminMatchFormSec" class="bg-slate-900 p-6 rounded-3xl border border-purple-500/40 space-y-5 shadow-xl">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
                     <h3 id="matchFormTitle" class="text-base font-bold text-purple-400 flex items-center gap-2">
                         ⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) ফিকশ্চার, স্কোর ও বিজয়ী ম্যানেজমেন্ট
                     </h3>
-                    <button id="cancelMatchEditBtn" onclick="resetMatchForm()" class="text-xs bg-gray-700 text-gray-300 px-2.5 py-1 rounded hidden">বাতিল করুন</button>
+                    <button id="cancelMatchEditBtn" onclick="resetMatchForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
                 </div>
 
                 <form onsubmit="saveMatchScoreData(event)" class="space-y-4">
                     <input type="hidden" id="editMatchIdCode" value="">
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">ম্যাচ আইডি / কোড *</label>
-                            <input type="text" id="mCode" placeholder="যেমন: G1_M1, QF-1, SF-1, 3P-Match, FINAL" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-300 font-bold">
+                            <input type="text" id="mCode" placeholder="যেমন: G1_M1, QF-1, SF-1, 3P-Match, FINAL" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">ম্যাচের নাম / টাইটেল *</label>
-                            <input type="text" id="mTitle" placeholder="যেমন: ১ম কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            <input type="text" id="mTitle" placeholder="যেমন: ১ম কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                         </div>
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময়</label>
-                            <input type="text" id="mDate" placeholder="যেমন: ১০ নভে, ২০২৬ - ৩:০০ PM" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-white">
+                            <input type="text" id="mDate" placeholder="যেমন: ১০ নভে, ২০২৬ - ৩:০০ PM" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <div class="space-y-2">
                             <label class="text-xs text-yellow-400 block font-bold">টিম ১ (নিবন্ধিত টিম সিলেক্ট করুন) *</label>
-                            <select id="mP1RegSelect" required onchange="document.getElementById('mP1Name').value = this.value" class="w-full bg-slate-950 border border-yellow-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                            <select id="mP1RegSelect" required onchange="document.getElementById('mP1Name').value = this.value" class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ১ বেছে নিন --</option>
                             </select>
                             <input type="hidden" id="mP1Name" value="">
-                            <input type="number" id="mP1Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-300 mt-1">
+                            <input type="number" id="mP1Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 mt-1">
                         </div>
                         <div class="space-y-2">
                             <label class="text-xs text-yellow-400 block font-bold">টিম ২ (নিবন্ধিত টিম সিলেক্ট করুন) *</label>
-                            <select id="mP2RegSelect" required onchange="document.getElementById('mP2Name').value = this.value" class="w-full bg-slate-950 border border-yellow-500/50 rounded p-2.5 text-xs text-yellow-300 font-bold">
+                            <select id="mP2RegSelect" required onchange="document.getElementById('mP2Name').value = this.value" class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
                                 <option value="">-- নিবন্ধিত টিম ২ বেছে নিন --</option>
                             </select>
                             <input type="hidden" id="mP2Name" value="">
-                            <input type="number" id="mP2Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-yellow-300 mt-1">
+                            <input type="number" id="mP2Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 mt-1">
                         </div>
                     </div>
 
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">ম্যাচ রেজাল্ট / বিজয়ী ঘোষণা *</label>
-                        <input type="text" id="mResult" placeholder="যেমন: টিম ১ বিজয়ী (২৯-২৫ পয়েন্টে জয়ী)" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-green-400 font-bold">
+                        <input type="text" id="mResult" placeholder="যেমন: টিম ১ বিজয়ী (২৯-২৫ পয়েন্টে জয়ী)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-green-400 font-bold">
                     </div>
 
-                    <button type="submit" id="mSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg">
+                    <button type="submit" id="mSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
                         💾 ম্যাচের স্কোর ও বিজয়ী সেভ করুন
                     </button>
                 </form>
@@ -488,32 +574,33 @@
     </main>
 
     <!-- Admin Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/80 flex justify-center items-center p-4 hidden z-50">
-        <div class="bg-slate-800 p-6 rounded-2xl border border-yellow-500/40 w-full max-w-sm space-y-4 relative">
-            <button onclick="toggleAdminModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white font-bold">✕</button>
-            <h2 class="text-xl font-bold text-yellow-400 text-center">এডমিন লগইন</h2>
+    <div id="loginModal" class="fixed inset-0 bg-black/85 flex justify-center items-center p-4 hidden z-50 backdrop-blur-md">
+        <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 w-full max-w-sm space-y-4 relative shadow-2xl">
+            <button onclick="toggleAdminModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-bold text-lg">✕</button>
+            <h2 class="text-xl font-extrabold gold-gradient-text text-center">এডমিন লগইন</h2>
             <p id="loginError" class="text-red-400 text-xs text-center font-bold hidden"></p>
-            <input type="email" id="loginEmail" placeholder="ইমেইল" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white">
-            <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white">
-            <button onclick="handleLogin()" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded text-sm">লগইন করুন</button>
+            <input type="email" id="loginEmail" placeholder="ইমেইল" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 font-extrabold py-3 rounded-xl text-sm shadow-lg">লগইন করুন</button>
         </div>
     </div>
 
     <!-- PLAYER / TEAM IMAGE LIGHTBOX -->
     <div id="imagePreviewModal" class="fixed inset-0 bg-black/90 flex justify-center items-center p-4 hidden z-[60] backdrop-blur-sm" onclick="closeImagePreview()">
-        <div class="relative max-w-lg w-full bg-slate-900 border-2 border-yellow-500/60 rounded-3xl p-4 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
+        <div class="relative max-w-lg w-full bg-slate-900 border-2 border-yellow-500/60 rounded-3xl p-5 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
             <button onclick="closeImagePreview()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-extrabold text-2xl">✕</button>
             <h3 id="modalPlayerName" class="text-lg font-bold text-yellow-400 text-center">ছবি প্রিভিউ</h3>
             <div class="w-full max-h-[70vh] overflow-hidden rounded-2xl flex justify-center items-center bg-slate-950 border border-slate-800">
-                <img id="modalPlayerImage" src="" alt="Profile Preview" class="max-h-[65vh] w-auto object-contain rounded-xl">
+                <img id="modalPlayerImage" src="" alt="Preview" class="max-h-[65vh] w-auto object-contain rounded-xl">
             </div>
             <p id="modalPlayerDetails" class="text-xs text-gray-300 text-center font-semibold"></p>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-center p-3 text-[11px] text-gray-400 border-t border-slate-800 mt-auto">
-        © 2026 Winter Carram Kings Battle (3 Teams Per Group Format & Supabase Connected)
+    <footer class="bg-slate-900/90 text-center p-4 text-xs text-gray-400 border-t border-slate-800 mt-auto space-y-1">
+        <p>© 2026 Winter Carrom Kings Battle Championship • All Rights Reserved</p>
+        <p class="text-[10px] text-gray-500">Premium Responsive UI with Supabase Cloud Integration</p>
     </footer>
 
     <!-- App Logic Script -->
@@ -541,6 +628,10 @@
             return safeStr(val).trim().toLowerCase();
         }
 
+        function safeUpper(val) {
+            return safeStr(val).trim().toUpperCase();
+        }
+
         function checkAdminSession() {
             try {
                 const session = localStorage.getItem('carrom_admin_session');
@@ -561,7 +652,7 @@
             const authBtn = document.getElementById('authBtn');
             if(authBtn) {
                 authBtn.innerText = "লগআউট (এডমিন)";
-                authBtn.className = "bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded text-xs font-bold shadow transition";
+                authBtn.className = "bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg transition";
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.remove('hidden');
@@ -575,7 +666,7 @@
             const authBtn = document.getElementById('authBtn');
             if(authBtn) {
                 authBtn.innerText = "এডমিন লগইন";
-                authBtn.className = "bg-yellow-500 hover:bg-yellow-400 text-gray-950 px-3 py-1.5 rounded text-xs font-bold shadow transition";
+                authBtn.className = "bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg transition transform hover:scale-105";
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.add('hidden');
@@ -593,35 +684,54 @@
 
             ['navHome', 'navFixtures', 'navKnockout', 'navGroups'].forEach(id => {
                 let el = document.getElementById(id);
-                if(el) el.className = "px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-gray-200";
+                if(el) el.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750";
             });
             const navDash = document.getElementById('navDashboard');
-            if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-900 text-red-200";
+            if(navDash) navDash.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-950/80 text-red-300 border border-red-500/30 hover:bg-red-900";
 
             if(tab === 'home') {
                 let el = document.getElementById('tabHome');
                 if(el) el.classList.remove('hidden');
                 let nav = document.getElementById('navHome');
-                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
             } else if(tab === 'fixtures') {
                 let el = document.getElementById('tabFixtures');
                 if(el) el.classList.remove('hidden');
                 let nav = document.getElementById('navFixtures');
-                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
             } else if(tab === 'knockout') {
                 let el = document.getElementById('tabKnockout');
                 if(el) el.classList.remove('hidden');
                 let nav = document.getElementById('navKnockout');
-                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
             } else if(tab === 'groups') {
                 let el = document.getElementById('tabGroups');
                 if(el) el.classList.remove('hidden');
                 let nav = document.getElementById('navGroups');
-                if(nav) nav.className = "px-4 py-1.5 rounded text-sm font-bold bg-yellow-500 text-gray-950";
+                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
             } else if(tab === 'dashboard' && isAdmin) {
                 let el = document.getElementById('tabDashboard');
                 if(el) el.classList.remove('hidden');
-                if(navDash) navDash.className = "px-4 py-1.5 rounded text-sm font-bold bg-red-600 text-white";
+                if(navDash) navDash.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-600 text-white shadow-lg";
+            }
+        }
+
+        function switchDashboardTab(subTab) {
+            let rec = document.getElementById('dashContentRecent');
+            let up = document.getElementById('dashContentUpcoming');
+            let btnRec = document.getElementById('dashBtnRecent');
+            let btnUp = document.getElementById('dashBtnUpcoming');
+
+            if(subTab === 'recent') {
+                if(rec) rec.classList.remove('hidden');
+                if(up) up.classList.add('hidden');
+                if(btnRec) btnRec.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow";
+                if(btnUp) btnUp.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white";
+            } else {
+                if(rec) rec.classList.add('hidden');
+                if(up) up.classList.remove('hidden');
+                if(btnRec) btnRec.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white";
+                if(btnUp) btnUp.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow";
             }
         }
 
@@ -806,9 +916,9 @@
                 if(!n) return;
                 if(idx === 0) latestText = n.text || '';
                 html += `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-1">
                         <p class="text-white font-medium whitespace-pre-wrap">${n.text || ''}</p>
-                        <span class="text-[10px] text-yellow-400 block">${n.date ? 'প্রকাশিত: ' + n.date : ''}</span>
+                        <span class="text-[10px] text-yellow-400 block font-semibold">${n.date ? 'প্রকাশিত: ' + n.date : ''}</span>
                     </div>
                 `;
             });
@@ -873,7 +983,7 @@
                 return safeStr(a.name).localeCompare(safeStr(b.name), 'bn');
             });
 
-            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
+            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন (HIGH➔MEDIUM➔LOW) --</option>';
             sortedPlayers.forEach(p => {
                 if(!p) return;
                 html += `<option value="${p.id}">👤 ${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
@@ -973,7 +1083,7 @@
             // RENDER HOMEPAGE LIVE MATCH WIDGET
             renderLiveMatchWidget();
 
-            // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES
+            // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES INSIDE DASHBOARD
             renderHomepageRecentAndUpcoming();
 
             if(selectedViewGroup === null) {
@@ -990,30 +1100,31 @@
                     let isOverLimit = (count > groupSizeLimit);
                     
                     let statusBadge = isComplete 
-                        ? `<span class="bg-green-500/20 text-green-400 border border-green-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">✅ সম্পন্ন (${count}/${groupSizeLimit})</span>`
+                        ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">✅ সম্পূর্ণ (${count}/${groupSizeLimit})</span>`
                         : isOverLimit
-                        ? `<span class="bg-red-500/20 text-red-400 border border-red-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">⛔ অতিরিক্ত (${count}/${groupSizeLimit})</span>`
-                        : `<span class="bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 shadow-sm">⚠️ অসম্পূর্ণ (${count}/${groupSizeLimit})</span>`;
+                        ? `<span class="bg-red-500/10 text-red-400 border border-red-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">⛔ অতিরিক্ত (${count}/${groupSizeLimit})</span>`
+                        : `<span class="bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">⚠️ অসম্পূর্ণ (${count}/${groupSizeLimit})</span>`;
 
-                    // Premium 2x2 Grid Box Card Design (3 teams format)
                     cardsHtml += `
-                        <div onclick="openGroupDetail('${gName}')" class="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 hover:from-slate-850 hover:to-slate-800 p-5 rounded-2xl border-2 ${isComplete ? 'border-green-500/50 shadow-green-500/10' : isOverLimit ? 'border-red-500/60 shadow-red-500/10' : 'border-yellow-500/40 shadow-yellow-500/10'} shadow-2xl cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between space-y-4 group">
-                            <div class="flex justify-between items-start gap-2">
-                                <div class="space-y-1">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-2xl group-hover:scale-110 transition">🏆</span>
-                                        <h4 class="text-lg md:text-xl font-extrabold text-yellow-400 group-hover:text-yellow-300 tracking-wide">${gName}</h4>
+                        <div onclick="openGroupDetail('${gName}')" class="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 hover:from-slate-850 hover:to-slate-800 p-6 rounded-3xl border-2 ${isComplete ? 'border-emerald-500/40 shadow-emerald-500/10' : isOverLimit ? 'border-red-500/50 shadow-red-500/10' : 'border-yellow-500/30 shadow-yellow-500/10'} shadow-2xl cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between space-y-5 group">
+                            <div class="flex justify-between items-start gap-3">
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                            🏆
+                                        </div>
+                                        <h4 class="text-xl font-black text-yellow-400 group-hover:text-yellow-300 tracking-wide">${gName}</h4>
                                     </div>
-                                    <p class="text-xs text-gray-300 font-medium">টিম সংখ্যা: <strong class="text-white">${count} / ${groupSizeLimit} টিম</strong> (সর্বোচ্চ)</p>
+                                    <p class="text-xs text-gray-300 font-medium">টিম সংখ্যা: <strong class="text-white font-extrabold">${count} / ${groupSizeLimit} টিম</strong> (সর্বোচ্চ)</p>
                                 </div>
                                 <div>
                                     ${statusBadge}
                                 </div>
                             </div>
                             
-                            <div class="pt-2 border-t border-slate-700/60 flex justify-between items-center">
-                                <span class="text-[11px] text-gray-400 group-hover:text-gray-200 transition">দ্বৈত ফরম্যাট (৩ টিম)</span>
-                                <div class="bg-slate-950 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 px-3 py-1.5 rounded-xl border border-slate-700 font-bold text-xs transition shadow flex items-center gap-1">
+                            <div class="pt-3 border-t border-slate-800 flex justify-between items-center">
+                                <span class="text-xs text-gray-400 group-hover:text-gray-200 transition">দ্বৈত ফরম্যাট (৩টি টিম)</span>
+                                <div class="bg-slate-950 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 px-3.5 py-1.5 rounded-xl border border-slate-700 font-bold text-xs transition shadow flex items-center gap-1.5">
                                     <span>বায়ো দেখুন</span>
                                     <span>→</span>
                                 </div>
@@ -1037,59 +1148,59 @@
 
                 let detailHtml = '';
                 if(teamList.length === 0) {
-                    detailHtml = `<div class="bg-slate-800 p-6 rounded-xl text-center text-xs text-gray-400 italic">এই গ্রুপে এখনো কোনো দ্বৈত টিম অ্যাসাইন করা হয়নি।</div>`;
+                    detailHtml = `<div class="bg-slate-900 p-8 rounded-2xl text-center text-xs text-gray-400 italic border border-slate-800">এই গ্রুপে এখনো কোনো দ্বৈত টিম অ্যাসাইন করা হয়নি।</div>`;
                 } else {
                     teamList.forEach((t, tIdx) => {
                         if(!t) return;
                         let teamImgUrl = t.teamImageUrl || '';
                         let teamLogoHtml = teamImgUrl 
-                            ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${t.teamName}', 'টিম লোগো: ${t.teamName}')" class="w-14 h-14 rounded-xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
-                            : `<div class="w-14 h-14 rounded-xl bg-slate-700 flex items-center justify-center text-lg font-bold text-yellow-400 shadow">🛡️</div>`;
+                            ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${t.teamName}', 'টিম লোগো: ${t.teamName}')" class="w-14 h-14 rounded-2xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow-lg" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
+                            : `<div class="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-xl font-bold text-yellow-400 shadow-inner border border-slate-700">🛡️</div>`;
 
                         let p1Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player1Id)) : null) || { name: t.player1Name, cat: t.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
                         let p2Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player2Id)) : null) || { name: t.player2Name, cat: t.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
 
                         let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
                         let p1ImgHtml = p1ImgUrl 
-                            ? `<img src="${p1ImgUrl}" onclick="openImagePreview('${p1ImgUrl}', '${p1Obj.name}', 'ক্যাটাগরি: ${p1Obj.cat || 'HIGH'} | মোবাইল: ${p1Obj.phone || 'N/A'} | ঠিকানা: ${p1Obj.address || 'N/A'}')" class="w-11 h-11 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                            : `<div class="w-11 h-11 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>`;
+                            ? `<img src="${p1ImgUrl}" onclick="openImagePreview('${p1ImgUrl}', '${p1Obj.name}', 'ক্যাটাগরি: ${p1Obj.cat || 'HIGH'} | মোবাইল: ${p1Obj.phone || 'N/A'} | ঠিকানা: ${p1Obj.address || 'N/A'}')" class="w-12 h-12 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="ছবি প্রিভিউ">`
+                            : `<div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sm border border-slate-700">👤</div>`;
 
                         let p2ImgUrl = p2Obj.imageUrl || p2Obj.image_url || '';
                         let p2ImgHtml = p2ImgUrl 
-                            ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-11 h-11 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                            : `<div class="w-11 h-11 rounded-full bg-slate-700 flex items-center justify-center text-xs">👤</div>`;
+                            ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-12 h-12 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="ছবি প্রিভিউ">`
+                            : `<div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sm border border-slate-700">👤</div>`;
 
-                        let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
-                        let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
+                        let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400 border-red-500/30' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
+                        let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400 border-red-500/30' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
 
                         let adminBtns = isAdmin ? `
-                            <div class="flex gap-2 mt-3 justify-end border-t border-slate-700/60 pt-2">
-                                <button onclick="editTeamSetup('${t.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-xs font-bold cursor-pointer">✏️ এডিট টিম</button>
-                                <button onclick="deleteTeamSetup('${t.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 rounded text-xs font-bold cursor-pointer">🗑️ টিম মুছুন</button>
+                            <div class="flex gap-2 mt-3 justify-end border-t border-slate-800 pt-3">
+                                <button onclick="editTeamSetup('${t.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">✏️ এডিট টিম</button>
+                                <button onclick="deleteTeamSetup('${t.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">🗑️ টিম মুছুন</button>
                             </div>
                         ` : '';
 
                         detailHtml += `
-                            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 space-y-4 shadow-xl">
+                            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4 shadow-xl">
                                 <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                                    <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-3.5">
                                         ${teamLogoHtml}
                                         <div>
                                             <h5 class="font-extrabold text-yellow-400 text-base md:text-lg">🛡️ টিম: ${t.teamName || 'N/A'}</h5>
-                                            <span class="text-[10px] text-gray-400">গ্রুপ: ${selectedViewGroup} | দ্বৈত ফরম্যাট</span>
+                                            <span class="text-[11px] text-gray-400">গ্রুপ: ${selectedViewGroup} | দ্বৈত টিম</span>
                                         </div>
                                     </div>
-                                    <span class="bg-yellow-500/10 text-yellow-300 border border-yellow-500/30 px-3 py-1 rounded-full text-xs font-bold">টিম #${tIdx + 1}</span>
+                                    <span class="bg-yellow-500/10 text-yellow-300 border border-yellow-500/30 px-3.5 py-1 rounded-full text-xs font-bold">টিম #${tIdx + 1}</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Player 1 Card -->
-                                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center gap-3">
+                                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-3.5">
                                         ${p1ImgHtml}
-                                        <div class="space-y-0.5 text-xs w-full">
-                                            <p class="font-bold text-white text-sm flex justify-between items-center">
+                                        <div class="space-y-1 text-xs w-full">
+                                            <p class="font-extrabold text-white text-sm flex justify-between items-center">
                                                 <span>👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
-                                                <span class="px-1.5 py-0.5 rounded text-[10px] ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                             </p>
                                             <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
@@ -1097,12 +1208,12 @@
                                     </div>
 
                                     <!-- Player 2 Card -->
-                                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center gap-3">
+                                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-3.5">
                                         ${p2ImgHtml}
-                                        <div class="space-y-0.5 text-xs w-full">
-                                            <p class="font-bold text-white text-sm flex justify-between items-center">
+                                        <div class="space-y-1 text-xs w-full">
+                                            <p class="font-extrabold text-white text-sm flex justify-between items-center">
                                                 <span>👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
-                                                <span class="px-1.5 py-0.5 rounded text-[10px] ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                             </p>
                                             <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
@@ -1126,7 +1237,8 @@
                 let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
                 let rA = rank[safeUpper(a.cat || 'HIGH')] || 4;
                 let rB = rank[safeUpper(b.cat || 'HIGH')] || 4;
-                return rA - rB;
+                if (rA !== rB) return rA - rB;
+                return safeStr(a.name).localeCompare(safeStr(b.name), 'bn');
             });
 
             let tableHtml = '';
@@ -1134,29 +1246,29 @@
                 tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
             } else {
                 sortedPlayers.forEach((p, idx) => {
-                    let badgeColor = safeUpper(p.cat) === 'HIGH' ? "bg-red-500/20 text-red-400" : safeUpper(p.cat) === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400";
+                    let badgeColor = safeUpper(p.cat) === 'HIGH' ? "bg-red-500/20 text-red-400 border-red-500/30" : safeUpper(p.cat) === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : "bg-green-500/20 text-green-400 border-green-500/30";
                     let imgUrl = p.imageUrl || p.image_url || '';
                     let imgHtml = imgUrl 
-                        ? `<img src="${imgUrl}" onclick="openImagePreview('${imgUrl}', '${p.name}', 'ক্যাটাগরি: ${p.cat || 'HIGH'} | মোবাইল: ${p.phone || 'N/A'}')" class="w-9 h-9 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-110 transition shadow" title="ছবি বড় দেখতে ক্লিক করুন">`
-                        : `<div class="w-9 h-9 rounded-full bg-slate-700 flex justify-center items-center text-xs font-bold text-gray-400">👤</div>`;
+                        ? `<img src="${imgUrl}" onclick="openImagePreview('${imgUrl}', '${p.name}', 'ক্যাটাগরি: ${p.cat || 'HIGH'} | মোবাইল: ${p.phone || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-110 transition shadow" title="ছবি বড় দেখতে ক্লিক করুন">`
+                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex justify-center items-center text-xs font-bold text-gray-400 border border-slate-700">👤</div>`;
 
                     let actionHtml = isAdmin ? `
-                        <td class="p-2">
-                            <div class="flex gap-1.5">
-                                <button onclick="editPlayerBio('${p.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-xs font-bold cursor-pointer">✏️ এডিট</button>
-                                <button onclick="deletePlayerBio('${p.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 rounded text-xs font-bold cursor-pointer">🗑️ মুছুন</button>
+                        <td class="p-3">
+                            <div class="flex gap-2">
+                                <button onclick="editPlayerBio('${p.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold">✏️ এডিট</button>
+                                <button onclick="deletePlayerBio('${p.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold">🗑️ মুছুন</button>
                             </div>
                         </td>
                     ` : '';
 
                     tableHtml += `
-                        <tr class="hover:bg-slate-700/40">
-                            <td class="p-2">${imgHtml}</td>
-                            <td class="p-2 text-yellow-400 font-bold">#${String(idx + 1).padStart(2, '0')}</td>
-                            <td class="p-2 font-bold text-white">${p.name || 'N/A'}</td>
-                            <td class="p-2 text-gray-300">${p.address || 'N/A'}</td>
-                            <td class="p-2"><span class="px-1.5 py-0.5 rounded text-xs border border-slate-600 ${badgeColor}">${p.cat || 'HIGH'}</span></td>
-                            <td class="p-2 text-gray-300">${p.phone || 'N/A'}</td>
+                        <tr class="hover:bg-slate-800/40 transition">
+                            <td class="p-3">${imgHtml}</td>
+                            <td class="p-3 text-yellow-400 font-bold">#${String(idx + 1).padStart(2, '0')}</td>
+                            <td class="p-3 font-bold text-white">${p.name || 'N/A'}</td>
+                            <td class="p-3 text-gray-300">${p.address || 'N/A'}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded text-xs border ${badgeColor} font-bold">${p.cat || 'HIGH'}</span></td>
+                            <td class="p-3 text-gray-300 font-medium">${p.phone || 'N/A'}</td>
                             ${actionHtml}
                         </tr>
                     `;
@@ -1169,10 +1281,6 @@
             populateTeamDropdowns();
         }
 
-        function safeUpper(val) {
-            return safeStr(val).trim().toUpperCase();
-        }
-
         function renderLiveMatchWidget() {
             let container = document.getElementById('liveMatchContent');
             let stageBadge = document.getElementById('liveMatchStage');
@@ -1180,8 +1288,8 @@
 
             if(!globalLiveMatchData) {
                 container.innerHTML = `
-                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 text-center space-y-1">
-                        <p class="text-sm font-semibold text-gray-300">বর্তমানে কোনো সরাসরি ম্যাচ চলমান নেই</p>
+                    <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 text-center space-y-1.5">
+                        <p class="text-base font-bold text-gray-300">বর্তমানে কোনো সরাসরি ম্যাচ চলমান নেই</p>
                         <p class="text-xs text-gray-500">পরবর্তী লাইভ ড্রাইভের জন্য এডমিন প্যানেল থেকে লাইভ সেটিং কনফিগার করুন।</p>
                     </div>
                 `;
@@ -1195,37 +1303,39 @@
             if(state === 'RUNNING') {
                 if(stageBadge) stageBadge.innerText = live.title || "সরাসরি সম্প্রচার";
                 container.innerHTML = `
-                    <div class="bg-slate-950/90 p-4 md:p-6 rounded-2xl border border-red-500/40 space-y-4">
+                    <div class="bg-slate-950/90 p-6 md:p-8 rounded-2xl border border-red-500/40 space-y-6 shadow-2xl">
                         <div class="text-center space-y-1">
-                            <span class="bg-red-600/30 text-red-300 border border-red-500/60 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
+                            <span class="bg-red-600/30 text-red-300 border border-red-500/60 px-4 py-1.5 rounded-full text-xs font-black tracking-wide inline-block shadow">
                                 🔥 ${live.status || 'ম্যাচ চলছে'}
                             </span>
-                            <h3 class="text-lg md:text-2xl font-extrabold text-yellow-400 mt-2">${live.title || 'লাইভ ম্যাচ'}</h3>
+                            <h3 class="text-xl md:text-3xl font-black text-yellow-400 mt-2 tracking-wide">${live.title || 'লাইভ ম্যাচ'}</h3>
                         </div>
 
-                        <div class="grid grid-cols-5 items-center gap-2 py-2">
+                        <div class="grid grid-cols-5 items-center gap-3 py-2">
                             <!-- Team 1 -->
-                            <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
+                            <div class="col-span-2 bg-gradient-to-b from-slate-900 to-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 text-center space-y-3 shadow-xl">
                                 <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ১ (স্ট্যান্ডবাই)</span>
-                                <h4 class="text-base md:text-xl font-extrabold text-white">${live.p1Name}</h4>
-                                <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
-                                    <span class="text-2xl md:text-4xl font-black text-red-400">${live.p1Score !== undefined ? live.p1Score : 0}</span>
+                                <h4 class="text-base md:text-2xl font-black text-white tracking-wide">${live.p1Name}</h4>
+                                <div class="bg-red-950/90 border-2 border-red-500/60 rounded-2xl py-3 shadow-inner">
+                                    <span class="text-3xl md:text-5xl font-black text-red-400">${live.p1Score !== undefined ? live.p1Score : 0}</span>
                                 </div>
                             </div>
 
                             <!-- VS Badge -->
                             <div class="col-span-1 text-center">
-                                <span class="bg-yellow-500 text-gray-950 font-black px-3 py-2 rounded-full text-xs md:text-sm shadow-xl inline-block">
-                                    VS
-                                </span>
+                                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 p-0.5 mx-auto shadow-2xl flex items-center justify-center">
+                                    <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center text-xs md:text-base font-black text-yellow-400">
+                                        VS
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Team 2 -->
-                            <div class="col-span-2 bg-slate-900/90 p-3 md:p-4 rounded-xl border border-slate-800 text-center space-y-2">
+                            <div class="col-span-2 bg-gradient-to-b from-slate-900 to-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 text-center space-y-3 shadow-xl">
                                 <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ২ (স্ট্যান্ডবাই)</span>
-                                <h4 class="text-base md:text-xl font-extrabold text-white">${live.p2Name}</h4>
-                                <div class="bg-red-950 border border-red-500/60 rounded-xl py-2">
-                                    <span class="text-2xl md:text-4xl font-black text-red-400">${live.p2Score !== undefined ? live.p2Score : 0}</span>
+                                <h4 class="text-base md:text-2xl font-black text-white tracking-wide">${live.p2Name}</h4>
+                                <div class="bg-red-950/90 border-2 border-red-500/60 rounded-2xl py-3 shadow-inner">
+                                    <span class="text-3xl md:text-5xl font-black text-red-400">${live.p2Score !== undefined ? live.p2Score : 0}</span>
                                 </div>
                             </div>
                         </div>
@@ -1236,31 +1346,31 @@
                 if(stageBadge) stageBadge.innerText = "🏁 সর্বশেষ ম্যাচ রেজাল্ট (সমাপ্ত)";
                 let winnerText = live.winnerText || `${live.p1Name} vs ${live.p2Name}`;
                 container.innerHTML = `
-                    <div class="bg-slate-950/95 p-5 md:p-6 rounded-2xl border-2 border-green-500/80 shadow-2xl space-y-4 text-center">
-                        <div class="space-y-1">
-                            <span class="bg-green-500/20 text-green-300 border border-green-500/50 px-3.5 py-1 rounded-full text-xs font-extrabold tracking-wide inline-block">
+                    <div class="bg-slate-950/95 p-6 md:p-8 rounded-2xl border-2 border-emerald-500/80 shadow-2xl space-y-5 text-center">
+                        <div class="space-y-1.5">
+                            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 px-4 py-1.5 rounded-full text-xs font-black tracking-wide inline-block shadow">
                                 🏁 ম্যাচ সমাপ্ত (পরবর্তী ম্যাচ শুরুর আগ পর্যন্ত ফ্লোটিং রেজাল্ট)
                             </span>
-                            <h3 class="text-lg md:text-2xl font-black text-yellow-400 mt-2">${live.title || 'ম্যাচ সমাপ্ত'}</h3>
+                            <h3 class="text-xl md:text-3xl font-black gold-gradient-text mt-2">${live.title || 'ম্যাচ সমাপ্ত'}</h3>
                         </div>
 
-                        <div class="bg-slate-900 p-4 rounded-xl border border-green-500/40 space-y-3">
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-emerald-500/40 space-y-4">
                             <div class="flex justify-around items-center">
                                 <div class="space-y-1">
                                     <span class="text-xs text-gray-400 font-bold block">🛡️ ${live.p1Name}</span>
-                                    <span class="text-3xl font-black text-yellow-300">${live.p1Score}</span>
+                                    <span class="text-4xl font-black text-yellow-400">${live.p1Score}</span>
                                 </div>
-                                <span class="text-lg font-black text-gray-500">VS</span>
+                                <span class="text-xl font-black text-gray-500">VS</span>
                                 <div class="space-y-1">
                                     <span class="text-xs text-gray-400 font-bold block">🛡️ ${live.p2Name}</span>
-                                    <span class="text-3xl font-black text-yellow-300">${live.p2Score}</span>
+                                    <span class="text-4xl font-black text-yellow-400">${live.p2Score}</span>
                                 </div>
                             </div>
 
-                            <div class="pt-3 border-t border-slate-800">
-                                <p class="text-green-400 text-sm md:text-base font-extrabold flex items-center justify-center gap-2">
+                            <div class="pt-4 border-t border-slate-800">
+                                <p class="text-emerald-400 text-sm md:text-lg font-black flex items-center justify-center gap-2">
                                     <span>🏆 বিজয়ী:</span>
-                                    <span class="bg-green-950 text-green-300 px-3 py-1 rounded-lg border border-green-500/40">${winnerText}</span>
+                                    <span class="bg-emerald-950 text-emerald-300 px-4 py-1.5 rounded-xl border border-emerald-500/40 shadow-lg">${winnerText}</span>
                                 </p>
                             </div>
                         </div>
@@ -1270,7 +1380,7 @@
             else if(state === 'SUSPENDED') {
                 if(stageBadge) stageBadge.innerText = "⏸️ ম্যাচ স্থগিত";
                 container.innerHTML = `
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border-2 border-yellow-500/70 text-center space-y-3">
+                    <div class="bg-slate-950/90 p-6 rounded-2xl border-2 border-yellow-500/70 text-center space-y-3 shadow-xl">
                         <div class="inline-block bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-4 py-1.5 rounded-full text-sm font-extrabold animate-pulse">
                             ⏸️ ম্যাচ স্থগিত করা হয়েছে
                         </div>
@@ -1296,18 +1406,24 @@
 
             if(recentElem) {
                 if(completedMatches.length === 0) {
-                    recentElem.innerHTML = `<p class="text-xs text-gray-400 italic">কোনো সম্প্রতি সমাপ্ত ম্যাচের ফলাফল প্রকাশিত হয়নি।</p>`;
+                    recentElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো সম্প্রতি সমাপ্ত ম্যাচের ফলাফল প্রকাশিত হয়নি।</p>`;
                 } else {
                     let recentHtml = '';
-                    completedMatches.slice(-5).reverse().forEach(m => {
+                    completedMatches.slice(-6).reverse().forEach(m => {
                         recentHtml += `
-                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
-                                <div class="flex justify-between text-yellow-400 font-bold">
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-emerald-500/40 transition shadow-lg">
+                                <div class="flex justify-between text-yellow-400 font-extrabold border-b border-slate-800 pb-1.5">
                                     <span>${m.title || m.matchCode}</span>
-                                    <span class="text-gray-400 text-[10px]">📅 ${m.date || ''}</span>
+                                    <span class="text-gray-400 text-[10px] font-normal">📅 ${m.date || ''}</span>
                                 </div>
-                                <p class="text-white font-semibold">${m.p1Name} (${m.p1Points}) vs ${m.p2Name} (${m.p2Points})</p>
-                                <p class="text-green-400 font-bold text-[11px]">🏆 ${m.result}</p>
+                                <div class="flex justify-between items-center text-white font-bold py-1">
+                                    <span>${m.p1Name}</span>
+                                    <span class="text-yellow-300 font-black text-sm">${m.p1Points} - ${m.p2Points}</span>
+                                    <span>${m.p2Name}</span>
+                                </div>
+                                <div class="bg-emerald-950/60 p-2 rounded-xl border border-emerald-500/30 text-emerald-300 text-center font-extrabold text-[11px]">
+                                    🏆 ${m.result}
+                                </div>
                             </div>
                         `;
                     });
@@ -1317,18 +1433,21 @@
 
             if(upcomingElem) {
                 if(!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
-                    upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
+                    upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
                 } else {
                     let upHtml = '';
                     globalUpcomingMatchesData.forEach(u => {
                         let adminDelBtn = isAdmin ? `<button onclick="deleteUpcomingMatch('${u.db_id}')" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
                         upHtml += `
-                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
-                                <div class="flex justify-between text-blue-400 font-bold">
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-blue-500/40 transition shadow-lg">
+                                <div class="flex justify-between text-blue-400 font-extrabold border-b border-slate-800 pb-1.5">
                                     <span>${u.title}</span>
-                                    <span class="text-yellow-300 text-[10px]">${u.time} ${adminDelBtn}</span>
+                                    <span class="text-yellow-300 text-[10px] font-bold">${u.time} ${adminDelBtn}</span>
                                 </div>
-                                <p class="text-white font-extrabold">${u.teams}</p>
+                                <p class="text-white font-extrabold text-sm py-1 text-center">${u.teams}</p>
+                                <div class="text-[10px] text-gray-400 text-center font-medium">
+                                    ⏰ নির্ধারিত সময় অনুযায়ী লাইভ শুরু হবে
+                                </div>
                             </div>
                         `;
                     });
@@ -1555,27 +1674,27 @@
                         result: 'ম্যাচ সেটআপ বাকি আছে'
                     };
 
-                    let adminEditBtn = isAdmin ? `<button onclick="editMatchScore('${mCode}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-2.5 py-1 rounded text-xs font-bold mt-2 cursor-pointer">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
+                    let adminEditBtn = isAdmin ? `<button onclick="editMatchScore('${mCode}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold mt-2 cursor-pointer shadow">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
 
                     matchCards += `
-                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2 text-xs">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                <span class="font-bold text-yellow-400">${mCode}: ${info.title}</span>
-                                <span class="text-[10px] text-gray-400">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs shadow-lg">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                                <span class="font-extrabold text-yellow-400 text-sm">${mCode}: ${info.title}</span>
+                                <span class="text-[10px] text-gray-400 font-medium">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
                             </div>
                             <div class="flex justify-between items-center py-1">
                                 <div class="space-y-0.5">
-                                    <p class="font-bold text-white text-sm">${info.p1Name}</p>
-                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-extrabold text-base">${info.p1Points}</span></p>
+                                    <p class="font-extrabold text-white text-sm">${info.p1Name}</p>
+                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-black text-base">${info.p1Points}</span></p>
                                 </div>
                                 <span class="bg-yellow-500/10 text-yellow-400 font-extrabold px-3 py-1 rounded-full border border-yellow-500/30">VS</span>
                                 <div class="space-y-0.5 text-right">
-                                    <p class="font-bold text-white text-sm">${info.p2Name}</p>
-                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-extrabold text-base">${info.p2Points}</span></p>
+                                    <p class="font-extrabold text-white text-sm">${info.p2Name}</p>
+                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-black text-base">${info.p2Points}</span></p>
                                 </div>
                             </div>
-                            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                                <span class="text-green-400 font-semibold">🏆 ফলাফল: ${info.result}</span>
+                            <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                                <span class="text-emerald-400 font-bold">🏆 ফলাফল: ${info.result}</span>
                                 ${adminEditBtn}
                             </div>
                         </div>
@@ -1583,10 +1702,10 @@
                 });
 
                 fixturesHtml += `
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 space-y-3">
-                        <h3 class="font-bold text-yellow-400 text-sm border-b border-slate-700 pb-1.5 flex justify-between items-center">
+                    <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-extrabold text-yellow-400 text-base border-b border-slate-800 pb-2 flex justify-between items-center">
                             <span>🏆 ${g.name} - গ্রুপপর্ব ফিকশ্চার (৩টি ম্যাচ)</span>
-                            <span class="text-[10px] bg-slate-800 text-gray-300 px-2 py-0.5 rounded font-bold">ভ্যালিডেটেড (৩ টিম)</span>
+                            <span class="text-[10px] bg-slate-800 text-gray-300 px-3 py-1 rounded-full font-bold">ভ্যালিডেটেড (৩ টিম)</span>
                         </h3>
                         <div class="space-y-3">
                             ${matchCards}
@@ -1624,7 +1743,7 @@
                 function getDetailedTeamBioCard(tObj, fallbackName) {
                     if(!tObj) {
                         return `
-                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
                                 <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
                                     <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-yellow-400 font-bold">🛡️</div>
                                     <span class="font-extrabold text-yellow-400 text-sm">${fallbackName}</span>
@@ -1639,25 +1758,25 @@
 
                     let teamImgUrl = tObj.teamImageUrl || '';
                     let teamLogoHtml = teamImgUrl 
-                        ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${tObj.teamName}', 'টিম লোগো: ${tObj.teamName}')" class="w-9 h-9 rounded-xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
-                        : `<div class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-sm font-bold text-yellow-400 shadow">🛡️</div>`;
+                        ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${tObj.teamName}', 'টিম লোগো: ${tObj.teamName}')" class="w-10 h-10 rounded-xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
+                        : `<div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-base font-bold text-yellow-400 shadow">🛡️</div>`;
 
                     let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
                     let p1ImgHtml = p1ImgUrl 
                         ? `<img src="${p1ImgUrl}" onclick="openImagePreview('${p1ImgUrl}', '${p1Obj.name}', 'ক্যাটাগরি: ${p1Obj.cat || 'HIGH'} | মোবাইল: ${p1Obj.phone || 'N/A'} | ঠিকানা: ${p1Obj.address || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs">👤</div>`;
+                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs border border-slate-700">👤</div>`;
 
                     let p2ImgUrl = p2Obj.imageUrl || p2Obj.image_url || '';
                     let p2ImgHtml = p2ImgUrl 
                         ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs">👤</div>`;
+                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs border border-slate-700">👤</div>`;
 
                     let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
                     let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
 
                     return `
-                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3 text-xs">
-                            <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs shadow-lg">
+                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-2.5">
                                 ${teamLogoHtml}
                                 <div>
                                     <span class="font-extrabold text-yellow-400 text-sm block">🛡️ টিম: ${tObj.teamName}</span>
@@ -1667,12 +1786,12 @@
                             
                             <div class="space-y-2">
                                 <!-- Player 1 -->
-                                <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center gap-2.5">
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
                                     ${p1ImgHtml}
                                     <div class="space-y-0.5 w-full">
                                         <div class="flex justify-between items-center">
-                                            <span class="font-bold text-white">👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
-                                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
+                                            <span class="font-bold text-white text-xs">👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                         </div>
                                         <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
@@ -1680,12 +1799,12 @@
                                 </div>
 
                                 <!-- Player 2 -->
-                                <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center gap-2.5">
+                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
                                     ${p2ImgHtml}
                                     <div class="space-y-0.5 w-full">
                                         <div class="flex justify-between items-center">
-                                            <span class="font-bold text-white">👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
-                                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
+                                            <span class="font-bold text-white text-xs">👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                         </div>
                                         <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
@@ -1696,26 +1815,26 @@
                     `;
                 }
 
-                let adminBtn = isAdmin ? `<button onclick="editMatchScore('${code}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-2.5 py-1.5 rounded text-xs font-bold mt-2 cursor-pointer shadow">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
+                let adminBtn = isAdmin ? `<button onclick="editMatchScore('${code}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold mt-2 cursor-pointer shadow">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
 
                 return `
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-4 shadow-xl">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 flex-wrap gap-2">
-                            <span class="font-bold ${defaultBadgeColor} text-sm">⚔️ ${code}: ${info.title}</span>
-                            <span class="text-[11px] bg-slate-950 text-yellow-300 px-2.5 py-1 rounded border border-slate-800 font-semibold">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2.5 flex-wrap gap-2">
+                            <span class="font-extrabold ${defaultBadgeColor} text-sm">⚔️ ${code}: ${info.title}</span>
+                            <span class="text-[11px] bg-slate-950 text-yellow-300 px-3 py-1 rounded-full border border-slate-800 font-semibold">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4">
                             <div class="md:col-span-2">${getDetailedTeamBioCard(t1Obj, info.p1Name)}</div>
-                            <div class="text-center flex flex-col items-center justify-center my-1 md:my-0">
-                                <span class="bg-yellow-500 text-gray-950 font-extrabold px-3 py-1.5 rounded-full text-xs shadow-lg">VS</span>
-                                <span class="text-xs text-yellow-300 font-bold mt-2">পয়েন্ট: <span class="text-white text-sm">${info.p1Points} - ${info.p2Points}</span></span>
+                            <div class="text-center flex flex-col items-center justify-center my-2 md:my-0">
+                                <span class="bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 font-black px-3.5 py-1.5 rounded-full text-xs shadow-lg">VS</span>
+                                <span class="text-xs text-yellow-300 font-bold mt-2">পয়েন্ট: <span class="text-white text-base font-black">${info.p1Points} - ${info.p2Points}</span></span>
                             </div>
                             <div class="md:col-span-2">${getDetailedTeamBioCard(t2Obj, info.p2Name)}</div>
                         </div>
 
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                            <span class="text-green-400 font-bold text-xs md:text-sm">🏆 ফলাফল: ${info.result}</span>
+                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                            <span class="text-emerald-400 font-extrabold text-xs md:text-sm">🏆 ফলাফল: ${info.result}</span>
                             ${adminBtn}
                         </div>
                     </div>
@@ -1741,7 +1860,7 @@
             let tpElem = document.getElementById('tpMatchesContainer');
             if(tpElem) tpElem.innerHTML = renderMatchCardWithBios('3P-Match', '৩য় স্থান নির্ধারণী ম্যাচ', 'text-blue-400');
             let finalElem = document.getElementById('finalMatchContainer');
-            if(finalElem) finalElem.innerHTML = renderMatchCardWithBios('FINAL', 'মেগা ফাইনাল ম্যাচ', 'text-yellow-300 font-extrabold text-sm');
+            if(finalElem) finalElem.innerHTML = renderMatchCardWithBios('FINAL', 'মেগা ফাইনাল ম্যাচ', 'text-yellow-300 font-black text-sm');
         }
 
         function compressImageToBase64(file) {
@@ -2092,7 +2211,7 @@
             document.getElementById('mP1Name').value = p1Name || '';
             document.getElementById('mP2Name').value = p2Name || '';
             document.getElementById('mP1RegSelect').value = p1Name || '';
-            document.getElementById('mP2RegSelect').value = p2Name || '';
+            document.getElementById('mP2RegSelect').value = p1Name || '';
             document.getElementById('mP1Points').value = p1Pts || 0;
             document.getElementById('mP2Points').value = p2Pts || 0;
             document.getElementById('mResult').value = resStr || '';
