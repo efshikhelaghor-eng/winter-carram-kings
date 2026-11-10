@@ -672,6 +672,40 @@
             return safeStr(val).trim().toUpperCase();
         }
 
+        
+        function formatWhatsAppNumber(phoneStr) {
+            let digits = safeStr(phoneStr).replace(/\D/g, '');
+            if (!digits) return '';
+            if (digits.startsWith('01')) {
+                digits = '88' + digits;
+            } else if (digits.startsWith('1')) {
+                digits = '880' + digits;
+            }
+            return digits;
+        }
+
+        function sendWhatsAppPlayerNotice(phone, name, customMsg) {
+            let formattedPhone = formatWhatsAppNumber(phone);
+            if (!formattedPhone) {
+                alert('সঠিক মোবাইল নম্বর পাওয়া যায়নি!');
+                return;
+            }
+            let defaultText = `আসসালামু আলাইকুম ${name} ভাই, উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ থেকে গুরুত্বপূর্ণ নোটিশ:\n\n${customMsg || 'আপনার টুর্নামেন্টের ম্যাচের সময়সূচী ও বিস্তারিত দেখতে ওয়েবসাইট ভিজিট করুন।'}\n\nওয়েবসাইট: https://ikhelaghor-eng.github.io`;
+            let url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(defaultText)}`;
+            window.open(url, '_blank');
+        }
+
+        function sendMatchWhatsAppNotice(phone, name, matchTitle, opponentName, timeStr) {
+            let formattedPhone = formatWhatsAppNumber(phone);
+            if (!formattedPhone) {
+                alert('সঠিক মোবাইল নম্বর পাওয়া যায়নি!');
+                return;
+            }
+            let msg = `আসসালামু আলাইকুম ${name} ভাই, উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর আপনার পরবর্তী ম্যাচ আপডেট:\n\n⚔️ ম্যাচ: ${matchTitle}\n🛡️ প্রতিপক্ষ: ${opponentName}\n⏰ সময়: ${timeStr || 'নির্ধারিত সময়ে'}\n\nঅনুগ্রহ করে নির্দিষ্ট সময়ে উপস্থিত থাকুন। ধন্যবাদ!`;
+            let url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+
         function checkAdminSession() {
             try {
                 const session = localStorage.getItem('carrom_admin_session');
@@ -1246,7 +1280,7 @@
                                                 <span>👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
                                                 <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                             </p>
-                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
+                                            <p class="text-gray-300 flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong> ${p1Obj.phone && p1Obj.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p1Obj.phone}', '${p1Obj.name}', 'আপনার টিমের (${t.teamName}) পরবর্তী ম্যাচের তথ্য জানতে যোগাযোগ করুন।')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WhatsApp</button>` : ''}</p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
                                         </div>
                                     </div>
@@ -1259,7 +1293,7 @@
                                                 <span>👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
                                                 <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                             </p>
-                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
+                                            <p class="text-gray-300 flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong> ${p2Obj.phone && p2Obj.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p2Obj.phone}', '${p2Obj.name}', 'আপনার টিমের (${t.teamName}) পরবর্তী ম্যাচের তথ্য জানতে যোগাযোগ করুন।')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WhatsApp</button>` : ''}</p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
                                         </div>
                                     </div>
@@ -1312,7 +1346,12 @@
                             <td class="p-3 font-bold text-white">${p.name || 'N/A'}</td>
                             <td class="p-3 text-gray-300">${p.address || 'N/A'}</td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded text-xs border ${badgeColor} font-bold">${p.cat || 'HIGH'}</span></td>
-                            <td class="p-3 text-gray-300 font-medium">${p.phone || 'N/A'}</td>
+                            <td class="p-3 text-gray-300 font-medium">
+                                <div class="flex items-center gap-2">
+                                    <span>${p.phone || 'N/A'}</span>
+                                    ${p.phone && p.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p.phone}', '${p.name}', '')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow" title="হোয়াটসঅ্যাপে মেসেজ পাঠান">💬 WA</button>` : ''}
+                                </div>
+                            </td>
                             ${actionHtml}
                         </tr>
                     `;
@@ -1869,7 +1908,7 @@
                                             <span class="font-bold text-white text-xs">👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                         </div>
-                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
+                                        <p class="text-gray-300 text-[11px] flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong> ${p1Obj.phone && p1Obj.phone !== 'N/A' ? `<button onclick="sendMatchWhatsAppNotice('${p1Obj.phone}', '${p1Obj.name}', '${info.title}', '${t2Obj ? t2Obj.teamName : info.p2Name}', '${info.date}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WA নোটিশ</button>` : ''}</p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
                                     </div>
                                 </div>
@@ -1882,7 +1921,7 @@
                                             <span class="font-bold text-white text-xs">👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                         </div>
-                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
+                                        <p class="text-gray-300 text-[11px] flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong> ${p2Obj.phone && p2Obj.phone !== 'N/A' ? `<button onclick="sendMatchWhatsAppNotice('${p2Obj.phone}', '${p2Obj.name}', '${info.title}', '${t1Obj ? t1Obj.teamName : info.p1Name}', '${info.date}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WA নোটিশ</button>` : ''}</p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
                                     </div>
                                 </div>
