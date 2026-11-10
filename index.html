@@ -1,2654 +1,411 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(234, 179, 8, 0.2); }
-            50% { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), 0 0 60px rgba(234, 179, 8, 0.5); }
-        }
-        .live-glow {
-            animation: pulse-glow 2.5s infinite;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #FDE047 0%, #EAB308 50%, #CA8A04 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gold-border-glow {
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.15);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬</title>
+<meta name="description" content="উইন্টার কিংস ক্যারাম ব্যাটল ২০২৬ — লাইভ স্কোর, ফিকশ্চার, গ্রুপ টেবিল, নকআউট ও ফাইনালের অফিশিয়াল পোর্টাল।">
+<meta name="theme-color" content="#05070d">
+<meta property="og:title" content="উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬">
+<meta property="og:description" content="লাইভ স্কোর, ফিকশ্চার, গ্রুপ টেবিল ও নকআউট — সব এক জায়গায়।">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E👑%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: { slate: { 750:'#2a3649', 850:'#172033' } } } } };
+</script>
+<link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col selection:bg-yellow-500 selection:text-gray-950">
+<body class="text-gray-100 min-h-screen flex flex-col selection:bg-yellow-500 selection:text-gray-950">
 
-    <!-- TOP ANNOUNCEMENT BAR -->
-    <div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-gray-950 font-bold text-xs py-1.5 px-4 text-center tracking-wide shadow-md flex justify-center items-center gap-2">
-        <span>🔥 অফিশিয়াল টুর্নামেন্ট পোর্টাল-২০২৬</span>
-        <span class="hidden md:inline">•</span>
-        <span class="hidden md:inline">সরাসরি ডাটাবেজ কানেক্টেড রিয়েল-টাইম আপডেট ✅</span>
+<!-- TOP BAR -->
+<div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-gray-950 font-bold text-xs py-1.5 px-4 text-center tracking-wide shadow-md flex justify-center items-center gap-2">
+  <span>🔥 অফিশিয়াল টুর্নামেন্ট পোর্টাল-২০২৬</span>
+  <span class="hidden md:inline">•</span>
+  <span class="hidden md:inline">লাইভ স্কোর প্রতি ১৫ সেকেন্ডে অটো-আপডেট ✅</span>
+</div>
+
+<!-- HEADER -->
+<header class="bg-slate-900/85 backdrop-blur-xl border-b border-yellow-500/30 sticky top-0 z-50 shadow-2xl">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="#" onclick="switchTab('home');return false;" class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-red-600 p-0.5 shadow-lg shadow-yellow-500/20">
+        <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-2xl">👑</div>
+      </div>
+      <div>
+        <h1 class="text-base md:text-xl font-black tracking-tight text-white leading-tight">উইন্টার কিংস <span class="gold-gradient-text">ক্যারাম ব্যাটল</span></h1>
+        <p class="text-[11px] text-yellow-400/90 font-medium flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> লাইভ সিঙ্ক সক্রিয় • ২০২৬
+        </p>
+      </div>
+    </a>
+    <button id="authBtn" onclick="toggleAdminModal()" class="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg shadow-yellow-500/20 transition hover:scale-105">এডমিন লগইন</button>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[69px] z-40 backdrop-blur">
+  <div class="max-w-6xl mx-auto px-4 flex justify-start md:justify-center gap-2 overflow-x-auto py-2.5 no-scrollbar" id="navBar">
+    <button data-tab="home" onclick="switchTab('home')" class="navBtn">🏠 হোম</button>
+    <button data-tab="fixtures" onclick="switchTab('fixtures')" class="navBtn">⚔️ গ্রুপ ফিকশ্চার</button>
+    <button data-tab="standings" onclick="switchTab('standings')" class="navBtn">📊 পয়েন্ট টেবিল</button>
+    <button data-tab="knockout" onclick="switchTab('knockout')" class="navBtn">🏆 নকআউট ও ফাইনাল</button>
+    <button data-tab="groups" onclick="switchTab('groups')" class="navBtn">📋 খেলোয়াড়</button>
+    <button data-tab="dashboard" id="navDashboard" onclick="switchTab('dashboard')" class="navBtn hidden">⚙️ এডমিন প্যানেল</button>
+  </div>
+</nav>
+<style>
+  .navBtn{padding:.5rem 1.1rem;border-radius:.85rem;font-size:.75rem;font-weight:700;white-space:nowrap;transition:all .2s;background:#1e293b;color:#d1d5db}
+  .navBtn:hover{background:#2a3649}
+  .navBtn.active{background:linear-gradient(90deg,#eab308,#f59e0b);color:#0b0f19;box-shadow:0 8px 20px -6px rgba(234,179,8,.5)}
+  #navDashboard{border:1px solid rgba(239,68,68,.35);color:#fca5a5;background:rgba(69,10,10,.6)}
+  #navDashboard.active{background:#dc2626;color:#fff}
+  .fld{width:100%;background:#020617;border:1px solid #334155;border-radius:.85rem;padding:.65rem .75rem;font-size:.8rem;color:#fff}
+  .lbl{display:block;font-size:.72rem;color:#9ca3af;margin-bottom:.25rem}
+</style>
+
+<main class="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-8">
+
+<!-- ============ HOME ============ -->
+<div id="tabHome" class="space-y-8 tabPane">
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 board-pattern p-6 md:p-10 gold-border-glow">
+    <div class="absolute -right-20 -top-20 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-20 -bottom-24 w-72 h-72 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="relative grid md:grid-cols-3 gap-6 items-center">
+      <div class="md:col-span-2 space-y-3 text-center md:text-left">
+        <span class="inline-block text-[11px] font-bold tracking-widest uppercase text-yellow-300 bg-yellow-500/10 border border-yellow-500/30 rounded-full px-3 py-1">Doubles Championship 2026</span>
+        <h2 class="text-3xl md:text-5xl font-black shine leading-tight">উইন্টার কিংস<br>ক্যারাম ব্যাটল</h2>
+        <p class="text-sm text-gray-300">৪টি গ্রুপ • প্রতি গ্রুপে ৩টি দ্বৈত টিম • কোয়ার্টার ফাইনাল থেকে মেগা ফাইনাল</p>
+      </div>
+      <div class="flex justify-center"><div class="text-[88px] md:text-[110px] float drop-shadow-[0_0_30px_rgba(234,179,8,.5)]">👑</div></div>
     </div>
+    <div class="relative grid grid-cols-2 md:grid-cols-4 gap-3 mt-6" id="heroStats"></div>
+  </section>
 
-    <!-- MAIN HEADER -->
-    <header class="bg-slate-900/90 backdrop-blur-xl border-b border-yellow-500/30 sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-red-600 p-0.5 flex justify-center items-center shadow-lg shadow-yellow-500/20">
-                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-xl md:text-2xl">
-                        👑
-                    </div>
-                </div>
-                <div>
-                    <h1 class="text-base md:text-xl font-black tracking-tight text-white flex items-center gap-2">
-                        উইন্টার কিংস <span class="gold-gradient-text font-black">ক্যারাম ব্যাটল</span>
-                    </h1>
-                    <p class="text-[11px] text-yellow-400/90 font-medium flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        লাইভ সিঙ্ক মোড সক্রিয় (প্রতি গ্রুপে ৩টি টিম)
-                    </p>
-                </div>
-            </div>
-            <div>
-                <button id="authBtn" onclick="toggleAdminModal()" class="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg shadow-yellow-500/20 transition transform hover:scale-105">
-                    এডমিন লগইন
-                </button>
-            </div>
+  <!-- CHAMPION (auto) -->
+  <div id="championBox" class="hidden"></div>
+
+  <!-- LIVE -->
+  <div id="liveMatchSection" class="relative bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 p-5 md:p-8 rounded-3xl border-2 border-red-500/60 live-glow space-y-5 overflow-hidden">
+    <div class="absolute -right-16 -top-16 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex justify-between items-center border-b border-red-500/25 pb-4 flex-wrap gap-3">
+      <div class="flex items-center gap-3">
+        <span class="relative flex h-4 w-4"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-4 w-4 bg-red-600"></span></span>
+        <div>
+          <h2 class="text-lg md:text-2xl font-black text-red-400 tracking-wide">🔴 সরাসরি লাইভ স্কোর</h2>
+          <p class="text-[11px] text-gray-400">Winter Carrom Kings Live Center • <span id="liveUpdated">—</span></p>
         </div>
-    </header>
-
-    <!-- NAVIGATION TABS -->
-    <nav class="bg-slate-900 border-b border-slate-800">
-        <div class="max-w-6xl mx-auto px-4 flex justify-start md:justify-center gap-2 overflow-x-auto py-2.5 no-scrollbar">
-            <button onclick="switchTab('home')" id="navHome" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20">
-                <span>🏠</span> হোম (ম্যাচ সেন্টার ও ড্যাশবোর্ড)
-            </button>
-            <button onclick="switchTab('fixtures')" id="navFixtures" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
-                <span>⚔️</span> গ্রুপ ফিকশ্চার
-            </button>
-            <button onclick="switchTab('knockout')" id="navKnockout" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
-                <span>🏆</span> নকআউট ও ফাইনাল
-            </button>
-            <button onclick="switchTab('groups')" id="navGroups" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750">
-                <span>📋</span> নিবন্ধিত খেলোয়াড়
-            </button>
-            <button onclick="switchTab('dashboard')" id="navDashboard" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-950/80 text-red-300 border border-red-500/30 hover:bg-red-900 hidden">
-                <span>⚙️</span> এডমিন প্যানেল
-            </button>
-        </div>
-    </nav>
-
-    <!-- MAIN CONTENT AREA -->
-    <main class="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-8">
-        
-        <!-- ==================== HOME TAB ==================== -->
-        <div id="tabHome" class="space-y-8">
-
-            <!-- HERO BROADCAST BANNER / LIVE SCORE CENTER -->
-            <div id="liveMatchSection" class="relative bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 p-6 md:p-8 rounded-3xl border-2 border-red-500/60 shadow-2xl live-glow space-y-5 overflow-hidden">
-                <div class="absolute -right-16 -top-16 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div class="flex justify-between items-center border-b border-red-500/25 pb-4 flex-wrap gap-3">
-                    <div class="flex items-center gap-3">
-                        <span class="relative flex h-4 w-4">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-4 w-4 bg-red-600"></span>
-                        </span>
-                        <div>
-                            <h2 class="text-lg md:text-2xl font-black text-red-400 tracking-wide uppercase">🔴 সরাসরি লাইভ ব্রডকাস্ট স্কোর</h2>
-                            <p class="text-[11px] text-gray-400 font-medium">Winter Carrom Kings Championship Live Center</p>
-                        </div>
-                    </div>
-                    <span id="liveMatchStage" class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/40 text-xs px-3.5 py-1.5 rounded-full font-bold shadow-inner">
-                        টুর্নামেন্ট লাইভ মোড
-                    </span>
-                </div>
-
-                <div id="liveStreamWidgetContainer" class="space-y-4 hidden"></div>
-                <div id="liveMatchContent" class="space-y-4">
-                    <p class="text-center text-gray-400 italic text-sm py-6">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
-                </div>
-            </div>
-
-            <!-- PREMIUM MATCH CENTER DASHBOARD (সাম্প্রতিক সমাপ্ত ও আপকামিং ম্যাচসমূহ ড্যাশবোর্ড) -->
-            <div class="bg-slate-900/90 rounded-3xl border border-yellow-500/40 p-6 shadow-2xl gold-border-glow space-y-6">
-                <!-- Dashboard Header -->
-                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl">
-                            📊
-                        </div>
-                        <div>
-                            <h2 class="text-lg md:text-xl font-extrabold gold-gradient-text">ম্যাচ সেন্টার ড্যাশবোর্ড (Match Center Dashboard)</h2>
-                            <p class="text-xs text-gray-400">সাম্প্রতিক ফলাফল ও আগামী সময়সূচীর রিয়েল-টাইম সেন্ট্রাল হাব</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Dashboard Tabs Control -->
-                    <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
-                        <button onclick="switchDashboardTab('recent')" id="dashBtnRecent" class="px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow">
-                            🏁 সমাপ্ত ম্যাচসমূহ
-                        </button>
-                        <button onclick="switchDashboardTab('upcoming')" id="dashBtnUpcoming" class="px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white">
-                            📅 আগামী ম্যাচসমূহ
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Dashboard Tab 1: Recent Matches -->
-                <div id="dashContentRecent" class="space-y-4">
-                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
-                        <span class="font-semibold text-green-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                            সাম্প্রতিক সমাপ্ত হওয়া ম্যাচসমূহ (অটো-আপডেটেড)
-                        </span>
-                        <span class="text-[11px] bg-green-500/10 text-green-300 border border-green-500/30 px-2.5 py-0.5 rounded-full font-bold">ফলাফল তালিকা</span>
-                    </div>
-                    <div id="recentMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো সম্প্রতি সমাপ্ত ম্যাচের তথ্য নেই।</p>
-                    </div>
-                </div>
-
-                <!-- Dashboard Tab 2: Upcoming Matches -->
-                <div id="dashContentUpcoming" class="space-y-4 hidden">
-                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
-                        <span class="font-semibold text-blue-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                            আগামী/আপকামিং ম্যাচ সময়সূচী
-                        </span>
-                        <span class="text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full font-bold">ফিকশ্চার শিডিউল</span>
-                    </div>
-                    <div id="upcomingMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- FORMAT BANNER & GROUPS HEADER -->
-            <div class="bg-gradient-to-r from-slate-900 to-slate-850 p-5 rounded-2xl border border-yellow-500/30 shadow-lg flex justify-between items-center flex-wrap gap-4">
-                <div class="space-y-1">
-                    <h2 class="text-lg md:text-xl font-black text-yellow-400">টুর্নামেন্টের গ্রুপসমূহ (প্রতি গ্রুপে সর্বোচ্চ ৩টি টিম)</h2>
-                    <p class="text-xs text-gray-300">দ্বৈত খেলোয়াড় ফরম্যাট: প্রতিটি টিমে ২ জন করে নিবন্ধিত খেলোয়াড় ও পূর্ণাঙ্গ বায়ো</p>
-                </div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                    <span class="text-xs font-bold text-yellow-400">সীমাবদ্ধতা:</span>
-                    <span class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-yellow-500 text-gray-950 shadow">প্রতি গ্রুপে ৩টি টিম</span>
-                </div>
-            </div>
-
-            <!-- MAIN GROUPS SELECTION CARDS (2X2 PREMIUM GRID BOX SYSTEM) -->
-            <div id="groupsSelectionView" class="space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <h3 class="text-sm font-extrabold text-yellow-400 flex items-center gap-2">
-                        <span>🏆</span> গ্রুপ নির্বাচন করুন (প্রতি গ্রুপে ৩টি টিম ফরম্যাট):
-                    </h3>
-                    <span class="text-xs text-gray-400">পাশাপাশি ও উপর-নিচ ২টা করে প্রফেশনাল বক্স</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="groupCardsContainer"></div>
-            </div>
-
-            <!-- SINGLE GROUP DETAIL VIEW WITH FULL TEAM BIO & PREVIEW -->
-            <div id="singleGroupDetailView" class="space-y-4 hidden">
-                <div class="flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-yellow-500/40 shadow-lg">
-                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-4 py-2 rounded-xl font-bold border border-slate-700 transition">← সকল গ্রুপে ফিরে যান</button>
-                    <h3 id="detailGroupTitle" class="text-base font-extrabold text-yellow-400">গ্রুপ বিস্তারিত</h3>
-                </div>
-                <div id="detailGroupTeamsContainer" class="space-y-5"></div>
-            </div>
-
-        </div>
-
-                    <!-- OFFICIAL NOTICE BOARD -->
-            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
-                        <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
-                    </h2>
-                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">
-                        ⚙️ এডমিন মোড সক্রিয়
-                    </span>
-                </div>
-                <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
-                    <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
-                </div>
-            </div>
-
-        <!-- ==================== FIXTURES TAB ==================== -->
-        <div id="tabFixtures" class="space-y-6 hidden">
-            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-2xl space-y-5">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
-                    <h2 class="text-xl font-extrabold text-yellow-400 flex items-center gap-2">
-                        <span>⚔️</span> গ্রুপপর্ব ফিকশ্চার (প্রতি গ্রুপে ৩টি টিমের ফরম্যাট)
-                    </h2>
-                    <p class="text-xs text-gray-400">সাধারণ ইউজাররা শুধু দেখতে পারবেন। এডমিন লগইন করলে এডিট অপশন পাবেন।</p>
-                </div>
-                <div id="fixturesContainer" class="space-y-6"></div>
-            </div>
-        </div>
-
-        <!-- ==================== KNOCKOUT TAB ==================== -->
-        <div id="tabKnockout" class="space-y-6 hidden">
-            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-2xl space-y-6">
-                <div class="border-b border-slate-800 pb-4 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-xl font-extrabold text-yellow-400 flex items-center gap-2">
-                            <span>🏆</span> নকআউট পর্ব ও ফাইনাল ম্যাচসমূহ (কোয়ার্টার থেকে ফাইনাল)
-                        </h2>
-                        <p class="text-xs text-gray-400 mt-1">কোয়ার্টার ফাইনাল, সেমিফাইনাল, ৩য় স্থান নির্ধারণী ও মেগা ফাইনাল ম্যাচ</p>
-                    </div>
-                    <span class="bg-red-500/20 text-red-400 border border-red-500/40 px-3.5 py-1 rounded-full text-xs font-bold">
-                        নকআউট টিম বায়ো মোড ✅
-                    </span>
-                </div>
-
-                <div class="space-y-4">
-                    <h3 class="text-base font-extrabold text-yellow-400 flex items-center gap-2 border-l-4 border-yellow-500 pl-3">
-                        <span>🔥</span> কোয়ার্টার ফাইনাল ম্যাচসমূহ
-                    </h3>
-                    <div id="qfMatchesContainer" class="space-y-4"></div>
-                </div>
-
-                <div class="space-y-4 pt-4">
-                    <h3 class="text-base font-extrabold text-orange-400 flex items-center gap-2 border-l-4 border-orange-500 pl-3">
-                        <span>⚡</span> সেমিফাইনাল ম্যাচসমূহ
-                    </h3>
-                    <div id="sfMatchesContainer" class="space-y-4"></div>
-                </div>
-
-                <div class="space-y-4 pt-4">
-                    <h3 class="text-base font-extrabold text-blue-400 flex items-center gap-2 border-l-4 border-blue-500 pl-3">
-                        <span>🥉</span> ৩য় স্থান নির্ধারণী ম্যাচ (Third Place Play-off)
-                    </h3>
-                    <div id="tpMatchesContainer" class="space-y-4"></div>
-                </div>
-
-                <div class="space-y-4 pt-4">
-                    <h3 class="text-base font-extrabold text-yellow-300 flex items-center gap-2 border-l-4 border-yellow-400 pl-3">
-                        <span>👑</span> মেগা ফাইনাল (Grand Final Match)
-                    </h3>
-                    <div id="finalMatchContainer" class="space-y-4"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== PLAYERS TAB ==================== -->
-        <div id="tabGroups" class="space-y-6 hidden">
-            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-2xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h2 class="text-lg font-extrabold text-yellow-400">📋 নিবন্ধিত খেলোয়াড়বৃন্দ (টুর্নামেন্টের একমাত্র অনুমোদিত পুল)</h2>
-                    <div class="flex items-center gap-3">
-                        <span id="totalCount" class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-yellow-300 font-extrabold border border-slate-700">মোট: ০ জন</span>
-                        <button id="quickAddPlayerBtn" onclick="switchTab('dashboard')" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-3.5 py-1.5 rounded-xl text-xs shadow hidden">➕ নতুন খেলোয়াড় যোগ করুন</button>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400">💡 এই নিবন্ধিত খেলোয়াড়দের বাইরে বাইরের কোনো খেলোয়াড় দিয়ে টুর্নামেন্টের কোনো টিম বা ফরম্যাট সেট করা যাবে না।</p>
-                <div class="overflow-x-auto rounded-xl border border-slate-800">
-                    <table class="w-full text-left text-xs md:text-sm">
-                        <thead>
-                            <tr class="bg-slate-800 text-yellow-400 border-b border-slate-700">
-                                <th class="p-3">ছবি</th>
-                                <th class="p-3">ক্রমিক</th>
-                                <th class="p-3">খেলোয়াড়ের নাম</th>
-                                <th class="p-3">ঠিকানা</th>
-                                <th class="p-3">ক্যাটাগরি</th>
-                                <th class="p-3">মোবাইল</th>
-                                <th class="p-3 actionHeader hidden">অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="playerTableBody" class="divide-y divide-slate-800 bg-slate-950/60">
-                            <tr><td colspan="7" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== ADMIN DASHBOARD TAB ==================== -->
-        <div id="tabDashboard" class="space-y-6 hidden">
-            
-            
-            <!-- ADMIN SECTION: LIVE STREAMING & SOCIAL LINKS MANAGER -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-red-500/50 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-red-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📺 ইউটিউব ও ফেসবুক লাইভ স্ট্রিমিং লিংক পোর্টালে পাবলিশ করুন (Live Stream)
-                </h3>
-                <form onsubmit="saveLiveStreamLinks(event)" class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">▶️ ইউটিউব লাইভ লিংক / Embed URL</label>
-                            <input type="text" id="adminYtLiveUrl" placeholder="যেমন: https://www.youtube.com/watch?v=XXXXXX বা Embed Code" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">📘 ফেসবুক পেজ / লাইভ লিংক URL</label>
-                            <input type="text" id="adminFbLiveUrl" placeholder="যেমন: https://www.facebook.com/yourpage/live" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ভিডিও প্লেয়ার ডিসপ্লে অপশন</label>
-                        <select id="adminStreamDisplayMode" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                            <option value="BUTTONS_AND_PLAYER">📺 ইউটিউব প্লেয়ার এবং বোথ লিংক বাটন দেখাবে</option>
-                            <option value="BUTTONS_ONLY">🔗 শুধুমাত্র সোশ্যাল লাইভ বাটনগুলো দেখাবে</option>
-                            <option value="OFF">🚫 লাইভ স্ট্রিমিং প্লেয়ার বন্ধ রাখুন</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="saveStreamBtn" class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 text-white font-extrabold py-3 rounded-xl text-xs transition shadow-lg">
-                        💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন
-                    </button>
-                </form>
-            </div>
-
-
-            <!-- ADMIN SECTION: LIVE MATCH CONTROL -->
-            <div class="bg-slate-900 p-6 rounded-3xl border-2 border-red-500/50 space-y-5 shadow-2xl">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h3 class="text-base font-extrabold text-red-400 flex items-center gap-2">
-                        🔴 লাইভ ম্যাচ স্কোর ও স্টেট ড্রপডাউন কন্ট্রোল (এডমিন প্যানেল)
-                    </h3>
-                    <span id="liveStatusIndicatorBadge" class="text-xs bg-red-950 text-red-300 border border-red-500/40 px-3 py-1 rounded-full font-bold">
-                        টিম লকড ও স্ট্যান্ডবাই মোড ✅
-                    </span>
-                </div>
-
-                <form onsubmit="saveLiveMatchInfo(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">ম্যাচ পর্যায় / শিরোনাম *</label>
-                            <input type="text" id="adminLiveTitle" placeholder="যেমন: ২য় কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">লাইভ অ্যাকশন / স্ট্যাটাস ড্রপডাউন (সমাপ্ত / স্থগিত) *</label>
-                            <select id="adminLiveStateDropdown" required class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="RUNNING">🔴 ম্যাচ চলমান (Live Running)</option>
-                                <option value="FINISHED">🏁 ম্যাচ সমাপ্ত (Match Finished - Req 29 Pts)</option>
-                                <option value="SUSPENDED">⏸️ ম্যাচ স্থগিত (Match Suspended)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div class="space-y-2">
-                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ১ (স্ট্যান্ডবাই / লকড) *</label>
-                            <select id="adminLiveP1Select" required class="w-full bg-slate-900 border border-red-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত টিম ১ সিলেক্ট করুন --</option>
-                            </select>
-                            <input type="number" id="adminLiveP1Score" placeholder="টিম ১ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-extrabold">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs text-red-400 block font-bold">🔴 লাইভ টিম ২ (স্ট্যান্ডবাই / লকড) *</label>
-                            <select id="adminLiveP2Select" required class="w-full bg-slate-900 border border-red-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত টিম ২ সিলেক্ট করুন --</option>
-                            </select>
-                            <input type="number" id="adminLiveP2Score" placeholder="টিম ২ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" value="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-extrabold">
-                        </div>
-                    </div>
-
-                    <div class="bg-amber-950/60 p-4 rounded-2xl border border-amber-500/40 text-xs text-amber-200 space-y-1.5">
-                        <p class="font-bold flex items-center gap-1.5"><span>💡</span> <strong>রুলস ও অটোমেশন গাইডলাইন:</strong></p>
-                        <p>• <strong>ম্যাচ সমাপ্ত:</strong> ড্রপডাউনে "ম্যাচ সমাপ্ত" সিলেক্ট করলে যেকোনো একটি টিমের স্কোর অবশ্যই **২৯ পয়েন্ট** হতে হবে। ২৯ পয়েন্ট না দিলে সেভ সফল হবে না!</p>
-                        <p>• <strong>ম্যাচ স্থগিত:</strong> ড্রপডাউনে "ম্যাচ স্থগিত" সিলেক্ট করলে স্ক্রিনে ম্যাচ স্থগিত লেখাটি সেট হয়ে যাবে এবং সাম্প্রতিক সমাপ্ত ম্যাচে অটো সেভ হয়ে যাবে।</p>
-                    </div>
-
-                    <div class="flex gap-3 flex-wrap">
-                        <button type="submit" id="saveLiveBtn" class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg flex-1">
-                            💾 লাইভ তথ্য সেভ ও আপডেট করুন (ড্রপডাউন সিস্টেম)
-                        </button>
-                        <button type="button" onclick="clearLiveMatch()" class="bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold px-4 py-3 rounded-xl text-xs transition border border-slate-700">
-                            ⏹️ রিসেট / লাইভ বন্ধ করুন
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- ADMIN SECTION: UPCOMING MATCH CREATOR -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-blue-500/40 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-blue-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📅 আগামী/আপকামিং ম্যাচের সময়সূচী ম্যানেজমেন্ট (অটো ড্রপডাউন সিস্টেম)
-                </h3>
-                <form onsubmit="saveUpcomingMatch(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">ম্যাচ শিরোনাম (গ্রুপপর্ব থেকে ফাইনাল) *</label>
-                            <select id="upTitle" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- ম্যাচের শিরোনাম সিলেক্ট করুন --</option>
-                                <optgroup label="গ্রুপপর্ব ম্যাচসমূহ">
-                                    <option value="গ্রুপ এ - ম্যাচ ১ (G1_M1)">গ্রুপ এ - ম্যাচ ১ (G1_M1)</option>
-                                    <option value="গ্রুপ এ - ম্যাচ ২ (G1_M2)">গ্রুপ এ - ম্যাচ ২ (G1_M2)</option>
-                                    <option value="গ্রুপ এ - ম্যাচ ৩ (G1_M3)">গ্রুপ এ - ম্যাচ ৩ (G1_M3)</option>
-                                    <option value="গ্রুপ বি - ম্যাচ ১ (G2_M1)">গ্রুপ বি - ম্যাচ ১ (G2_M1)</option>
-                                    <option value="গ্রুপ বি - ম্যাচ ২ (G2_M2)">গ্রুপ বি - ম্যাচ ২ (G2_M2)</option>
-                                    <option value="গ্রুপ বি - ম্যাচ ৩ (G2_M3)">গ্রুপ বি - ম্যাচ ৩ (G2_M3)</option>
-                                    <option value="গ্রুপ সি - ম্যাচ ১ (G3_M1)">গ্রুপ সি - ম্যাচ ১ (G3_M1)</option>
-                                    <option value="গ্রুপ সি - ম্যাচ ২ (G3_M2)">গ্রুপ সি - ম্যাচ ২ (G3_M2)</option>
-                                    <option value="গ্রুপ সি - ম্যাচ ৩ (G3_M3)">গ্রুপ সি - ম্যাচ ৩ (G3_M3)</option>
-                                    <option value="গ্রুপ ডি - ম্যাচ ১ (G4_M1)">গ্রুপ ডি - ম্যাচ ১ (G4_M1)</option>
-                                    <option value="গ্রুপ ডি - ম্যাচ ২ (G4_M2)">গ্রুপ ডি - ম্যাচ ২ (G4_M2)</option>
-                                    <option value="গ্রুপ ডি - ম্যাচ ৩ (G4_M3)">গ্রুপ ডি - ম্যাচ ৩ (G4_M3)</option>
-                                </optgroup>
-                                <optgroup label="নকআউট ও ফাইনাল ম্যাচসমূহ">
-                                    <option value="১ম কোয়ার্টার ফাইনাল (QF-1)">১ম কোয়ার্টার ফাইনাল (QF-1)</option>
-                                    <option value="২য় কোয়ার্টার ফাইনাল (QF-2)">২য় কোয়ার্টার ফাইনাল (QF-2)</option>
-                                    <option value="৩য় কোয়ার্টার ফাইনাল (QF-3)">৩য় কোয়ার্টার ফাইনাল (QF-3)</option>
-                                    <option value="৪র্থ কোয়ার্টার ফাইনাল (QF-4)">৪র্থ কোয়ার্টার ফাইনাল (QF-4)</option>
-                                    <option value="১ম সেমিফাইনাল (SF-1)">১ম সেমিফাইনাল (SF-1)</option>
-                                    <option value="২য় সেমিফাইনাল (SF-2)">২য় সেমিফাইনাল (SF-2)</option>
-                                    <option value="৩য় স্থান নির্ধারণী ম্যাচ (3P-Match)">৩য় স্থান নির্ধারণী ম্যাচ (3P-Match)</option>
-                                    <option value="মেগা ফাইনাল ম্যাচ (FINAL)">মেগা ফাইনাল ম্যাচ (FINAL)</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">টিম ১ (নিবন্ধিত টিম) *</label>
-                            <select id="upTeam1Select" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- টিম ১ সিলেক্ট করুন --</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">টিম ২ (নিবন্ধিত টিম) *</label>
-                            <select id="upTeam2Select" required class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- টিম ২ সিলেক্ট করুন --</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময় (ম্যানুয়াল ইনপুট) *</label>
-                        <input type="text" id="upTime" placeholder="যেমন: ১০ নভেম্বর, ২০২৬ - রাত ৮:৩০ PM" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                    </div>
-                    <button type="submit" id="saveUpBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg">
-                        ➕ নতুন আপকামিং ম্যাচ সময়সূচী যোগ করুন
-                    </button>
-                </form>
-            </div>
-
-
-
-            <!-- SECTION 1: NEW PLAYER REGISTRATION FORM -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-6 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400 flex items-center gap-2">
-                        নতুন খেলোয়ার নিবন্ধন / এডিটিং ফরম
-                    </h3>
-                    <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
-                </div>
-
-                <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="hidden" id="editPlayerId" value="">
-                    <input type="hidden" id="existingPlayerDbId" value="">
-                    <input type="hidden" id="existingPlayerImgUrl" value="">
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের নাম *</label>
-                        <input type="text" id="sName" placeholder="খেলোয়াড়ের নাম *" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">মোবাইল নম্বর *</label>
-                        <input type="text" id="sPhone" placeholder="মোবাইল নম্বর *" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ঠিকানা</label>
-                        <input type="text" id="sAddress" placeholder="ঠিকানা" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ক্যাটাগরি</label>
-                        <select id="sCat" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-yellow-400 font-bold">
-                            <option value="HIGH">HIGH</option>
-                            <option value="MEDIUM">MEDIUM</option>
-                            <option value="LOW">LOW</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-xs text-gray-400 block mb-1">খেলোয়াড়ের ছবি (ঐচ্ছিক - অটো কম্প্রেসড)</label>
-                        <input type="file" id="sImage" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-gray-300">
-                    </div>
-                    
-                    <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold py-3 rounded-xl text-sm md:col-span-2 transition shadow-lg">
-                        💾 নতুন খেলোয়ার সেভ করুন
-                    </button>
-                </form>
-            </div>
-
-            <!-- SECTION 2: DOUBLES TEAM SETUP -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-blue-500/40 space-y-5 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400 flex items-center gap-2">
-                        🛡️ ২. দ্বৈত টিম সেটআপ ও এডিটিং (সর্বোচ্চ ৩ টিম প্রতি গ্রুপ)
-                    </h3>
-                    <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
-                </div>
-                
-                <form onsubmit="saveTeamSetup(event)" class="space-y-4">
-                    <input type="hidden" id="editRowId" value="">
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">গ্রুপ সিলেক্ট করুন * (সর্বোচ্চ ৩ টিম)</label>
-                            <select id="tGroup" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-yellow-400 font-bold">
-                                <option value="গ্রুপ এ">গ্রুপ এ</option>
-                                <option value="গ্রুপ বি">গ্রুপ বি</option>
-                                <option value="গ্রুপ সি">গ্রুপ সি</option>
-                                <option value="গ্রুপ ডি">গ্রুপ ডি</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">টিমের নাম * (যেমন: রয়েল ফাইটার্স)</label>
-                            <input type="text" id="tTeamName" placeholder="টিমের নাম *" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">টিম লোগো / ছবি (ঐচ্ছিক)</label>
-                            <input type="file" id="tTeamImage" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-1.5 text-xs text-gray-300">
-                            <input type="hidden" id="existingTeamImgUrl" value="">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">১ম নিবন্ধিত খেলোয়াড় সিলেক্ট করুন * (HIGH➔MEDIUM➔LOW সিরিয়াল)</label>
-                            <select id="tPlayer1Select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
-                                <option value="">-- ১ম নিবন্ধিত খেলোয়াড় বেছে নিন --</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">২য় নিবন্ধিত খেলোয়াড় সিলেক্ট করুন * (HIGH➔MEDIUM➔LOW সিরিয়াল)</label>
-                            <select id="tPlayer2Select" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white font-bold">
-                                <option value="">-- ২য় নিবন্ধিত খেলোয়াড় বেছে নিন --</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" id="teamSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
-                        💾 দ্বৈত টিম সেভ ও গ্রুপে অ্যাসাইন করুন (সর্বোচ্চ ৩ টিম লিমিট চেক)
-                    </button>
-                </form>
-            </div>
-
-            <!-- SECTION 3: ALL MATCHES MANUAL SCORE EDITOR -->
-            <div id="adminMatchFormSec" class="bg-slate-900 p-6 rounded-3xl border border-purple-500/40 space-y-5 shadow-xl">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
-                    <h3 id="matchFormTitle" class="text-base font-bold text-purple-400 flex items-center gap-2">
-                        ⚔️ ৩. সকল ম্যাচ (গ্রুপপর্ব ও নকআউট) ফিকশ্চার, স্কোর ও বিজয়ী ম্যানেজমেন্ট
-                    </h3>
-                    <button id="cancelMatchEditBtn" onclick="resetMatchForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল করুন</button>
-                </div>
-
-                <form onsubmit="saveMatchScoreData(event)" class="space-y-4">
-                    <input type="hidden" id="editMatchIdCode" value="">
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ম্যাচ আইডি / কোড *</label>
-                            <input type="text" id="mCode" placeholder="যেমন: G1_M1, QF-1, SF-1, 3P-Match, FINAL" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">ম্যাচের নাম / টাইটেল *</label>
-                            <input type="text" id="mTitle" placeholder="যেমন: ১ম কোয়ার্টার ফাইনাল / মেগা ফাইনাল" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-400 block mb-1">তারিখ ও সময়</label>
-                            <input type="text" id="mDate" placeholder="যেমন: ১০ নভে, ২০২৬ - ৩:০০ PM" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <div class="space-y-2">
-                            <label class="text-xs text-yellow-400 block font-bold">টিম ১ (নিবন্ধিত টিম সিলেক্ট করুন) *</label>
-                            <select id="mP1RegSelect" required onchange="document.getElementById('mP1Name').value = this.value" class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত টিম ১ বেছে নিন --</option>
-                            </select>
-                            <input type="hidden" id="mP1Name" value="">
-                            <input type="number" id="mP1Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 mt-1">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs text-yellow-400 block font-bold">টিম ২ (নিবন্ধিত টিম সিলেক্ট করুন) *</label>
-                            <select id="mP2RegSelect" required onchange="document.getElementById('mP2Name').value = this.value" class="w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                                <option value="">-- নিবন্ধিত টিম ২ বেছে নিন --</option>
-                            </select>
-                            <input type="hidden" id="mP2Name" value="">
-                            <input type="number" id="mP2Points" placeholder="ম্যাচ পয়েন্ট (ম্যাক্স ২৯)" min="0" max="29" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 mt-1">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ম্যাচ রেজাল্ট / বিজয়ী ঘোষণা *</label>
-                        <input type="text" id="mResult" placeholder="যেমন: টিম ১ বিজয়ী (২৯-২৫ পয়েন্টে জয়ী)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-green-400 font-bold">
-                    </div>
-
-                    <button type="submit" id="mSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">
-                        💾 ম্যাচের স্কোর ও বিজয়ী সেভ করুন
-                    </button>
-                </form>
-            </div>
-
-                        <!-- SECTION 0: NOTICE BOARD MANAGER -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-yellow-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📢 নোটিশ বোর্ড ম্যানেজমেন্ট (এডমিন প্যানেল)
-                </h3>
-                <form onsubmit="saveNotice(event)" class="space-y-3">
-                    <textarea id="adminNoticeInput" rows="3" placeholder="এখানে অফিশিয়াল নোটিশ লিখুন..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-yellow-500"></textarea>
-                    <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
-                        💾 নোটিশ আপডেট ও প্রকাশ করুন
-                    </button>
-                <button type="button" id="noticeCancelBtn" onclick="cancelNoticeEdit()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">বাতিল</button>
-                </form>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Admin Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/85 flex justify-center items-center p-4 hidden z-50 backdrop-blur-md">
-        <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 w-full max-w-sm space-y-4 relative shadow-2xl">
-            <button onclick="toggleAdminModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-bold text-lg">✕</button>
-            <h2 class="text-xl font-extrabold gold-gradient-text text-center">এডমিন লগইন</h2>
-            <p id="loginError" class="text-red-400 text-xs text-center font-bold hidden"></p>
-            <input type="email" id="loginEmail" placeholder="ইমেইল" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
-            <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white">
-            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 font-extrabold py-3 rounded-xl text-sm shadow-lg">লগইন করুন</button>
-        </div>
+      </div>
+      <span id="liveMatchStage" class="bg-yellow-500/10 text-yellow-300 border border-yellow-500/40 text-xs px-3.5 py-1.5 rounded-full font-bold">লাইভ মোড</span>
     </div>
+    <div id="liveStreamWidgetContainer" class="hidden"></div>
+    <div id="liveMatchContent"><div class="skeleton h-40"></div></div>
+  </div>
 
-    <!-- PLAYER / TEAM IMAGE LIGHTBOX -->
-    <div id="imagePreviewModal" class="fixed inset-0 bg-black/90 flex justify-center items-center p-4 hidden z-[60] backdrop-blur-sm" onclick="closeImagePreview()">
-        <div class="relative max-w-lg w-full bg-slate-900 border-2 border-yellow-500/60 rounded-3xl p-5 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
-            <button onclick="closeImagePreview()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-extrabold text-2xl">✕</button>
-            <h3 id="modalPlayerName" class="text-lg font-bold text-yellow-400 text-center">ছবি প্রিভিউ</h3>
-            <div class="w-full max-h-[70vh] overflow-hidden rounded-2xl flex justify-center items-center bg-slate-950 border border-slate-800">
-                <img id="modalPlayerImage" src="" alt="Preview" class="max-h-[65vh] w-auto object-contain rounded-xl">
-            </div>
-            <p id="modalPlayerDetails" class="text-xs text-gray-300 text-center font-semibold"></p>
+  <!-- MATCH CENTER -->
+  <section class="bg-slate-900/80 rounded-3xl border border-yellow-500/30 p-5 md:p-6 gold-border-glow space-y-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl">📊</div>
+        <div>
+          <h2 class="text-lg md:text-xl font-extrabold gold-gradient-text">ম্যাচ সেন্টার</h2>
+          <p class="text-xs text-gray-400">সাম্প্রতিক ফলাফল ও আগামী সময়সূচী</p>
         </div>
+      </div>
+      <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <button onclick="switchDashboardTab('recent')" id="dashBtnRecent" class="px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950">🏁 সমাপ্ত</button>
+        <button onclick="switchDashboardTab('upcoming')" id="dashBtnUpcoming" class="px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white">📅 আগামী</button>
+      </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900/90 text-center p-4 text-xs text-gray-400 border-t border-slate-800 mt-auto space-y-1">
-        <p>© 2026 Winter Carrom Kings Battle Championship • All Rights Reserved</p>
-        <p class="text-[10px] text-gray-500">Premium Responsive UI with Supabase Cloud Integration</p>
-    </footer>
-
-    <!-- App Logic Script -->
-    <script>
-        const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
-
-        let isAdmin = false;
-        let globalTeamsData = [];
-        let globalPlayersData = [];
-        let globalNoticesData = [];
-        let globalMatchesData = {};
-        let globalLiveMatchData = null;
-        let globalUpcomingMatchesData = [];
-        let selectedViewGroup = null;
-        const groupSizeLimit = 3;
-        const WINNING_SCORE = 29;
-
-        function safeStr(val) {
-            if (val === null || val === undefined) return "";
-            return String(val);
-        }
-
-        function safeLower(val) {
-            return safeStr(val).trim().toLowerCase();
-        }
-
-        function safeUpper(val) {
-            return safeStr(val).trim().toUpperCase();
-        }
-
-        
-        let globalStreamConfig = { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
-
-        function getYouTubeEmbedUrl(urlStr) {
-            if (!urlStr) return '';
-            let raw = safeStr(urlStr).trim();
-            if (raw.includes('iframe') && raw.includes('src=')) {
-                let match = raw.match(/src=["']([^"']+)["']/);
-                if (match && match[1]) return match[1];
-            }
-            if (raw.includes('youtu.be/')) {
-                let id = raw.split('youtu.be/')[1].split('?')[0].split('&')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('watch?v=')) {
-                let id = raw.split('watch?v=')[1].split('&')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('/live/')) {
-                let id = raw.split('/live/')[1].split('?')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('youtube.com/embed/')) return raw;
-            return raw;
-        }
-
-        async function saveLiveStreamLinks(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন লাইভ স্ট্রিমিং লিংক আপডেট করতে পারবেন!');
-                return;
-            }
-
-            let ytUrl = safeStr(document.getElementById('adminYtLiveUrl').value).trim();
-            let fbUrl = safeStr(document.getElementById('adminFbLiveUrl').value).trim();
-            let displayMode = safeStr(document.getElementById('adminStreamDisplayMode').value).trim();
-
-            let streamObj = { ytUrl: ytUrl, fbUrl: fbUrl, displayMode: displayMode };
-
-            let btn = document.getElementById('saveStreamBtn');
-            btn.innerText = "⏳ ডাটাবেজে সেভ হচ্ছে...";
-            btn.disabled = true;
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: 'LIVE_STREAM_CONFIG', group_name: 'LIVE_STREAM', data: streamObj })
-                });
-
-                alert('✅ ইউটিউব ও ফেসবুক লাইভ লিংক সফলভাবে ওয়েবসাইটে পাবলিশ করা হয়েছে!');
-                loadData();
-            } catch(err) {
-                alert('লাইভ লিংক সেভ করা হয়েছে।');
-            } finally {
-                btn.innerText = "💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন";
-                btn.disabled = false;
-            }
-        }
-
-
-        function renderLiveStreamWidget() {
-            let streamBox = document.getElementById('liveStreamWidgetContainer');
-            if (!streamBox) return;
-
-            if (!globalStreamConfig || globalStreamConfig.displayMode === 'OFF') {
-                streamBox.innerHTML = '';
-                streamBox.classList.add('hidden');
-                return;
-            }
-
-            let ytEmbed = getYouTubeEmbedUrl(globalStreamConfig.ytUrl);
-            let ytDirect = globalStreamConfig.ytUrl || '#';
-            let fbDirect = globalStreamConfig.fbUrl || '#';
-            let mode = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
-
-            let playerHtml = '';
-            if (mode === 'BUTTONS_AND_PLAYER' && ytEmbed) {
-                playerHtml = `
-                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-red-500/50 shadow-2xl bg-black mb-4">
-                        <iframe src="${ytEmbed}" title="YouTube Live Stream" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                    </div>
-                `;
-            }
-
-            let buttonsHtml = `
-                <div class="flex items-center justify-center gap-3 flex-wrap">
-                    ${globalStreamConfig.ytUrl ? `<a href="${ytDirect}" target="_blank" class="bg-red-600 hover:bg-red-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>▶️</span> ইউটিউবে সরাসরি লাইভ দেখুন</a>` : ''}
-                    ${globalStreamConfig.fbUrl ? `<a href="${fbDirect}" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>📘</span> ফেসবুক পেজে লাইভ দেখুন</a>` : ''}
-                </div>
-            `;
-
-            if (playerHtml || (globalStreamConfig.ytUrl || globalStreamConfig.fbUrl)) {
-                streamBox.innerHTML = `
-                    <div class="bg-slate-950/90 p-4 rounded-2xl border border-red-500/40 space-y-3">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="text-xs font-bold text-red-400 flex items-center gap-2"><span>📺</span> সোশ্যাল মিডিয়া সরাসরি ব্রডকাস্ট স্ট্রিম</span>
-                            <span class="text-[10px] bg-red-500/20 text-red-300 px-2.5 py-0.5 rounded-full font-bold animate-pulse">LIVE BROADCAST</span>
-                        </div>
-                        ${playerHtml}
-                        ${buttonsHtml}
-                    </div>
-                `;
-                streamBox.classList.remove('hidden');
-            } else {
-                streamBox.innerHTML = '';
-                streamBox.classList.add('hidden');
-            }
-        }
-
-        function checkAdminSession() {
-            try {
-                const session = localStorage.getItem('carrom_admin_session');
-                if (session === 'true') {
-                    isAdmin = true;
-                    applyAdminUIState();
-                } else {
-                    isAdmin = false;
-                    applyPublicUIState();
-                }
-            } catch(e) {
-                isAdmin = false;
-                applyPublicUIState();
-            }
-        }
-
-        function applyAdminUIState() {
-            const authBtn = document.getElementById('authBtn');
-            if(authBtn) {
-                authBtn.innerText = "লগআউট (এডমিন)";
-                authBtn.className = "bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg transition";
-            }
-            const navDash = document.getElementById('navDashboard');
-            if(navDash) navDash.classList.remove('hidden');
-            const noticeInd = document.getElementById('noticeAdminIndicator');
-            if(noticeInd) noticeInd.classList.remove('hidden');
-            if(typeof renderNotices === 'function') renderNotices(globalNoticesData);
-            const quickAdd = document.getElementById('quickAddPlayerBtn');
-            if(quickAdd) quickAdd.classList.remove('hidden');
-        }
-
-        function applyPublicUIState() {
-            const authBtn = document.getElementById('authBtn');
-            if(authBtn) {
-                authBtn.innerText = "এডমিন লগইন";
-                authBtn.className = "bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg transition transform hover:scale-105";
-            }
-            const navDash = document.getElementById('navDashboard');
-            if(navDash) navDash.classList.add('hidden');
-            const noticeInd = document.getElementById('noticeAdminIndicator');
-            if(noticeInd) noticeInd.classList.add('hidden');
-            if(typeof renderNotices === 'function') renderNotices(globalNoticesData);
-            const quickAdd = document.getElementById('quickAddPlayerBtn');
-            if(quickAdd) quickAdd.classList.add('hidden');
-        }
-
-        function switchTab(tab) {
-            ['tabHome', 'tabFixtures', 'tabKnockout', 'tabGroups', 'tabDashboard'].forEach(id => {
-                let el = document.getElementById(id);
-                if(el) el.classList.add('hidden');
-            });
-
-            ['navHome', 'navFixtures', 'navKnockout', 'navGroups'].forEach(id => {
-                let el = document.getElementById(id);
-                if(el) el.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-750";
-            });
-            const navDash = document.getElementById('navDashboard');
-            if(navDash) navDash.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-950/80 text-red-300 border border-red-500/30 hover:bg-red-900";
-
-            if(tab === 'home') {
-                let el = document.getElementById('tabHome');
-                if(el) el.classList.remove('hidden');
-                let nav = document.getElementById('navHome');
-                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
-            } else if(tab === 'fixtures') {
-                let el = document.getElementById('tabFixtures');
-                if(el) el.classList.remove('hidden');
-                let nav = document.getElementById('navFixtures');
-                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
-            } else if(tab === 'knockout') {
-                let el = document.getElementById('tabKnockout');
-                if(el) el.classList.remove('hidden');
-                let nav = document.getElementById('navKnockout');
-                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
-            } else if(tab === 'groups') {
-                let el = document.getElementById('tabGroups');
-                if(el) el.classList.remove('hidden');
-                let nav = document.getElementById('navGroups');
-                if(nav) nav.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20";
-            } else if(tab === 'dashboard' && isAdmin) {
-                let el = document.getElementById('tabDashboard');
-                if(el) el.classList.remove('hidden');
-                if(navDash) navDash.className = "px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-600 text-white shadow-lg";
-            }
-        }
-
-        function switchDashboardTab(subTab) {
-            let rec = document.getElementById('dashContentRecent');
-            let up = document.getElementById('dashContentUpcoming');
-            let btnRec = document.getElementById('dashBtnRecent');
-            let btnUp = document.getElementById('dashBtnUpcoming');
-
-            if(subTab === 'recent') {
-                if(rec) rec.classList.remove('hidden');
-                if(up) up.classList.add('hidden');
-                if(btnRec) btnRec.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow";
-                if(btnUp) btnUp.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white";
-            } else {
-                if(rec) rec.classList.add('hidden');
-                if(up) up.classList.remove('hidden');
-                if(btnRec) btnRec.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white";
-                if(btnUp) btnUp.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow";
-            }
-        }
-
-        function toggleAdminModal() {
-            if(isAdmin) {
-                isAdmin = false;
-                try { localStorage.removeItem('carrom_admin_session'); } catch(e){}
-                applyPublicUIState();
-                switchTab('home');
-                renderData(globalTeamsData, globalPlayersData);
-            } else {
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPass').value = '';
-                document.getElementById('loginError').classList.add('hidden');
-                const modal = document.getElementById('loginModal');
-                modal.classList.toggle('hidden');
-            }
-        }
-
-        function handleLogin() {
-            const email = safeStr(document.getElementById('loginEmail').value).trim();
-            const pass = document.getElementById('loginPass').value;
-            const errElem = document.getElementById('loginError');
-
-            if(email === 'efshikhelaghor@gmail.com' && pass === 'admin123') {
-                isAdmin = true;
-                try { localStorage.setItem('carrom_admin_session', 'true'); } catch(e){}
-                applyAdminUIState();
-                document.getElementById('loginModal').classList.add('hidden');
-                errElem.classList.add('hidden');
-                renderData(globalTeamsData, globalPlayersData);
-                switchTab('dashboard');
-            } else {
-                errElem.innerText = "ভুল ইমেইল বা পাসওয়ার্ড!";
-                errElem.classList.remove('hidden');
-            }
-        }
-
-        function openImagePreview(imgUrl, pName, pDetails) {
-            if(!imgUrl) return;
-            document.getElementById('modalPlayerImage').src = imgUrl;
-            document.getElementById('modalPlayerName').innerText = pName || 'ছবি প্রিভিউ';
-            document.getElementById('modalPlayerDetails').innerText = pDetails || '';
-            document.getElementById('imagePreviewModal').classList.remove('hidden');
-        }
-
-        function closeImagePreview() {
-            document.getElementById('imagePreviewModal').classList.add('hidden');
-        }
-
-        function getLocalCache() {
-            try {
-                let cached = localStorage.getItem('carrom_players_cache');
-                return cached ? JSON.parse(cached) : [];
-            } catch(e) { return []; }
-        }
-
-        function setLocalCache(players) {
-            try {
-                localStorage.setItem('carrom_players_cache', JSON.stringify(players));
-            } catch(e) {}
-        }
-
-        function sanitizeAndDedupPlayers(playersList) {
-            if(!Array.isArray(playersList)) return [];
-            let uniqueMap = new Map();
-            let cleaned = [];
-            
-            playersList.forEach(p => {
-                if(!p || typeof p !== 'object') return;
-                let nameKey = safeLower(p.name);
-                let phoneKey = safeStr(p.phone).trim();
-                let uniqueKey = nameKey + "_" + phoneKey;
-                
-                if(!nameKey && !phoneKey) return;
-                
-                if(!uniqueMap.has(uniqueKey)) {
-                    uniqueMap.set(uniqueKey, true);
-                    cleaned.push(p);
-                }
-            });
-            return cleaned;
-        }
-
-        async function loadData() {
-            let cachedPlayers = getLocalCache();
-            globalPlayersData = sanitizeAndDedupPlayers(cachedPlayers);
-            renderData(globalTeamsData, globalPlayersData);
-
-            try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams?select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-                
-                if(!res.ok) throw new Error("Supabase fetch failed");
-                const rawTeams = await res.json();
-                
-                let teamsList = [];
-                let playersList = [];
-                globalMatchesData = {};
-                globalUpcomingMatchesData = [];
-                globalLiveMatchData = null;
-
-                if(Array.isArray(rawTeams)) {
-                    rawTeams.forEach(t => {
-                        if(!t) return;
-                        let gName = safeStr(t.group_name).trim();
-                        if(gName === 'MATCH_SCORES' || gName === 'KNOCKOUT_MATCHES') {
-                            globalMatchesData[t.id] = t.data || {};
-                        } else if(gName === 'LIVE_MATCH') {
-                            globalLiveMatchData = t.data || null;
-                        } else if(gName === 'LIVE_STREAM') {
-                            globalStreamConfig = t.data || { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
-                        } else if(gName === 'UPCOMING_MATCHES') {
-                            if(t.data) globalUpcomingMatchesData.push({ db_id: t.id, ...t.data });
-                        } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!gName && t.data && t.data.phone)) {
-                            let d = t.data || {};
-                            if(d.name || d.phone) {
-                                playersList.push({
-                                    db_id: t.id,
-                                    id: d.id || t.id,
-                                    name: safeStr(d.name).trim(),
-                                    phone: safeStr(d.phone).trim(),
-                                    address: safeStr(d.address).trim(),
-                                    cat: safeStr(d.cat || "HIGH").trim(),
-                                    imageUrl: d.imageUrl || d.image_url || ""
-                                });
-                            }
-                        } else if(gName) {
-                            teamsList.push(t);
-                        }
-                    });
-                    
-                    globalTeamsData = teamsList;
-                    if(playersList.length > 0) {
-                        globalPlayersData = sanitizeAndDedupPlayers(playersList);
-                        setLocalCache(globalPlayersData);
-                    }
-                }
-
-                // Fetch Notices
-                fetch(`${SUPABASE_URL}/rest/v1/notices?select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                }).then(r => r.json()).then(notices => {
-                    if(Array.isArray(notices)) {
-                        globalNoticesData = notices;
-                        renderNotices(notices);
-                    }
-                }).catch(e => {});
-
-                renderData(globalTeamsData, globalPlayersData);
-                populateTeamDropdowns();
-                populatePlayerDropdowns();
-                populateLiveMatchFormStandby();
-
-            } catch(e) {
-                console.error("Supabase Error (using fallback cache):", e);
-                renderData(globalTeamsData, globalPlayersData);
-            }
-        }
-
-        // ---------- Helpers: uniform date + HTML escape ----------
-        function escHtml(v) {
-            return safeStr(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-        }
-        function formatBnDate(ts) {
-            let d = new Date(ts);
-            if(isNaN(d.getTime())) return '';
-            return d.toLocaleString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-        }
-        function noticeTimestamp(n) {
-            let idNum = Number(n && n.id);
-            if(idNum > 1e12 && idNum < 4e12) return idNum; // id = Date.now()
-            let t = new Date(n && n.date).getTime();
-            return isNaN(t) ? 0 : t;
-        }
-        function noticeDateLabel(n) {
-            let ts = noticeTimestamp(n);
-            if(ts) return formatBnDate(ts);
-            return safeStr(n && n.date);
-        }
-        function noticeHeaders(extra) {
-            return Object.assign({
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json'
-            }, extra || {});
-        }
-
-        let editingNoticeId = null;
-
-        function renderNotices(notices) {
-            let boardElem = document.getElementById('noticeBoardContent');
-            if(!boardElem) return;
-
-            if(!notices || notices.length === 0) {
-                boardElem.innerHTML = `<p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>`;
-                return;
-            }
-
-            let sorted = [...notices].filter(n => n).sort((a, b) => noticeTimestamp(b) - noticeTimestamp(a));
-            let html = '';
-            sorted.forEach(n => {
-                let idAttr = escHtml(n.id);
-                let adminBtns = isAdmin ? `
-                    <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="editNotice('${idAttr}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-lg text-[11px] font-bold">✏️ এডিট</button>
-                        <button type="button" onclick="deleteNotice('${idAttr}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-[11px] font-bold">🗑️ মুছুন</button>
-                    </div>` : '';
-                let label = noticeDateLabel(n);
-                html += `
-                    <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-1">
-                        <p class="text-white font-medium whitespace-pre-wrap">${escHtml(n.text)}</p>
-                        <span class="text-[10px] text-yellow-400 block font-semibold">${label ? 'প্রকাশিত: ' + escHtml(label) : ''}</span>
-                        ${adminBtns}
-                    </div>
-                `;
-            });
-            boardElem.innerHTML = html;
-        }
-
-        function editNotice(id) {
-            if(!isAdmin) return;
-            let n = globalNoticesData.find(x => String(x.id) === String(id));
-            if(!n) return;
-            editingNoticeId = String(n.id);
-            let input = document.getElementById('adminNoticeInput');
-            input.value = n.text || '';
-            input.focus();
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            let btn = document.getElementById('noticeSaveBtn');
-            btn.innerText = '💾 নোটিশ এডিট সেভ করুন';
-            showNoticeCancel(true);
-        }
-
-        function showNoticeCancel(show) {
-            let c = document.getElementById('noticeCancelBtn');
-            if(c) c.classList.toggle('hidden', !show);
-        }
-
-        function cancelNoticeEdit() {
-            editingNoticeId = null;
-            document.getElementById('adminNoticeInput').value = '';
-            document.getElementById('noticeSaveBtn').innerText = '💾 নোটিশ আপডেট ও প্রকাশ করুন';
-            showNoticeCancel(false);
-        }
-
-        async function deleteNotice(id) {
-            if(!isAdmin) return;
-            if(!confirm('এই নোটিশটি স্থায়ীভাবে মুছে ফেলতে চান?')) return;
-            try {
-                let res = await fetch(`${SUPABASE_URL}/rest/v1/notices?id=eq.${encodeURIComponent(id)}`, {
-                    method: 'DELETE',
-                    headers: noticeHeaders({ 'Prefer': 'return=representation' })
-                });
-                let rows = res.ok ? await res.json().catch(() => []) : null;
-                if(!res.ok || (Array.isArray(rows) && rows.length === 0)) {
-                    alert('❌ নোটিশ মোছা যায়নি। Supabase-এ notices টেবিলে DELETE পলিসি (RLS) চালু আছে কিনা দেখুন।');
-                    return;
-                }
-                globalNoticesData = globalNoticesData.filter(n => String(n.id) !== String(id));
-                if(editingNoticeId === String(id)) cancelNoticeEdit();
-                renderNotices(globalNoticesData);
-            } catch(err) {
-                alert('❌ ইন্টারনেট সমস্যার কারণে মোছা যায়নি।');
-            }
-        }
-
-        async function saveNotice(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন নোটিশ আপডেট করতে পারবেন!');
-                return;
-            }
-
-            let text = safeStr(document.getElementById('adminNoticeInput').value).trim();
-            if(!text) return;
-
-            let submitBtn = document.getElementById('noticeSaveBtn');
-            if(submitBtn.disabled) return; // double-tap guard
-
-            // Duplicate guard (same text already published, not the one being edited)
-            let dup = globalNoticesData.find(n => n && safeStr(n.text).trim() === text && String(n.id) !== String(editingNoticeId));
-            if(dup) {
-                alert('⚠️ এই একই নোটিশ আগে থেকেই প্রকাশিত আছে। নতুন কিছু লিখুন বা পুরনোটি এডিট করুন।');
-                return;
-            }
-
-            let originalLabel = editingNoticeId ? "💾 নোটিশ এডিট সেভ করুন" : "💾 নোটিশ আপডেট ও প্রকাশ করুন";
-            submitBtn.innerText = "⏳ সেভ হচ্ছে...";
-            submitBtn.disabled = true;
-
-            try {
-                let res;
-                if(editingNoticeId) {
-                    res = await fetch(`${SUPABASE_URL}/rest/v1/notices?id=eq.${encodeURIComponent(editingNoticeId)}`, {
-                        method: 'PATCH',
-                        headers: noticeHeaders({ 'Prefer': 'return=representation' }),
-                        body: JSON.stringify({ text: text })
-                    });
-                } else {
-                    let now = Date.now();
-                    res = await fetch(`${SUPABASE_URL}/rest/v1/notices`, {
-                        method: 'POST',
-                        headers: noticeHeaders({ 'Prefer': 'return=representation' }),
-                        body: JSON.stringify({ id: String(now), text: text, date: formatBnDate(now) })
-                    });
-                }
-                if(!res.ok) {
-                    alert('❌ নোটিশ সেভ হয়নি। (Supabase পলিসি বা ইন্টারনেট চেক করুন)');
-                } else {
-                    alert(editingNoticeId ? '✅ নোটিশ এডিট হয়েছে!' : '✅ নোটিশ সফলভাবে প্রকাশিত হয়েছে!');
-                    editingNoticeId = null;
-                    document.getElementById('adminNoticeInput').value = '';
-                    showNoticeCancel(false);
-                    originalLabel = "💾 নোটিশ আপডেট ও প্রকাশ করুন";
-                    loadData();
-                }
-            } catch(err) {
-                alert('❌ ইন্টারনেট সমস্যার কারণে নোটিশ সেভ হয়নি।');
-            } finally {
-                submitBtn.innerText = originalLabel;
-                submitBtn.disabled = false;
-            }
-        }
-
-        function populatePlayerDropdowns() {
-            let p1Select = document.getElementById('tPlayer1Select');
-            let p2Select = document.getElementById('tPlayer2Select');
-
-            let validPlayers = Array.isArray(globalPlayersData) ? globalPlayersData.filter(p => p && typeof p === 'object') : [];
-            let sortedPlayers = [...validPlayers].sort((a, b) => {
-                let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
-                let rA = rank[safeUpper(a.cat || 'HIGH')] || 4;
-                let rB = rank[safeUpper(b.cat || 'HIGH')] || 4;
-                if (rA !== rB) return rA - rB;
-                return safeStr(a.name).localeCompare(safeStr(b.name), 'bn');
-            });
-
-            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন (HIGH➔MEDIUM➔LOW) --</option>';
-            sortedPlayers.forEach(p => {
-                if(!p) return;
-                html += `<option value="${p.id}">👤 ${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
-            });
-
-            if(p1Select) p1Select.innerHTML = html;
-            if(p2Select) p2Select.innerHTML = html;
-        }
-
-        function populateTeamDropdowns() {
-            let p1Select = document.getElementById('mP1RegSelect');
-            let p2Select = document.getElementById('mP2RegSelect');
-            let l1Select = document.getElementById('adminLiveP1Select');
-            let l2Select = document.getElementById('adminLiveP2Select');
-            let upT1Select = document.getElementById('upTeam1Select');
-            let upT2Select = document.getElementById('upTeam2Select');
-
-            let html = '<option value="">-- নিবন্ধিত টিম বেছে নিন --</option>';
-            globalTeamsData.forEach(t => {
-                if(!t) return;
-                let tName = t.data && t.data.teamName ? t.data.teamName : (t.data && t.data.name ? t.data.name : '');
-                if(tName) {
-                    html += `<option value="${tName}">🛡️ ${tName} (${t.group_name || 'গ্রুপ'})</option>`;
-                }
-            });
-
-            if(p1Select) p1Select.innerHTML = html;
-            if(p2Select) p2Select.innerHTML = html;
-            if(l1Select) l1Select.innerHTML = html;
-            if(l2Select) l2Select.innerHTML = html;
-            if(upT1Select) upT1Select.innerHTML = html;
-            if(upT2Select) upT2Select.innerHTML = html;
-
-            populateLiveMatchFormStandby();
-        }
-
-        function populateLiveMatchFormStandby() {
-            let titleInput = document.getElementById('adminLiveTitle');
-            let dropdownInput = document.getElementById('adminLiveStateDropdown');
-            let l1Select = document.getElementById('adminLiveP1Select');
-            let l2Select = document.getElementById('adminLiveP2Select');
-            let s1Input = document.getElementById('adminLiveP1Score');
-            let s2Input = document.getElementById('adminLiveP2Score');
-            let badge = document.getElementById('liveStatusIndicatorBadge');
-
-            if(!titleInput || !l1Select) return;
-
-            if(globalLiveMatchData) {
-                if(titleInput && !titleInput.value) titleInput.value = globalLiveMatchData.title || '';
-                if(dropdownInput) dropdownInput.value = globalLiveMatchData.state || (globalLiveMatchData.active ? 'RUNNING' : 'FINISHED');
-                if(l1Select) l1Select.value = globalLiveMatchData.p1Name || '';
-                if(l2Select) l2Select.value = globalLiveMatchData.p2Name || '';
-                if(s1Input) s1Input.value = globalLiveMatchData.p1Score !== undefined ? globalLiveMatchData.p1Score : 0;
-                if(s2Input) s2Input.value = globalLiveMatchData.p2Score !== undefined ? globalLiveMatchData.p2Score : 0;
-
-                if(badge) {
-                    let st = globalLiveMatchData.state || 'RUNNING';
-                    if(st === 'RUNNING') {
-                        badge.innerText = `🔴 লাইভ রানিং: ${globalLiveMatchData.p1Name} vs ${globalLiveMatchData.p2Name}`;
-                    } else if(st === 'FINISHED') {
-                        badge.innerText = `🏁 ম্যাচ সমাপ্ত (ফ্লোটিং রেজাল্ট সক্রিয় ✅)`;
-                    } else if(st === 'SUSPENDED') {
-                        badge.innerText = `⏸️ ম্যাচ স্থগিত`;
-                    }
-                }
-            } else {
-                if(badge) badge.innerText = "টিম লকড ও স্ট্যান্ডবাই মোড ✅";
-
-            if (globalStreamConfig) {
-                let ytInput = document.getElementById('adminYtLiveUrl');
-                let fbInput = document.getElementById('adminFbLiveUrl');
-                let modeInput = document.getElementById('adminStreamDisplayMode');
-                if (ytInput && !ytInput.value) ytInput.value = globalStreamConfig.ytUrl || '';
-                if (fbInput && !fbInput.value) fbInput.value = globalStreamConfig.fbUrl || '';
-                if (modeInput) modeInput.value = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
-            }
-
-            }
-        }
-
-        function openGroupDetail(gName) {
-            selectedViewGroup = gName;
-            renderData(globalTeamsData, globalPlayersData);
-        }
-
-        function backToGroupsList() {
-            selectedViewGroup = null;
-            renderData(globalTeamsData, globalPlayersData);
-        }
-
-        function renderData(teams, players) {
-            let groups = { 'গ্রুপ এ': [], 'গ্রুপ বি': [], 'গ্রুপ সি': [], 'গ্রুপ ডি': [] };
-
-            if(Array.isArray(teams)) {
-                teams.forEach(item => {
-                    if(!item) return;
-                    let gName = safeStr(item.group_name).trim();
-                    if(gName && gName !== 'PLAYERS_POOL' && gName !== 'NEW_REGISTERED_PLAYERS' && gName !== 'MATCH_SCORES' && gName !== 'KNOCKOUT_MATCHES' && gName !== 'LIVE_MATCH' && gName !== 'UPCOMING_MATCHES' && item.data) {
-                        if(!groups[gName]) groups[gName] = [];
-                        groups[gName].push({ db_id: item.id, ...item.data });
-                    }
-                });
-            }
-
-            const actionHeaders = document.querySelectorAll('.actionHeader');
-            actionHeaders.forEach(el => {
-                if(isAdmin) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            });
-
-            // RENDER HOMEPAGE LIVE MATCH WIDGET
-            renderLiveMatchWidget();
-            renderLiveStreamWidget();
-
-            // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES INSIDE DASHBOARD
-            renderHomepageRecentAndUpcoming();
-
-            if(selectedViewGroup === null) {
-                let viewElem = document.getElementById('groupsSelectionView');
-                let detailElem = document.getElementById('singleGroupDetailView');
-                if(viewElem) viewElem.classList.remove('hidden');
-                if(detailElem) detailElem.classList.add('hidden');
-
-                let cardsHtml = '';
-                ['গ্রুপ এ', 'গ্রুপ বি', 'গ্রুপ সি', 'গ্রুপ ডি'].forEach(gName => {
-                    let teamList = groups[gName] || [];
-                    let count = teamList.length;
-                    let isComplete = (count === groupSizeLimit);
-                    let isOverLimit = (count > groupSizeLimit);
-                    
-                    let statusBadge = isComplete 
-                        ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">✅ সম্পূর্ণ (${count}/${groupSizeLimit})</span>`
-                        : isOverLimit
-                        ? `<span class="bg-red-500/10 text-red-400 border border-red-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">⛔ অতিরিক্ত (${count}/${groupSizeLimit})</span>`
-                        : `<span class="bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[11px] px-3 py-1 rounded-full font-extrabold flex items-center gap-1 shadow-sm">⚠️ অসম্পূর্ণ (${count}/${groupSizeLimit})</span>`;
-
-                    cardsHtml += `
-                        <div onclick="openGroupDetail('${gName}')" class="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 hover:from-slate-850 hover:to-slate-800 p-6 rounded-3xl border-2 ${isComplete ? 'border-emerald-500/40 shadow-emerald-500/10' : isOverLimit ? 'border-red-500/50 shadow-red-500/10' : 'border-yellow-500/30 shadow-yellow-500/10'} shadow-2xl cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between space-y-5 group">
-                            <div class="flex justify-between items-start gap-3">
-                                <div class="space-y-1.5">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition">
-                                            🏆
-                                        </div>
-                                        <h4 class="text-xl font-black text-yellow-400 group-hover:text-yellow-300 tracking-wide">${gName}</h4>
-                                    </div>
-                                    <p class="text-xs text-gray-300 font-medium">টিম সংখ্যা: <strong class="text-white font-extrabold">${count} / ${groupSizeLimit} টিম</strong> (সর্বোচ্চ)</p>
-                                </div>
-                                <div>
-                                    ${statusBadge}
-                                </div>
-                            </div>
-                            
-                            <div class="pt-3 border-t border-slate-800 flex justify-between items-center">
-                                <span class="text-xs text-gray-400 group-hover:text-gray-200 transition">দ্বৈত ফরম্যাট (৩টি টিম)</span>
-                                <div class="bg-slate-950 group-hover:bg-yellow-500 group-hover:text-gray-950 text-yellow-400 px-3.5 py-1.5 rounded-xl border border-slate-700 font-bold text-xs transition shadow flex items-center gap-1.5">
-                                    <span>বায়ো দেখুন</span>
-                                    <span>→</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                let container = document.getElementById('groupCardsContainer');
-                if(container) container.innerHTML = cardsHtml;
-            } else {
-                let viewElem = document.getElementById('groupsSelectionView');
-                let detailElem = document.getElementById('singleGroupDetailView');
-                if(viewElem) viewElem.classList.add('hidden');
-                if(detailElem) detailElem.classList.remove('hidden');
-
-                let teamList = groups[selectedViewGroup] || [];
-                let count = teamList.length;
-
-                let titleElem = document.getElementById('detailGroupTitle');
-                if(titleElem) titleElem.innerText = `${selectedViewGroup} - টিম ও খেলোয়াড় বায়ো তালিকা (${count}/${groupSizeLimit} সর্বোচ্চ)`;
-
-                let detailHtml = '';
-                if(teamList.length === 0) {
-                    detailHtml = `<div class="bg-slate-900 p-8 rounded-2xl text-center text-xs text-gray-400 italic border border-slate-800">এই গ্রুপে এখনো কোনো দ্বৈত টিম অ্যাসাইন করা হয়নি।</div>`;
-                } else {
-                    teamList.forEach((t, tIdx) => {
-                        if(!t) return;
-                        let teamImgUrl = t.teamImageUrl || '';
-                        let teamLogoHtml = teamImgUrl 
-                            ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${t.teamName}', 'টিম লোগো: ${t.teamName}')" class="w-14 h-14 rounded-2xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow-lg" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
-                            : `<div class="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-xl font-bold text-yellow-400 shadow-inner border border-slate-700">🛡️</div>`;
-
-                        let p1Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player1Id)) : null) || { name: t.player1Name, cat: t.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-                        let p2Obj = (Array.isArray(players) ? players.find(p => p && String(p.id) === String(t.player2Id)) : null) || { name: t.player2Name, cat: t.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-
-                        let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
-                        let p1ImgHtml = p1ImgUrl 
-                            ? `<img src="${p1ImgUrl}" onclick="openImagePreview('${p1ImgUrl}', '${p1Obj.name}', 'ক্যাটাগরি: ${p1Obj.cat || 'HIGH'} | মোবাইল: ${p1Obj.phone || 'N/A'} | ঠিকানা: ${p1Obj.address || 'N/A'}')" class="w-12 h-12 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="ছবি প্রিভিউ">`
-                            : `<div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sm border border-slate-700">👤</div>`;
-
-                        let p2ImgUrl = p2Obj.imageUrl || p2Obj.image_url || '';
-                        let p2ImgHtml = p2ImgUrl 
-                            ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-12 h-12 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="ছবি প্রিভিউ">`
-                            : `<div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sm border border-slate-700">👤</div>`;
-
-                        let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400 border-red-500/30' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
-                        let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400 border-red-500/30' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
-
-                        let adminBtns = isAdmin ? `
-                            <div class="flex gap-2 mt-3 justify-end border-t border-slate-800 pt-3">
-                                <button onclick="editTeamSetup('${t.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">✏️ এডিট টিম</button>
-                                <button onclick="deleteTeamSetup('${t.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">🗑️ টিম মুছুন</button>
-                            </div>
-                        ` : '';
-
-                        detailHtml += `
-                            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4 shadow-xl">
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                                    <div class="flex items-center gap-3.5">
-                                        ${teamLogoHtml}
-                                        <div>
-                                            <h5 class="font-extrabold text-yellow-400 text-base md:text-lg">🛡️ টিম: ${t.teamName || 'N/A'}</h5>
-                                            <span class="text-[11px] text-gray-400">গ্রুপ: ${selectedViewGroup} | দ্বৈত টিম</span>
-                                        </div>
-                                    </div>
-                                    <span class="bg-yellow-500/10 text-yellow-300 border border-yellow-500/30 px-3.5 py-1 rounded-full text-xs font-bold">টিম #${tIdx + 1}</span>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Player 1 Card -->
-                                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-3.5">
-                                        ${p1ImgHtml}
-                                        <div class="space-y-1 text-xs w-full">
-                                            <p class="font-extrabold text-white text-sm flex justify-between items-center">
-                                                <span>👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
-                                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
-                                            </p>
-                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
-                                            <p class="text-gray-400">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Player 2 Card -->
-                                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center gap-3.5">
-                                        ${p2ImgHtml}
-                                        <div class="space-y-1 text-xs w-full">
-                                            <p class="font-extrabold text-white text-sm flex justify-between items-center">
-                                                <span>👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
-                                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
-                                            </p>
-                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
-                                            <p class="text-gray-400">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                ${adminBtns}
-                            </div>
-                        `;
-                    });
-                }
-                let detailContainer = document.getElementById('detailGroupTeamsContainer');
-                if(detailContainer) detailContainer.innerHTML = detailHtml;
-            }
-
-            renderGroupFixtures();
-            renderKnockoutMatches();
-
-            let validPlayers = Array.isArray(players) ? players.filter(p => p && typeof p === 'object') : [];
-            let sortedPlayers = [...validPlayers].sort((a, b) => {
-                let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
-                let rA = rank[safeUpper(a.cat || 'HIGH')] || 4;
-                let rB = rank[safeUpper(b.cat || 'HIGH')] || 4;
-                if (rA !== rB) return rA - rB;
-                return safeStr(a.name).localeCompare(safeStr(b.name), 'bn');
-            });
-
-            let tableHtml = '';
-            if(sortedPlayers.length === 0) {
-                tableHtml = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-gray-400">কোনো নিবন্ধিত খেলোয়াড় পাওয়া যায়নি।</td></tr>`;
-            } else {
-                sortedPlayers.forEach((p, idx) => {
-                    let badgeColor = safeUpper(p.cat) === 'HIGH' ? "bg-red-500/20 text-red-400 border-red-500/30" : safeUpper(p.cat) === 'MEDIUM' ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : "bg-green-500/20 text-green-400 border-green-500/30";
-                    let imgUrl = p.imageUrl || p.image_url || '';
-                    let imgHtml = imgUrl 
-                        ? `<img src="${imgUrl}" onclick="openImagePreview('${imgUrl}', '${p.name}', 'ক্যাটাগরি: ${p.cat || 'HIGH'} | মোবাইল: ${p.phone || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-110 transition shadow" title="ছবি বড় দেখতে ক্লিক করুন">`
-                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex justify-center items-center text-xs font-bold text-gray-400 border border-slate-700">👤</div>`;
-
-                    let actionHtml = isAdmin ? `
-                        <td class="p-3">
-                            <div class="flex gap-2">
-                                <button onclick="editPlayerBio('${p.db_id}')" class="bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold">✏️ এডিট</button>
-                                <button onclick="deletePlayerBio('${p.db_id}')" class="bg-red-600 hover:bg-red-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold">🗑️ মুছুন</button>
-                            </div>
-                        </td>
-                    ` : '';
-
-                    tableHtml += `
-                        <tr class="hover:bg-slate-800/40 transition">
-                            <td class="p-3">${imgHtml}</td>
-                            <td class="p-3 text-yellow-400 font-bold">#${String(idx + 1).padStart(2, '0')}</td>
-                            <td class="p-3 font-bold text-white">${p.name || 'N/A'}</td>
-                            <td class="p-3 text-gray-300">${p.address || 'N/A'}</td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded text-xs border ${badgeColor} font-bold">${p.cat || 'HIGH'}</span></td>
-                            <td class="p-3 text-gray-300 font-medium">${p.phone || 'N/A'}</td>
-                            ${actionHtml}
-                        </tr>
-                    `;
-                });
-            }
-            let tableBody = document.getElementById('playerTableBody');
-            if(tableBody) tableBody.innerHTML = tableHtml;
-            let totalCount = document.getElementById('totalCount');
-            if(totalCount) totalCount.innerText = `মোট: ${sortedPlayers.length} জন`;
-            populateTeamDropdowns();
-        }
-
-        function renderLiveMatchWidget() {
-            let container = document.getElementById('liveMatchContent');
-            let stageBadge = document.getElementById('liveMatchStage');
-            if(!container) return;
-
-            if(!globalLiveMatchData) {
-                container.innerHTML = `
-                    <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 text-center space-y-1.5">
-                        <p class="text-base font-bold text-gray-300">বর্তমানে কোনো সরাসরি ম্যাচ চলমান নেই</p>
-                        <p class="text-xs text-gray-500">পরবর্তী লাইভ ড্রাইভের জন্য এডমিন প্যানেল থেকে লাইভ সেটিং কনফিগার করুন।</p>
-                    </div>
-                `;
-                if(stageBadge) stageBadge.innerText = "লাইভ ম্যাচ স্থগিত/বন্ধ";
-                return;
-            }
-
-            let live = globalLiveMatchData;
-            let state = live.state || (live.active ? 'RUNNING' : 'FINISHED');
-
-            if(state === 'RUNNING') {
-                if(stageBadge) stageBadge.innerText = live.title || "সরাসরি সম্প্রচার";
-                container.innerHTML = `
-                    <div class="bg-slate-950/90 p-6 md:p-8 rounded-2xl border border-red-500/40 space-y-6 shadow-2xl">
-                        <div class="text-center space-y-1">
-                            <span class="bg-red-600/30 text-red-300 border border-red-500/60 px-4 py-1.5 rounded-full text-xs font-black tracking-wide inline-block shadow">
-                                🔥 ${live.status || 'ম্যাচ চলছে'}
-                            </span>
-                            <h3 class="text-xl md:text-3xl font-black text-yellow-400 mt-2 tracking-wide">${live.title || 'লাইভ ম্যাচ'}</h3>
-                        </div>
-
-                        <div class="grid grid-cols-5 items-center gap-3 py-2">
-                            <!-- Team 1 -->
-                            <div class="col-span-2 bg-gradient-to-b from-slate-900 to-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 text-center space-y-3 shadow-xl">
-                                <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ১ (স্ট্যান্ডবাই)</span>
-                                <h4 class="text-base md:text-2xl font-black text-white tracking-wide">${live.p1Name}</h4>
-                                <div class="bg-red-950/90 border-2 border-red-500/60 rounded-2xl py-3 shadow-inner">
-                                    <span class="text-3xl md:text-5xl font-black text-red-400">${live.p1Score !== undefined ? live.p1Score : 0}</span>
-                                </div>
-                            </div>
-
-                            <!-- VS Badge -->
-                            <div class="col-span-1 text-center">
-                                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 p-0.5 mx-auto shadow-2xl flex items-center justify-center">
-                                    <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center text-xs md:text-base font-black text-yellow-400">
-                                        VS
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Team 2 -->
-                            <div class="col-span-2 bg-gradient-to-b from-slate-900 to-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800 text-center space-y-3 shadow-xl">
-                                <span class="text-xs text-yellow-400 font-bold block">🛡️ টিম ২ (স্ট্যান্ডবাই)</span>
-                                <h4 class="text-base md:text-2xl font-black text-white tracking-wide">${live.p2Name}</h4>
-                                <div class="bg-red-950/90 border-2 border-red-500/60 rounded-2xl py-3 shadow-inner">
-                                    <span class="text-3xl md:text-5xl font-black text-red-400">${live.p2Score !== undefined ? live.p2Score : 0}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            else if(state === 'FINISHED') {
-                if(stageBadge) stageBadge.innerText = "🏁 সর্বশেষ ম্যাচ রেজাল্ট (সমাপ্ত)";
-                let winnerText = live.winnerText || `${live.p1Name} vs ${live.p2Name}`;
-                container.innerHTML = `
-                    <div class="bg-slate-950/95 p-6 md:p-8 rounded-2xl border-2 border-emerald-500/80 shadow-2xl space-y-5 text-center">
-                        <div class="space-y-1.5">
-                            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 px-4 py-1.5 rounded-full text-xs font-black tracking-wide inline-block shadow">
-                                🏁 ম্যাচ সমাপ্ত (পরবর্তী ম্যাচ শুরুর আগ পর্যন্ত ফ্লোটিং রেজাল্ট)
-                            </span>
-                            <h3 class="text-xl md:text-3xl font-black gold-gradient-text mt-2">${live.title || 'ম্যাচ সমাপ্ত'}</h3>
-                        </div>
-
-                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-emerald-500/40 space-y-4">
-                            <div class="flex justify-around items-center">
-                                <div class="space-y-1">
-                                    <span class="text-xs text-gray-400 font-bold block">🛡️ ${live.p1Name}</span>
-                                    <span class="text-4xl font-black text-yellow-400">${live.p1Score}</span>
-                                </div>
-                                <span class="text-xl font-black text-gray-500">VS</span>
-                                <div class="space-y-1">
-                                    <span class="text-xs text-gray-400 font-bold block">🛡️ ${live.p2Name}</span>
-                                    <span class="text-4xl font-black text-yellow-400">${live.p2Score}</span>
-                                </div>
-                            </div>
-
-                            <div class="pt-4 border-t border-slate-800">
-                                <p class="text-emerald-400 text-sm md:text-lg font-black flex items-center justify-center gap-2">
-                                    <span>🏆 বিজয়ী:</span>
-                                    <span class="bg-emerald-950 text-emerald-300 px-4 py-1.5 rounded-xl border border-emerald-500/40 shadow-lg">${winnerText}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            else if(state === 'SUSPENDED') {
-                if(stageBadge) stageBadge.innerText = "⏸️ ম্যাচ স্থগিত";
-                container.innerHTML = `
-                    <div class="bg-slate-950/90 p-6 rounded-2xl border-2 border-yellow-500/70 text-center space-y-3 shadow-xl">
-                        <div class="inline-block bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-4 py-1.5 rounded-full text-sm font-extrabold animate-pulse">
-                            ⏸️ ম্যাচ স্থগিত করা হয়েছে
-                        </div>
-                        <h3 class="text-xl font-bold text-white">${live.title || 'লাইভ ম্যাচ'}</h3>
-                        <p class="text-xs text-yellow-200/80 font-medium">${live.p1Name} (${live.p1Score}) vs ${live.p2Name} (${live.p2Score})</p>
-                        <p class="text-xs text-gray-400 italic">অপরিহার্য কারণবশত বা সাময়িক বিরতির জন্য ম্যাচটি স্থগিত করা হয়েছে।</p>
-                    </div>
-                `;
-            }
-        }
-
-        function renderHomepageRecentAndUpcoming() {
-            let recentElem = document.getElementById('recentMatchesList');
-            let upcomingElem = document.getElementById('upcomingMatchesList');
-
-            let completedMatches = [];
-            Object.keys(globalMatchesData).forEach(mCode => {
-                let m = globalMatchesData[mCode];
-                if(m && m.result) {
-                    let resStr = safeStr(m.result).trim();
-                    let resLower = resStr.toLowerCase();
-
-                    // Strict validation: Must explicitly contain winner info or suspended tag, and MUST NOT contain unplayed/pending tags
-                    let isUnplayed = resLower.includes('শুরু হয় নাই') || 
-                                     resLower.includes('সেটআপ') || 
-                                     resLower.includes('অপেক্ষমাণ') || 
-                                     resLower.includes('নির্ধারিত হয়নি') ||
-                                     resStr === '০-০' ||
-                                     resStr === '0-0';
-
-                    let isFinishedOrSuspended = resLower.includes('বিজয়ী') || 
-                                                resLower.includes('স্থগিত') || 
-                                                resLower.includes('সমাপ্ত') || 
-                                                resLower.includes('জয়ী') ||
-                                                resLower.includes('ড্র');
-
-                    if(!isUnplayed && isFinishedOrSuspended) {
-                        completedMatches.push(m);
-                    }
-                }
-            });
-
-            if(recentElem) {
-                if(completedMatches.length === 0) {
-                    recentElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো সম্প্রতি সমাপ্ত ম্যাচের ফলাফল প্রকাশিত হয়নি।</p>`;
-                } else {
-                    let recentHtml = '';
-                    completedMatches.slice(-6).reverse().forEach(m => {
-                        recentHtml += `
-                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-emerald-500/40 transition shadow-lg">
-                                <div class="flex justify-between text-yellow-400 font-extrabold border-b border-slate-800 pb-1.5">
-                                    <span>${m.title || m.matchCode}</span>
-                                    <span class="text-gray-400 text-[10px] font-normal">📅 ${m.date || ''}</span>
-                                </div>
-                                <div class="flex justify-between items-center text-white font-bold py-1">
-                                    <span>${m.p1Name}</span>
-                                    <span class="text-yellow-300 font-black text-sm">${m.p1Points} - ${m.p2Points}</span>
-                                    <span>${m.p2Name}</span>
-                                </div>
-                                <div class="bg-emerald-950/60 p-2 rounded-xl border border-emerald-500/30 text-emerald-300 text-center font-extrabold text-[11px]">
-                                    🏆 ${m.result}
-                                </div>
-                            </div>
-                        `;
-                    });
-                    recentElem.innerHTML = recentHtml;
-                }
-            }
-
-            if(upcomingElem) {
-                if(!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
-                    upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
-                } else {
-                    let upHtml = '';
-                    globalUpcomingMatchesData.forEach(u => {
-                        let adminDelBtn = isAdmin ? `<button onclick="deleteUpcomingMatch('${u.db_id}')" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
-                        upHtml += `
-                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-blue-500/40 transition shadow-lg">
-                                <div class="flex justify-between text-blue-400 font-extrabold border-b border-slate-800 pb-1.5">
-                                    <span>${u.title}</span>
-                                    <span class="text-yellow-300 text-[10px] font-bold">${u.time} ${adminDelBtn}</span>
-                                </div>
-                                <p class="text-white font-extrabold text-sm py-1 text-center">${u.teams}</p>
-                                <div class="text-[10px] text-gray-400 text-center font-medium">
-                                    ⏰ নির্ধারিত সময় অনুযায়ী লাইভ শুরু হবে
-                                </div>
-                            </div>
-                        `;
-                    });
-                    upcomingElem.innerHTML = upHtml;
-                }
-            }
-        }
-
-        async function saveLiveMatchInfo(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন লাইভ স্কোর আপডেট করতে পারবেন!');
-                return;
-            }
-
-            let title = safeStr(document.getElementById('adminLiveTitle').value).trim();
-            let selectedState = safeStr(document.getElementById('adminLiveStateDropdown').value).trim();
-            let p1Name = safeStr(document.getElementById('adminLiveP1Select').value).trim();
-            let p2Name = safeStr(document.getElementById('adminLiveP2Select').value).trim();
-            let p1Score = parseInt(document.getElementById('adminLiveP1Score').value) || 0;
-            let p2Score = parseInt(document.getElementById('adminLiveP2Score').value) || 0;
-
-            if(!title || !p1Name || !p2Name) {
-                alert('লাইভ ম্যাচের নাম ও ২টি নিবন্ধিত টিম সিলেক্ট করুন!');
-                return;
-            }
-
-            if(selectedState === 'FINISHED') {
-                if(p1Score < WINNING_SCORE && p2Score < WINNING_SCORE) {
-                    alert(`⛔ আপডেট ব্যর্থ/সফল হবে না!
-
-ম্যাচটি "সমাপ্ত" করতে হলে যেকোনো একটি টিমের পয়েন্ট অবশ্যই সর্বনিম্ন ${WINNING_SCORE} হতে হবে।
-
-বর্তমান স্কোর: ${p1Name} (${p1Score}) vs ${p2Name} (${p2Score})।
-দয়া করে সঠিক ২৯ পয়েন্ট এন্ট্রি দিন।`);
-                    return;
-                }
-            }
-
-            let winnerText = "";
-            if(p1Score > p2Score) {
-                winnerText = `${p1Name} বিজয়ী (${p1Score}-${p2Score} পয়েন্টে জয়ী)`;
-            } else if(p2Score > p1Score) {
-                winnerText = `${p2Name} বিজয়ী (${p2Score}-${p1Score} পয়েন্টে জয়ী)`;
-            } else {
-                winnerText = `ড্র ম্যাচ (${p1Score}-${p2Score} পয়েন্ট)`;
-            }
-
-            let liveObj = {
-                active: (selectedState === 'RUNNING'),
-                state: selectedState,
-                title: title,
-                status: selectedState === 'RUNNING' ? 'ম্যাচ চলছে' : (selectedState === 'FINISHED' ? 'ম্যাচ সমাপ্ত' : 'ম্যাচ স্থগিত'),
-                p1Name: p1Name,
-                p2Name: p2Name,
-                p1Score: p1Score,
-                p2Score: p2Score,
-                winnerText: winnerText
-            };
-
-            let btn = document.getElementById('saveLiveBtn');
-            btn.innerText = "⏳ ডাটাবেজে সেভ হচ্ছে...";
-            btn.disabled = true;
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
-                });
-
-                if(selectedState === 'FINISHED' || selectedState === 'SUSPENDED') {
-                    let matchCodeKey = "LIVE_RES_" + Date.now();
-                    let resultTag = selectedState === 'FINISHED' ? winnerText : `ম্যাচ স্থগিত (${p1Score}-${p2Score} পয়েন্টে স্থগিত)`;
-                    let completedMatchObj = {
-                        id: matchCodeKey,
-                        matchCode: matchCodeKey,
-                        title: title,
-                        p1Name: p1Name,
-                        p2Name: p2Name,
-                        p1Points: String(p1Score),
-                        p2Points: String(p2Score),
-                        result: resultTag,
-                        date: formatBnDate(Date.now())
-                    };
-
-                    await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'resolution=merge-duplicates'
-                        },
-                        body: JSON.stringify({ id: matchCodeKey, group_name: 'MATCH_SCORES', data: completedMatchObj })
-                    });
-
-                    if(selectedState === 'FINISHED') {
-                        alert(`🎉 সফল হয়েছে! ২৯ পয়েন্ট অর্জিত হওয়ায় ম্যাচটি "সমাপ্ত" হয়েছে এবং পরবর্তী ম্যাচ লাইভ হওয়ার আগ পর্যন্ত লাইভ প্যানেলে রেজাল্ট ফ্লোটিং থাকবে!
-
-এছাড়া সাম্প্রতিক সমাপ্ত ম্যাচে তথ্য অটো-আপডেট হয়ে গেছে।`);
-                    } else {
-                        alert(`⏸️ "ম্যাচ স্থগিত" সফলভাবে সেভ হয়েছে এবং স্ক্রিনে সেট করা হয়েছে! সাম্প্রতিক সমাপ্ত ম্যাচেও তথ্য সেভ হয়েছে।`);
-                    }
-                } else {
-                    alert('🔴 লাইভ ম্যাচ স্কোর সফলভাবে রানিং মোডে আপডেট ও সেভ হয়েছে!');
-                }
-
-                loadData();
-            } catch(err) {
-                alert('লাইভ স্কোর সফলভাবে সেভ হয়েছে।');
-            } finally {
-                btn.innerText = "💾 লাইভ তথ্য সেভ ও আপডেট করুন (ড্রপডাউন সিস্টেম)";
-                btn.disabled = false;
-            }
-        }
-
-        async function clearLiveMatch() {
-            if(!isAdmin) return;
-            if(!confirm("আপনি কি লাইভ ম্যাচ রিসেট বা বন্ধ করতে চান?")) return;
-
-            let liveObj = { active: false, state: 'SUSPENDED', title: 'ম্যাচ স্থগিত', status: 'স্থগিত' };
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: 'LIVE_CURRENT_MATCH', group_name: 'LIVE_MATCH', data: liveObj })
-                });
-                alert('✅ লাইভ রিসেট করা হয়েছে!');
-                document.getElementById('adminLiveTitle').value = '';
-                document.getElementById('adminLiveP1Select').value = '';
-                document.getElementById('adminLiveP2Select').value = '';
-                document.getElementById('adminLiveP1Score').value = 0;
-                document.getElementById('adminLiveP2Score').value = 0;
-                loadData();
-            } catch(e) {}
-        }
-
-        async function saveUpcomingMatch(e) {
-            e.preventDefault();
-            if(!isAdmin) return;
-
-            let title = safeStr(document.getElementById('upTitle').value).trim();
-            let t1 = safeStr(document.getElementById('upTeam1Select').value).trim();
-            let t2 = safeStr(document.getElementById('upTeam2Select').value).trim();
-            let time = safeStr(document.getElementById('upTime').value).trim();
-
-            if(!title || !t1 || !t2 || !time) {
-                alert('সকল তথ্য ও দুটি টিম সিলেক্ট করুন!');
-                return;
-            }
-
-            if(safeLower(t1) === safeLower(t2)) {
-                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে খেলতে পারে না!');
-                return;
-            }
-
-            let teams = `${t1} vs ${t2}`;
-            let targetId = "UP_" + Date.now();
-            let upObj = { title: title, teams: teams, time: time };
-
-            let btn = document.getElementById('saveUpBtn');
-            btn.innerText = "⏳ সেভ হচ্ছে...";
-            btn.disabled = true;
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: targetId, group_name: 'UPCOMING_MATCHES', data: upObj })
-                });
-
-                alert('✅ আগামী ম্যাচের সময়সূচী সফলভাবে সেভ হয়েছে!');
-                document.getElementById('upTitle').value = '';
-                document.getElementById('upTeam1Select').value = '';
-                document.getElementById('upTeam2Select').value = '';
-                document.getElementById('upTime').value = '';
-                loadData();
-            } catch(e) {
-                alert('সেভ করতে সমস্যা হয়েছে।');
-            } finally {
-                btn.innerText = "➕ নতুন আপকামিং ম্যাচ সময়সূচী যোগ করুন";
-                btn.disabled = false;
-            }
-        }
-
-        async function deleteUpcomingMatch(dbId) {
-            if(!isAdmin) return;
-            if(!confirm("আপকামিং ম্যাচের তথ্য মুছে ফেলতে চান?")) return;
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                loadData();
-            } catch(e) {}
-        }
-
-        function renderGroupFixtures() {
-            let fixturesContainer = document.getElementById('fixturesContainer');
-            if(!fixturesContainer) return;
-
-            let fixturesHtml = '';
-            let groupMeta = [
-                { name: 'গ্রুপ এ', prefix: 'G1', matches: ['G1_M1', 'G1_M2', 'G1_M3'] },
-                { name: 'গ্রুপ বি', prefix: 'G2', matches: ['G2_M1', 'G2_M2', 'G2_M3'] },
-                { name: 'গ্রুপ সি', prefix: 'G3', matches: ['G3_M1', 'G3_M2', 'G3_M3'] },
-                { name: 'গ্রুপ ডি', prefix: 'G4', matches: ['G4_M1', 'G4_M2', 'G4_M3'] }
-            ];
-
-            groupMeta.forEach(g => {
-                let matchCards = '';
-                g.matches.forEach((mCode, idx) => {
-                    let matchNo = idx + 1;
-                    let info = globalMatchesData[mCode] || {
-                        title: `${g.name} - ম্যাচ #${matchNo}`,
-                        date: 'নির্ধারিত হয়নি',
-                        p1Name: `টিম সিলেক্ট করুন`,
-                        p2Name: `টিম সিলেক্ট করুন`,
-                        p1Points: '০',
-                        p2Points: '০',
-                        result: 'ম্যাচ সেটআপ বাকি আছে'
-                    };
-
-                    let adminEditBtn = isAdmin ? `<button onclick="editMatchScore('${mCode}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold mt-2 cursor-pointer shadow">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
-
-                    matchCards += `
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs shadow-lg">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                                <span class="font-extrabold text-yellow-400 text-sm">${mCode}: ${info.title}</span>
-                                <span class="text-[10px] text-gray-400 font-medium">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1">
-                                <div class="space-y-0.5">
-                                    <p class="font-extrabold text-white text-sm">${info.p1Name}</p>
-                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-black text-base">${info.p1Points}</span></p>
-                                </div>
-                                <span class="bg-yellow-500/10 text-yellow-400 font-extrabold px-3 py-1 rounded-full border border-yellow-500/30">VS</span>
-                                <div class="space-y-0.5 text-right">
-                                    <p class="font-extrabold text-white text-sm">${info.p2Name}</p>
-                                    <p class="text-[11px] text-yellow-300">পয়েন্ট: <span class="font-black text-base">${info.p2Points}</span></p>
-                                </div>
-                            </div>
-                            <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                                <span class="text-emerald-400 font-bold">🏆 ফলাফল: ${info.result}</span>
-                                ${adminEditBtn}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                fixturesHtml += `
-                    <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800 space-y-4">
-                        <h3 class="font-extrabold text-yellow-400 text-base border-b border-slate-800 pb-2 flex justify-between items-center">
-                            <span>🏆 ${g.name} - গ্রুপপর্ব ফিকশ্চার (৩টি ম্যাচ)</span>
-                            <span class="text-[10px] bg-slate-800 text-gray-300 px-3 py-1 rounded-full font-bold">ভ্যালিডেটেড (৩ টিম)</span>
-                        </h3>
-                        <div class="space-y-3">
-                            ${matchCards}
-                        </div>
-                    </div>
-                `;
-            });
-            fixturesContainer.innerHTML = fixturesHtml;
-        }
-
-        function renderKnockoutMatches() {
-            let allAssignedTeams = [];
-            if(Array.isArray(globalTeamsData)) {
-                globalTeamsData.forEach(t => {
-                    if(t && t.data && t.group_name && t.group_name !== 'NEW_REGISTERED_PLAYERS' && t.group_name !== 'PLAYERS_POOL') {
-                        allAssignedTeams.push(t.data);
-                    }
-                });
-            }
-
-            function renderMatchCardWithBios(code, defaultTitle, defaultBadgeColor) {
-                let info = globalMatchesData[code] || {
-                    title: defaultTitle,
-                    date: 'নির্ধারিত হয়নি',
-                    p1Name: `টিম সিলেক্ট করুন`,
-                    p2Name: `টিম সিলেক্ট করুন`,
-                    p1Points: '০',
-                    p2Points: '০',
-                    result: 'ম্যাচ সেটআপ বাকি আছে'
-                };
-
-                let t1Obj = allAssignedTeams.find(t => t && t.teamName && safeLower(t.teamName) === safeLower(info.p1Name)) || null;
-                let t2Obj = allAssignedTeams.find(t => t && t.teamName && safeLower(t.teamName) === safeLower(info.p2Name)) || null;
-
-                function getDetailedTeamBioCard(tObj, fallbackName) {
-                    if(!tObj) {
-                        return `
-                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
-                                <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
-                                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-yellow-400 font-bold">🛡️</div>
-                                    <span class="font-extrabold text-yellow-400 text-sm">${fallbackName}</span>
-                                </div>
-                                <p class="text-gray-400 italic text-[11px]">টিম বায়ো এখনো অ্যাসাইন করা হয়নি।</p>
-                            </div>
-                        `;
-                    }
-                    
-                    let p1Obj = (Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && String(p.id) === String(tObj.player1Id)) : null) || { name: tObj.player1Name, cat: tObj.player1Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-                    let p2Obj = (Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && String(p.id) === String(tObj.player2Id)) : null) || { name: tObj.player2Name, cat: tObj.player2Cat, phone: 'N/A', address: 'N/A', imageUrl: '' };
-
-                    let teamImgUrl = tObj.teamImageUrl || '';
-                    let teamLogoHtml = teamImgUrl 
-                        ? `<img src="${teamImgUrl}" onclick="openImagePreview('${teamImgUrl}', '${tObj.teamName}', 'টিম লোগো: ${tObj.teamName}')" class="w-10 h-10 rounded-xl object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition shadow" title="টিম লোগো বড় দেখতে ক্লিক করুন">` 
-                        : `<div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-base font-bold text-yellow-400 shadow">🛡️</div>`;
-
-                    let p1ImgUrl = p1Obj.imageUrl || p1Obj.image_url || '';
-                    let p1ImgHtml = p1ImgUrl 
-                        ? `<img src="${p1ImgUrl}" onclick="openImagePreview('${p1ImgUrl}', '${p1Obj.name}', 'ক্যাটাগরি: ${p1Obj.cat || 'HIGH'} | মোবাইল: ${p1Obj.phone || 'N/A'} | ঠিকানা: ${p1Obj.address || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs border border-slate-700">👤</div>`;
-
-                    let p2ImgUrl = p2Obj.imageUrl || p2Obj.image_url || '';
-                    let p2ImgHtml = p2ImgUrl 
-                        ? `<img src="${p2ImgUrl}" onclick="openImagePreview('${p2ImgUrl}', '${p2Obj.name}', 'ক্যাটাগরি: ${p2Obj.cat || 'HIGH'} | মোবাইল: ${p2Obj.phone || 'N/A'} | ঠিকানা: ${p2Obj.address || 'N/A'}')" class="w-10 h-10 rounded-full object-cover border-2 border-yellow-500/60 cursor-pointer hover:scale-105 transition" title="ছবি প্রিভিউ">`
-                        : `<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-xs border border-slate-700">👤</div>`;
-
-                    let cat1Color = safeUpper(p1Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p1Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
-                    let cat2Color = safeUpper(p2Obj.cat || 'HIGH') === 'HIGH' ? 'bg-red-500/20 text-red-400' : safeUpper(p2Obj.cat || '') === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400';
-
-                    return `
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs shadow-lg">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-2.5">
-                                ${teamLogoHtml}
-                                <div>
-                                    <span class="font-extrabold text-yellow-400 text-sm block">🛡️ টিম: ${tObj.teamName}</span>
-                                    <span class="text-[10px] text-gray-400">দ্বৈত টিম ফরম্যাট</span>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-2">
-                                <!-- Player 1 -->
-                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
-                                    ${p1ImgHtml}
-                                    <div class="space-y-0.5 w-full">
-                                        <div class="flex justify-between items-center">
-                                            <span class="font-bold text-white text-xs">👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
-                                        </div>
-                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
-                                        <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
-                                    </div>
-                                </div>
-
-                                <!-- Player 2 -->
-                                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
-                                    ${p2ImgHtml}
-                                    <div class="space-y-0.5 w-full">
-                                        <div class="flex justify-between items-center">
-                                            <span class="font-bold text-white text-xs">👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
-                                        </div>
-                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
-                                        <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                let adminBtn = isAdmin ? `<button onclick="editMatchScore('${code}', '${info.title}', '${info.p1Name}', '${info.p2Name}', '${info.p1Points}', '${info.p2Points}', '${info.result}', '${info.date || ''}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold mt-2 cursor-pointer shadow">✏️ এডিট ফিকশ্চার ও বিজয়ী</button>` : '';
-
-                return `
-                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4 shadow-xl">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2.5 flex-wrap gap-2">
-                            <span class="font-extrabold ${defaultBadgeColor} text-sm">⚔️ ${code}: ${info.title}</span>
-                            <span class="text-[11px] bg-slate-950 text-yellow-300 px-3 py-1 rounded-full border border-slate-800 font-semibold">📅 ${info.date || 'নির্ধারিত হয়নি'}</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4">
-                            <div class="md:col-span-2">${getDetailedTeamBioCard(t1Obj, info.p1Name)}</div>
-                            <div class="text-center flex flex-col items-center justify-center my-2 md:my-0">
-                                <span class="bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 font-black px-3.5 py-1.5 rounded-full text-xs shadow-lg">VS</span>
-                                <span class="text-xs text-yellow-300 font-bold mt-2">পয়েন্ট: <span class="text-white text-base font-black">${info.p1Points} - ${info.p2Points}</span></span>
-                            </div>
-                            <div class="md:col-span-2">${getDetailedTeamBioCard(t2Obj, info.p2Name)}</div>
-                        </div>
-
-                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                            <span class="text-emerald-400 font-extrabold text-xs md:text-sm">🏆 ফলাফল: ${info.result}</span>
-                            ${adminBtn}
-                        </div>
-                    </div>
-                `;
-            }
-
-            const qfCodes = ['QF-1', 'QF-2', 'QF-3', 'QF-4'];
-            let qfHtml = '';
-            qfCodes.forEach((code, idx) => {
-                qfHtml += renderMatchCardWithBios(code, `${idx + 1}ম কোয়ার্টার ফাইনাল`, 'text-yellow-400');
-            });
-            let qfElem = document.getElementById('qfMatchesContainer');
-            if(qfElem) qfElem.innerHTML = qfHtml;
-
-            const sfCodes = ['SF-1', 'SF-2'];
-            let sfHtml = '';
-            sfCodes.forEach((code, idx) => {
-                sfHtml += renderMatchCardWithBios(code, `${idx + 1}ম সেমিফাইনাল`, 'text-orange-400');
-            });
-            let sfElem = document.getElementById('sfMatchesContainer');
-            if(sfElem) sfElem.innerHTML = sfHtml;
-
-            let tpElem = document.getElementById('tpMatchesContainer');
-            if(tpElem) tpElem.innerHTML = renderMatchCardWithBios('3P-Match', '৩য় স্থান নির্ধারণী ম্যাচ', 'text-blue-400');
-            let finalElem = document.getElementById('finalMatchContainer');
-            if(finalElem) finalElem.innerHTML = renderMatchCardWithBios('FINAL', 'মেগা ফাইনাল ম্যাচ', 'text-yellow-300 font-black text-sm');
-        }
-
-        function compressImageToBase64(file) {
-            return new Promise((resolve) => {
-                if (!file) return resolve("");
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxWidth = 400;
-                        if (width > maxWidth) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7));
-                    };
-                    img.onerror = () => resolve("");
-                };
-                reader.onerror = () => resolve("");
-            });
-        }
-
-        async function savePlayerBio(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন নতুন খেলোয়াড় এন্ট্রি বা এডিট দিতে পারবেন!');
-                return;
-            }
-
-            const editPlayerId = safeStr(document.getElementById('editPlayerId').value).trim();
-            const existingDbId = safeStr(document.getElementById('existingPlayerDbId').value).trim();
-            const name = safeStr(document.getElementById('sName').value).trim();
-            const phone = safeStr(document.getElementById('sPhone').value).trim();
-            const address = safeStr(document.getElementById('sAddress').value).trim();
-            const cat = safeStr(document.getElementById('sCat').value || 'HIGH');
-            const imgFile = document.getElementById('sImage').files[0];
-            let existingImg = safeStr(document.getElementById('existingPlayerImgUrl').value);
-
-            if(!name || !phone) {
-                alert('খেলোয়াড়ের নাম এবং মোবাইল নম্বর দুটিই আবশ্যক!');
-                return;
-            }
-
-            let duplicateFound = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => {
-                if(!p || typeof p !== 'object') return false;
-                let targetCheckId = existingDbId || editPlayerId;
-                if(targetCheckId && (String(p.db_id) === String(targetCheckId) || String(p.id) === String(targetCheckId))) return false;
-                let existingName = safeLower(p.name);
-                let existingPhone = safeStr(p.phone).trim();
-                return (existingName === safeLower(name) && existingPhone === phone);
-            }) : null;
-
-            if(duplicateFound) {
-                alert(`⛔ ডুপ্লিকেট নিবন্ধন নিষিদ্ধ!
-
-"${duplicateFound.name}" এবং মোবাইল নম্বর "${duplicateFound.phone}" দিয়ে ইতিপূর্বে একজন খেলোয়াড় নিবন্ধিত হয়েছেন।`);
-                return;
-            }
-
-            const submitBtn = document.getElementById('sSubmitBtn');
-            submitBtn.innerText = "⏳ ডাটাবেজে সেভ হচ্ছে...";
-            submitBtn.disabled = true;
-
-            let imageUrl = existingImg;
-            if(imgFile) {
-                const compressedUrl = await compressImageToBase64(imgFile);
-                if(compressedUrl) imageUrl = compressedUrl;
-            }
-
-            const targetDbId = existingDbId ? existingDbId : (editPlayerId ? editPlayerId : String(Date.now()));
-            const targetPlayerId = editPlayerId ? editPlayerId : String(Date.now());
-
-            const playerDataObj = {
-                id: targetPlayerId,
-                name: name,
-                phone: phone,
-                address: address,
-                cat: cat,
-                imageUrl: imageUrl
-            };
-
-            let payload = {
-                id: targetDbId,
-                group_name: 'NEW_REGISTERED_PLAYERS',
-                data: playerDataObj
-            };
-
-            try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if(!res.ok) {
-                    const errText = await res.text();
-                    throw new Error("Supabase save failed: " + errText);
-                }
-
-                alert('✅ খেলোয়াড়ের তথ্য সফলভাবে ডাটাবেজে পার্মানেন্টলি সেভ হয়েছে!');
-                resetPlayerForm();
-                switchTab('groups');
-                await loadData();
-            } catch(err) {
-                console.error("Save error:", err);
-                alert('ডাটা সেভ করতে সমস্যা হয়েছে: ' + err.message);
-            } finally {
-                submitBtn.innerText = "💾 নতুন খেলোয়ার সেভ করুন";
-                submitBtn.disabled = false;
-            }
-        }
-
-        function editPlayerBio(dbId) {
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন এডিট করতে পারবেন!');
-                return;
-            }
-            const player = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.db_id) === String(dbId) || String(p.id) === String(dbId))) : null;
-            if(!player) return;
-            document.getElementById('editPlayerId').value = player.id || player.db_id || '';
-            document.getElementById('existingPlayerDbId').value = player.db_id || '';
-            document.getElementById('sName').value = player.name || '';
-            document.getElementById('sPhone').value = player.phone || '';
-            document.getElementById('sAddress').value = player.address || '';
-            document.getElementById('sCat').value = player.cat || 'HIGH';
-            document.getElementById('existingPlayerImgUrl').value = player.imageUrl || player.image_url || '';
-            document.getElementById('playerFormTitle').innerText = "✏️ খেলোয়াড় তথ্য এডিট ফরম";
-            document.getElementById('sSubmitBtn').innerText = "🔄 খেলোয়াড় তথ্য আপডেট করুন";
-            document.getElementById('cancelPlayerEditBtn').classList.remove('hidden');
-            switchTab('dashboard');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function resetPlayerForm() {
-            document.getElementById('editPlayerId').value = '';
-            document.getElementById('existingPlayerDbId').value = '';
-            document.getElementById('existingPlayerImgUrl').value = '';
-            document.getElementById('sName').value = '';
-            document.getElementById('sPhone').value = '';
-            document.getElementById('sAddress').value = '';
-            document.getElementById('sImage').value = '';
-            document.getElementById('sCat').value = 'HIGH';
-            document.getElementById('playerFormTitle').innerText = "নতুন খেলোয়ার নিবন্ধন ফরম";
-            document.getElementById('sSubmitBtn').innerText = "💾 নতুন খেলোয়ার সেভ করুন";
-            document.getElementById('cancelPlayerEditBtn').classList.add('hidden');
-        }
-
-        async function deletePlayerBio(dbId) {
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন মুছতে পারবেন!');
-                return;
-            }
-            if(!confirm("আপনি কি নিশ্চিত যে এই খেলোয়াড়কে মুছে ফেলতে চান?")) return;
-            try {
-                let res = await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                if(res.ok) {
-                    alert('✅ খেলোয়াড় সফলভাবে মুছে ফেলা হয়েছে!');
-                    loadData();
-                } else {
-                    alert('মুছে ফেলতে সমস্যা হয়েছে।');
-                }
-            } catch(e) {
-                alert('নেটওয়ার্ক ত্রুটি।');
-            }
-        }
-
-        async function saveTeamSetup(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন টিম সেটআপ করতে পারবেন!');
-                return;
-            }
-
-            const editId = safeStr(document.getElementById('editRowId').value);
-            const group = safeStr(document.getElementById('tGroup').value);
-            const teamName = safeStr(document.getElementById('tTeamName').value).trim();
-            const p1Id = safeStr(document.getElementById('tPlayer1Select').value);
-            const p2Id = safeStr(document.getElementById('tPlayer2Select').value);
-            const teamImgFile = document.getElementById('tTeamImage').files[0];
-            let existingTeamImg = safeStr(document.getElementById('existingTeamImgUrl').value);
-
-            if(!teamName || !p1Id || !p2Id) {
-                alert('টিমের নাম এবং দুজন নিবন্ধিত খেলোয়াড় সিলেক্ট করা আবশ্যক!');
-                return;
-            }
-
-            const p1 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p1Id) || String(p.db_id) === String(p1Id))) : null;
-            const p2 = Array.isArray(globalPlayersData) ? globalPlayersData.find(p => p && (String(p.id) === String(p2Id) || String(p.db_id) === String(p2Id))) : null;
-
-            if(!p1 || !p2) {
-                alert('⛔ সিকিউরিটি ত্রুটি: শুধুমাত্র নিবন্ধিত খেলোয়াড় পুল থেকে খেলোয়াড় বেছে নিতে হবে।');
-                return;
-            }
-
-            if(p1Id === p2Id) {
-                alert('⛔ ত্রুটি: একই খেলোয়াড়কে দ্বৈত টিমের দুটি পজিশনে দেওয়া যাবে না!');
-                return;
-            }
-
-            let currentGroupTeams = globalTeamsData.filter(t => {
-                if(!t || !t.group_name) return false;
-                if(editId && String(t.id) === String(editId)) return false;
-                return safeStr(t.group_name).trim() === group;
-            });
-
-            if(currentGroupTeams.length >= groupSizeLimit) {
-                alert(`⛔ এন্ট্রি সীমাবদ্ধতা ত্রুটি (${group}): প্রতিটি গ্রুপে সর্বোচ্চ ৩টি টিম এন্ট্রি হতে পারে।`);
-                return;
-            }
-
-            let existingTeamAssigned = Array.isArray(globalTeamsData) ? globalTeamsData.find(t => {
-                if(!t || !t.data) return false;
-                if(editId && String(t.id) === String(editId)) return false;
-                let tData = t.data;
-                let tp1 = String(tData.player1Id);
-                let tp2 = String(tData.player2Id);
-                return (tp1 === p1Id || tp1 === p2Id || tp2 === p1Id || tp2 === p2Id);
-            }) : null;
-
-            if(existingTeamAssigned) {
-                alert(`⛔ সতর্কতা: নির্বাচিত খেলোয়াড়দের মধ্যে কেউ একজন ইতিমধ্যে "${existingTeamAssigned.data.teamName}"-এ নিবন্ধিত আছেন।`);
-                return;
-            }
-
-            const submitBtn = document.getElementById('teamSubmitBtn');
-            submitBtn.innerText = "⏳ সেভ হচ্ছে...";
-            submitBtn.disabled = true;
-
-            let teamImageUrl = existingTeamImg;
-            if(teamImgFile) {
-                const compressedUrl = await compressImageToBase64(teamImgFile);
-                if(compressedUrl) teamImageUrl = compressedUrl;
-            }
-
-            const targetId = editId ? editId : String(Date.now());
-            const teamObj = {
-                id: targetId,
-                teamName: teamName,
-                player1Id: p1.id || p1.db_id,
-                player1Name: p1.name,
-                player1Cat: p1.cat || 'HIGH',
-                player2Id: p2.id || p2.db_id,
-                player2Name: p2.name,
-                player2Cat: p2.cat || 'HIGH',
-                teamImageUrl: teamImageUrl
-            };
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: targetId, group_name: group, data: teamObj })
-                });
-
-                alert('✅ দ্বৈত টিম সফলভাবে সেভ হয়েছে!');
-                resetTeamForm();
-                switchTab('home');
-                loadData();
-            } catch(err) {
-                alert('টিম সফলভাবে সেভ হয়েছে।');
-            } finally {
-                submitBtn.innerText = "💾 দ্বৈত টিম সেভ ও গ্রুপে অ্যাসাইন করুন (সর্বোচ্চ ৩ টিম লিমিট চেক)";
-                submitBtn.disabled = false;
-            }
-        }
-
-        function editTeamSetup(dbId) {
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন এডিট করতে পারবেন!');
-                return;
-            }
-            const item = Array.isArray(globalTeamsData) ? globalTeamsData.find(t => t && String(t.id) === String(dbId)) : null;
-            if(!item || !item.data) return;
-            document.getElementById('editRowId').value = item.id;
-            document.getElementById('tGroup').value = item.group_name || 'গ্রুপ এ';
-            document.getElementById('tTeamName').value = item.data.teamName || '';
-            document.getElementById('tPlayer1Select').value = item.data.player1Id || '';
-            document.getElementById('tPlayer2Select').value = item.data.player2Id || '';
-            document.getElementById('existingTeamImgUrl').value = item.data.teamImageUrl || '';
-            document.getElementById('teamSetupTitle').innerText = "✏️ দ্বৈত টিম তথ্য এডিট ফরম";
-            document.getElementById('teamSubmitBtn').innerText = "🔄 টিম আপডেট করুন";
-            document.getElementById('cancelTeamEditBtn').classList.remove('hidden');
-            switchTab('dashboard');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-
-        async function deleteTeamSetup(dbId) {
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন মুছতে পারবেন!');
-                return;
-            }
-            if(!confirm("এই টিমটি মুছে ফেলতে চান?")) return;
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams?id=eq.${dbId}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                loadData();
-            } catch(e) {}
-        }
-
-        function resetTeamForm() {
-            document.getElementById('editRowId').value = '';
-            document.getElementById('tTeamName').value = '';
-            document.getElementById('tPlayer1Select').value = '';
-            document.getElementById('tPlayer2Select').value = '';
-            document.getElementById('existingTeamImgUrl').value = '';
-            document.getElementById('tTeamImage').value = '';
-            document.getElementById('teamSetupTitle').innerText = "🛡️ ২. দ্বৈত টিম সেটআপ ও এডিটিং";
-            document.getElementById('teamSubmitBtn').innerText = "💾 দ্বৈত টিম সেভ ও গ্রুপে অ্যাসাইন করুন (সর্বোচ্চ ৩ টিম লিমিট চেক)";
-            document.getElementById('cancelTeamEditBtn').classList.add('hidden');
-        }
-
-        function editMatchScore(mCode, mTitle, p1Name, p2Name, p1Pts, p2Pts, resStr, dateStr) {
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন এডিট করতে পারবেন!');
-                return;
-            }
-            switchTab('dashboard');
-            document.getElementById('adminMatchFormSec').scrollIntoView({ behavior: 'smooth' });
-
-            document.getElementById('editMatchIdCode').value = mCode;
-            document.getElementById('mCode').value = mCode;
-            document.getElementById('mCode').disabled = true;
-            document.getElementById('mTitle').value = mTitle || '';
-            document.getElementById('mP1Name').value = p1Name || '';
-            document.getElementById('mP2Name').value = p2Name || '';
-            document.getElementById('mP1RegSelect').value = p1Name || '';
-            document.getElementById('mP2RegSelect').value = p1Name || '';
-            document.getElementById('mP1Points').value = p1Pts || 0;
-            document.getElementById('mP2Points').value = p2Pts || 0;
-            document.getElementById('mResult').value = resStr || '';
-            document.getElementById('mDate').value = dateStr || '';
-
-            document.getElementById('matchFormTitle').innerText = `✏️ এডিট স্কোর ও টিম: ${mTitle} (${mCode})`;
-            document.getElementById('cancelMatchEditBtn').classList.remove('hidden');
-        }
-
-        function resetMatchForm() {
-            document.getElementById('editMatchIdCode').value = '';
-            document.getElementById('mCode').value = '';
-            document.getElementById('mCode').disabled = false;
-            document.getElementById('mTitle').value = '';
-            document.getElementById('mP1Name').value = '';
-            document.getElementById('mP2Name').value = '';
-            document.getElementById('mP1RegSelect').value = '';
-            document.getElementById('mP2RegSelect').value = '';
-            document.getElementById('mP1Points').value = '';
-            document.getElementById('mP2Points').value = '';
-            document.getElementById('mResult').value = '';
-            document.getElementById('mDate').value = '';
-            document.getElementById('matchFormTitle').innerText = "⚔️ ৩. সকল ম্যাচ স্কোর ও টিম সিলেকশন";
-            document.getElementById('cancelMatchEditBtn').classList.add('hidden');
-        }
-
-        async function saveMatchScoreData(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন ম্যাচের স্কোর আপডেট করতে পারবেন!');
-                return;
-            }
-
-            let mCode = safeStr(document.getElementById('mCode').value).trim();
-            let title = safeStr(document.getElementById('mTitle').value).trim();
-            let p1Name = safeStr(document.getElementById('mP1Name').value).trim();
-            let p2Name = safeStr(document.getElementById('mP2Name').value).trim();
-            let p1Pts = safeStr(document.getElementById('mP1Points').value).trim();
-            let p2Pts = safeStr(document.getElementById('mP2Points').value).trim();
-            let result = safeStr(document.getElementById('mResult').value).trim();
-            let dateStr = safeStr(document.getElementById('mDate').value).trim();
-
-            if(!mCode || !title || !p1Name || !p2Name || !result) {
-                alert('সকল তথ্য পূরণ করুন!');
-                return;
-            }
-
-            if(safeLower(p1Name) === safeLower(p2Name)) {
-                alert('⛔ ত্রুটি: একই টিম নিজের বিরুদ্ধে ম্যাচ খেলতে পারে না!');
-                return;
-            }
-
-            for (let [label, v] of [['টিম ১', p1Pts], ['টিম ২', p2Pts]]) {
-                if(v === '') continue;
-                let n = Number(v);
-                if(!Number.isInteger(n) || n < 0 || n > WINNING_SCORE) {
-                    alert(`⛔ ${label}-এর পয়েন্ট ০ থেকে ${WINNING_SCORE}-এর মধ্যে একটি পূর্ণসংখ্যা হতে হবে!`);
-                    return;
-                }
-            }
-
-            let submitBtn = document.getElementById('mSubmitBtn');
-            submitBtn.innerText = "⏳ সেভ হচ্ছে...";
-            submitBtn.disabled = true;
-
-            let matchObj = {
-                id: mCode,
-                matchCode: mCode,
-                title: title,
-                p1Name: p1Name,
-                p2Name: p2Name,
-                p1Points: p1Pts,
-                p2Points: p2Pts,
-                result: result,
-                date: dateStr
-            };
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: mCode, group_name: 'MATCH_SCORES', data: matchObj })
-                });
-
-                alert(`✅ ${mCode} সফলভাবে সেভ হয়েছে!`);
-                resetMatchForm();
-                switchTab('knockout');
-                loadData();
-            } catch(err) {
-                alert('স্কোর সফলভাবে সেভ হয়েছে।');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = "💾 ম্যাচের স্কোর ও বিজয়ী সেভ করুন";
-            }
-        }
-
-        checkAdminSession();
-        loadData();
-    </script>
+    <div id="dashContentRecent"><div id="recentMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></div>
+    <div id="dashContentUpcoming" class="hidden"><div id="upcomingMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></div>
+  </section>
+
+  <!-- GROUPS -->
+  <section class="space-y-4">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-850 p-5 rounded-2xl border border-yellow-500/30 flex justify-between items-center flex-wrap gap-3">
+      <div>
+        <h2 class="text-lg md:text-xl font-black text-yellow-400">টুর্নামেন্টের গ্রুপসমূহ</h2>
+        <p class="text-xs text-gray-300">প্রতিটি টিমে ২ জন খেলোয়াড় • গ্রুপে সর্বোচ্চ ৩টি টিম</p>
+      </div>
+      <span class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-yellow-500 text-gray-950">প্রতি গ্রুপে ৩টি টিম</span>
+    </div>
+    <div id="groupsSelectionView"><div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="groupCardsContainer"></div></div>
+    <div id="singleGroupDetailView" class="space-y-4 hidden">
+      <div class="flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-yellow-500/40 gap-2 flex-wrap">
+        <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-4 py-2 rounded-xl font-bold border border-slate-700 transition">← সকল গ্রুপ</button>
+        <h3 id="detailGroupTitle" class="text-sm md:text-base font-extrabold text-yellow-400">গ্রুপ</h3>
+      </div>
+      <div id="detailGroupStandings"></div>
+      <div id="detailGroupTeamsContainer" class="space-y-5"></div>
+    </div>
+  </section>
+
+  <!-- NOTICE BOARD -->
+  <section class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-4">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h2 class="text-base md:text-lg font-extrabold text-yellow-400">📢 অফিশিয়াল নোটিশ বোর্ড</h2>
+      <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">⚙️ এডমিন মোড</span>
+    </div>
+    <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200"><p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p></div>
+  </section>
+</div>
+
+<!-- ============ FIXTURES ============ -->
+<div id="tabFixtures" class="space-y-6 hidden tabPane">
+  <div class="bg-slate-900/80 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-5">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-xl font-extrabold text-yellow-400">⚔️ গ্রুপপর্ব ফিকশ্চার</h2>
+      <p class="text-xs text-gray-400 mt-1">প্রতি গ্রুপে ৩টি ম্যাচ (রাউন্ড-রবিন)</p>
+    </div>
+    <div id="fixturesContainer" class="space-y-6"></div>
+  </div>
+</div>
+
+<!-- ============ STANDINGS ============ -->
+<div id="tabStandings" class="space-y-6 hidden tabPane">
+  <div class="bg-slate-900/80 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-5">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-xl font-extrabold text-yellow-400">📊 গ্রুপ পয়েন্ট টেবিল</h2>
+      <p class="text-xs text-gray-400 mt-1">জয় = ২ পয়েন্ট • সমান হলে পয়েন্ট ব্যবধান (+/−) দিয়ে র‍্যাংক • সমাপ্ত ম্যাচ থেকে অটো-ক্যালকুলেটেড</p>
+    </div>
+    <div id="standingsAll" class="grid grid-cols-1 lg:grid-cols-2 gap-5"></div>
+  </div>
+</div>
+
+<!-- ============ KNOCKOUT ============ -->
+<div id="tabKnockout" class="space-y-6 hidden tabPane">
+  <div class="bg-slate-900/80 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-xl font-extrabold text-yellow-400">🏆 নকআউট পর্ব ও ফাইনাল</h2>
+      <p class="text-xs text-gray-400 mt-1">কোয়ার্টার ফাইনাল • সেমিফাইনাল • ৩য় স্থান • মেগা ফাইনাল</p>
+    </div>
+    <div class="space-y-4"><h3 class="text-base font-extrabold text-yellow-400 border-l-4 border-yellow-500 pl-3">🔥 কোয়ার্টার ফাইনাল</h3><div id="qfMatchesContainer" class="space-y-4"></div></div>
+    <div class="space-y-4 pt-4"><h3 class="text-base font-extrabold text-orange-400 border-l-4 border-orange-500 pl-3">⚡ সেমিফাইনাল</h3><div id="sfMatchesContainer" class="space-y-4"></div></div>
+    <div class="space-y-4 pt-4"><h3 class="text-base font-extrabold text-blue-400 border-l-4 border-blue-500 pl-3">🥉 ৩য় স্থান নির্ধারণী ম্যাচ</h3><div id="tpMatchesContainer" class="space-y-4"></div></div>
+    <div class="space-y-4 pt-4"><h3 class="text-base font-extrabold text-yellow-300 border-l-4 border-yellow-400 pl-3">👑 মেগা ফাইনাল</h3><div id="finalMatchContainer" class="space-y-4"></div></div>
+  </div>
+</div>
+
+<!-- ============ PLAYERS ============ -->
+<div id="tabGroups" class="space-y-6 hidden tabPane">
+  <div class="bg-slate-900/80 p-5 md:p-6 rounded-3xl border border-slate-800 space-y-4">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h2 class="text-lg font-extrabold text-yellow-400">📋 নিবন্ধিত খেলোয়াড়বৃন্দ</h2>
+      <div class="flex items-center gap-3">
+        <span id="totalCount" class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-yellow-300 font-extrabold border border-slate-700">মোট: ০ জন</span>
+        <button id="quickAddPlayerBtn" onclick="switchTab('dashboard')" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold px-3.5 py-1.5 rounded-xl text-xs hidden">➕ নতুন খেলোয়াড়</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <input type="search" id="playerSearch" oninput="renderPlayersTable()" placeholder="🔍 নাম / ঠিকানা দিয়ে খুঁজুন" class="fld sm:col-span-2">
+      <select id="playerCatFilter" onchange="renderPlayersTable()" class="fld text-yellow-300 font-bold">
+        <option value="">সব ক্যাটাগরি</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option>
+      </select>
+    </div>
+    <p class="text-xs text-gray-400">💡 শুধুমাত্র এই নিবন্ধিত খেলোয়াড়দের নিয়েই টিম গঠন করা যাবে।</p>
+    <div class="overflow-x-auto rounded-xl border border-slate-800">
+      <table class="w-full text-left text-xs md:text-sm">
+        <thead><tr class="bg-slate-800 text-yellow-400 border-b border-slate-700">
+          <th class="p-3">ছবি</th><th class="p-3">ক্রম</th><th class="p-3">নাম</th><th class="p-3">ঠিকানা</th><th class="p-3">ক্যাটাগরি</th><th class="p-3">মোবাইল</th><th class="p-3 actionHeader hidden">অ্যাকশন</th>
+        </tr></thead>
+        <tbody id="playerTableBody" class="divide-y divide-slate-800 bg-slate-950/60"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN ============ -->
+<div id="tabDashboard" class="space-y-6 hidden tabPane">
+
+  <!-- Stream -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-red-500/50 space-y-4">
+    <h3 class="text-base font-bold text-red-400 border-b border-slate-800 pb-3">📺 ইউটিউব ও ফেসবুক লাইভ স্ট্রিম</h3>
+    <form onsubmit="saveLiveStreamLinks(event)" class="space-y-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div><label class="lbl text-yellow-400 font-bold">▶️ ইউটিউব লাইভ লিংক / Embed</label><input type="text" id="adminYtLiveUrl" placeholder="https://www.youtube.com/watch?v=XXXX" class="fld"></div>
+        <div><label class="lbl text-yellow-400 font-bold">📘 ফেসবুক লাইভ লিংক</label><input type="text" id="adminFbLiveUrl" placeholder="https://www.facebook.com/yourpage/live" class="fld"></div>
+      </div>
+      <div><label class="lbl">প্লেয়ার ডিসপ্লে</label>
+        <select id="adminStreamDisplayMode" class="fld text-yellow-300 font-bold">
+          <option value="BUTTONS_AND_PLAYER">📺 ইউটিউব প্লেয়ার + বাটন</option>
+          <option value="BUTTONS_ONLY">🔗 শুধু বাটন</option>
+          <option value="OFF">🚫 বন্ধ</option>
+        </select></div>
+      <button type="submit" id="saveStreamBtn" class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 text-white font-extrabold py-3 rounded-xl text-xs">💾 লাইভ স্ট্রিম সেভ করুন</button>
+    </form>
+  </div>
+
+  <!-- Live match -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border-2 border-red-500/50 space-y-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h3 class="text-base font-extrabold text-red-400">🔴 লাইভ ম্যাচ কন্ট্রোল</h3>
+      <span id="liveStatusIndicatorBadge" class="text-xs bg-red-950 text-red-300 border border-red-500/40 px-3 py-1 rounded-full font-bold">স্ট্যান্ডবাই ✅</span>
+    </div>
+    <form onsubmit="saveLiveMatchInfo(event)" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div><label class="lbl text-yellow-400 font-bold">ম্যাচ শিরোনাম *</label><input type="text" id="adminLiveTitle" required placeholder="যেমন: ২য় কোয়ার্টার ফাইনাল" class="fld"></div>
+        <div><label class="lbl text-yellow-400 font-bold">স্ট্যাটাস *</label>
+          <select id="adminLiveStateDropdown" required class="fld text-yellow-300 font-bold">
+            <option value="RUNNING">🔴 চলমান</option>
+            <option value="FINISHED">🏁 সমাপ্ত (বিজয়ীর ২৯ পয়েন্ট আবশ্যক)</option>
+            <option value="SUSPENDED">⏸️ স্থগিত</option>
+          </select></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div class="space-y-2"><label class="lbl text-red-400 font-bold">🔴 টিম ১ *</label>
+          <select id="adminLiveP1Select" required class="fld text-yellow-300 font-bold"><option value="">-- টিম ১ --</option></select>
+          <input type="number" id="adminLiveP1Score" min="0" max="29" value="0" class="fld font-extrabold"></div>
+        <div class="space-y-2"><label class="lbl text-red-400 font-bold">🔴 টিম ২ *</label>
+          <select id="adminLiveP2Select" required class="fld text-yellow-300 font-bold"><option value="">-- টিম ২ --</option></select>
+          <input type="number" id="adminLiveP2Score" min="0" max="29" value="0" class="fld font-extrabold"></div>
+      </div>
+      <div class="bg-amber-950/60 p-4 rounded-2xl border border-amber-500/40 text-xs text-amber-200 space-y-1.5">
+        <p class="font-bold">💡 নিয়ম:</p>
+        <p>• <strong>সমাপ্ত:</strong> একটি টিমের স্কোর ঠিক <strong>২৯</strong> এবং অন্যটির ২৯-এর কম হতে হবে।</p>
+        <p>• <strong>সমাপ্ত/স্থগিত</strong> সেভ করলে ফলাফল "সমাপ্ত ম্যাচ" তালিকায় অটো যোগ হবে (একই ম্যাচ বারবার সেভ করলে ডুপ্লিকেট হবে না)।</p>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button type="submit" id="saveLiveBtn" class="bg-gradient-to-r from-red-600 to-red-500 text-white font-bold px-6 py-3 rounded-xl text-xs flex-1">💾 লাইভ তথ্য সেভ করুন</button>
+        <button type="button" onclick="clearLiveMatch()" class="bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold px-4 py-3 rounded-xl text-xs border border-slate-700">⏹️ লাইভ বন্ধ করুন</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Upcoming -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-blue-500/40 space-y-4">
+    <h3 class="text-base font-bold text-blue-400 border-b border-slate-800 pb-3">📅 আগামী ম্যাচের সময়সূচী</h3>
+    <form onsubmit="saveUpcomingMatch(event)" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div><label class="lbl text-yellow-400 font-bold">ম্যাচ *</label><select id="upTitle" required class="fld text-yellow-300 font-bold"></select></div>
+        <div><label class="lbl text-yellow-400 font-bold">টিম ১ *</label><select id="upTeam1Select" required class="fld text-yellow-300 font-bold"></select></div>
+        <div><label class="lbl text-yellow-400 font-bold">টিম ২ *</label><select id="upTeam2Select" required class="fld text-yellow-300 font-bold"></select></div>
+      </div>
+      <div><label class="lbl">তারিখ ও সময় *</label><input type="text" id="upTime" required placeholder="যেমন: ১০ নভেম্বর, ২০২৬ - রাত ৮:৩০" class="fld"></div>
+      <button type="submit" id="saveUpBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs">➕ সময়সূচী যোগ করুন</button>
+    </form>
+  </div>
+
+  <!-- Player form -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h3 id="playerFormTitle" class="text-base font-bold text-yellow-400">নতুন খেলোয়াড় নিবন্ধন ফরম</h3>
+      <button id="cancelPlayerEditBtn" onclick="resetPlayerForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল</button>
+    </div>
+    <form id="singleRegForm" onsubmit="savePlayerBio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" id="editPlayerId"><input type="hidden" id="existingPlayerDbId"><input type="hidden" id="existingPlayerImgUrl">
+      <div><label class="lbl">নাম *</label><input type="text" id="sName" required class="fld"></div>
+      <div><label class="lbl">মোবাইল *</label><input type="tel" id="sPhone" required class="fld"></div>
+      <div><label class="lbl">ঠিকানা</label><input type="text" id="sAddress" class="fld"></div>
+      <div><label class="lbl">ক্যাটাগরি</label>
+        <select id="sCat" class="fld text-yellow-400 font-bold"><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select></div>
+      <div class="md:col-span-2"><label class="lbl">ছবি (ঐচ্ছিক — অটো কম্প্রেস)</label><input type="file" id="sImage" accept="image/*" class="fld text-gray-300"></div>
+      <button type="submit" id="sSubmitBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold py-3 rounded-xl text-sm md:col-span-2">💾 নতুন খেলোয়াড় সেভ করুন</button>
+    </form>
+  </div>
+
+  <!-- Team form -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-blue-500/40 space-y-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h3 id="teamSetupTitle" class="text-base font-bold text-blue-400">🛡️ দ্বৈত টিম সেটআপ (সর্বোচ্চ ৩ টিম/গ্রুপ)</h3>
+      <button id="cancelTeamEditBtn" onclick="resetTeamForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল</button>
+    </div>
+    <form onsubmit="saveTeamSetup(event)" class="space-y-4">
+      <input type="hidden" id="editRowId">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div><label class="lbl">গ্রুপ *</label>
+          <select id="tGroup" class="fld text-yellow-400 font-bold"><option>গ্রুপ এ</option><option>গ্রুপ বি</option><option>গ্রুপ সি</option><option>গ্রুপ ডি</option></select></div>
+        <div><label class="lbl">টিমের নাম *</label><input type="text" id="tTeamName" required class="fld font-bold"></div>
+        <div><label class="lbl">টিম লোগো (ঐচ্ছিক)</label><input type="file" id="tTeamImage" accept="image/*" class="fld text-gray-300"><input type="hidden" id="existingTeamImgUrl"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div><label class="lbl text-yellow-400 font-bold">১ম খেলোয়াড় *</label><select id="tPlayer1Select" required class="fld font-bold"></select></div>
+        <div><label class="lbl text-yellow-400 font-bold">২য় খেলোয়াড় *</label><select id="tPlayer2Select" required class="fld font-bold"></select></div>
+      </div>
+      <button type="submit" id="teamSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-xl text-sm">💾 টিম সেভ করুন</button>
+    </form>
+  </div>
+
+  <!-- Match form -->
+  <div id="adminMatchFormSec" class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-purple-500/40 space-y-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+      <h3 id="matchFormTitle" class="text-base font-bold text-purple-400">⚔️ ম্যাচ ফিকশ্চার, স্কোর ও বিজয়ী</h3>
+      <button id="cancelMatchEditBtn" onclick="resetMatchForm()" class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-lg hidden">বাতিল</button>
+    </div>
+    <form onsubmit="saveMatchScoreData(event)" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div><label class="lbl">ম্যাচ কোড *</label><select id="mCode" required onchange="onMatchCodeChange()" class="fld text-yellow-300 font-bold"></select></div>
+        <div><label class="lbl">ম্যাচের নাম *</label><input type="text" id="mTitle" required class="fld"></div>
+        <div><label class="lbl">তারিখ ও সময়</label><input type="text" id="mDate" placeholder="১০ নভে, ২০২৬ - ৩:০০ PM" class="fld"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <div class="space-y-2"><label class="lbl text-yellow-400 font-bold">টিম ১ *</label>
+          <select id="mP1RegSelect" required class="fld text-yellow-300 font-bold"></select>
+          <input type="number" id="mP1Points" placeholder="পয়েন্ট (০–২৯)" min="0" max="29" class="fld text-yellow-300"></div>
+        <div class="space-y-2"><label class="lbl text-yellow-400 font-bold">টিম ২ *</label>
+          <select id="mP2RegSelect" required class="fld text-yellow-300 font-bold"></select>
+          <input type="number" id="mP2Points" placeholder="পয়েন্ট (০–২৯)" min="0" max="29" class="fld text-yellow-300"></div>
+      </div>
+      <div><label class="lbl">ফলাফল / বিজয়ী (ফাঁকা রাখলে স্কোর থেকে অটো তৈরি হবে; খেলা না হলে "ম্যাচ সেটআপ বাকি আছে")</label>
+        <input type="text" id="mResult" placeholder="যেমন: রয়েল ফাইটার্স বিজয়ী (২৯-২৫)" class="fld text-green-400 font-bold"></div>
+      <div class="flex gap-3 flex-wrap">
+        <button type="submit" id="mSubmitBtn" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-3 rounded-xl text-sm">💾 ম্যাচ সেভ করুন</button>
+        <button type="button" id="mDeleteBtn" onclick="deleteMatchResult()" class="hidden bg-red-700 hover:bg-red-600 text-white font-bold px-4 py-3 rounded-xl text-xs">🗑️ ফলাফল রিসেট</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Notice -->
+  <div class="bg-slate-900 p-5 md:p-6 rounded-3xl border border-yellow-500/40 space-y-4">
+    <h3 class="text-base font-bold text-yellow-400 border-b border-slate-800 pb-3">📢 নোটিশ বোর্ড ম্যানেজমেন্ট</h3>
+    <form onsubmit="saveNotice(event)" class="space-y-3">
+      <textarea id="adminNoticeInput" rows="3" required placeholder="অফিশিয়াল নোটিশ লিখুন..." class="fld text-sm"></textarea>
+      <div class="flex gap-2">
+        <button type="submit" id="noticeSaveBtn" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-extrabold px-6 py-2.5 rounded-xl text-xs">💾 নোটিশ প্রকাশ করুন</button>
+        <button type="button" id="noticeCancelBtn" onclick="cancelNoticeEdit()" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">বাতিল</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</main>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="fixed inset-0 bg-black/85 flex justify-center items-center p-4 hidden z-[70] backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <form onsubmit="handleLogin(event)" class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 w-full max-w-sm space-y-4 relative shadow-2xl">
+    <button type="button" onclick="toggleAdminModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-bold text-lg" aria-label="বন্ধ করুন">✕</button>
+    <h2 id="loginTitle" class="text-xl font-extrabold gold-gradient-text text-center">এডমিন লগইন</h2>
+    <p id="loginError" class="text-red-400 text-xs text-center font-bold hidden"></p>
+    <input type="email" id="loginEmail" placeholder="ইমেইল" autocomplete="username" class="fld p-3 text-sm">
+    <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="current-password" class="fld p-3 text-sm">
+    <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 font-extrabold py-3 rounded-xl text-sm">লগইন করুন</button>
+  </form>
+</div>
+
+<!-- IMAGE LIGHTBOX -->
+<div id="imagePreviewModal" class="fixed inset-0 bg-black/90 flex justify-center items-center p-4 hidden z-[60] backdrop-blur-sm" onclick="closeImagePreview()">
+  <div class="relative max-w-lg w-full bg-slate-900 border-2 border-yellow-500/60 rounded-3xl p-5 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
+    <button onclick="closeImagePreview()" class="absolute top-3 right-4 text-gray-400 hover:text-white font-extrabold text-2xl" aria-label="বন্ধ করুন">✕</button>
+    <h3 id="modalPlayerName" class="text-lg font-bold text-yellow-400 text-center">ছবি</h3>
+    <div class="w-full max-h-[70vh] overflow-hidden rounded-2xl flex justify-center items-center bg-slate-950 border border-slate-800">
+      <img id="modalPlayerImage" src="" alt="প্রিভিউ" class="max-h-[65vh] w-auto object-contain rounded-xl">
+    </div>
+    <p id="modalPlayerDetails" class="text-xs text-gray-300 text-center font-semibold"></p>
+  </div>
+</div>
+
+<div id="toastWrap" aria-live="polite"></div>
+
+<footer class="bg-slate-900/90 text-center p-5 text-xs text-gray-400 border-t border-slate-800 mt-auto space-y-1">
+  <p>© 2026 Winter Carrom Kings Battle Championship • All Rights Reserved</p>
+  <p class="text-[10px] text-gray-500">Premium Responsive Portal • Supabase Cloud</p>
+</footer>
+
+<script src="assets/app.js"></script>
 </body>
 </html>
-
-<!-- Build Timestamp: 2026-11-10 15:18:55 -->
