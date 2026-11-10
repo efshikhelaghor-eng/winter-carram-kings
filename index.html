@@ -216,6 +216,9 @@
                     <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
                         <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
                     </h2>
+                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">
+                        ⚙️ এডমিন মোড সক্রিয়
+                    </span>
                 </div>
                 <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
                     <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
@@ -693,7 +696,8 @@
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.remove('hidden');
-            
+            const noticeInd = document.getElementById('noticeAdminIndicator');
+            if(noticeInd) noticeInd.classList.remove('hidden');
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.remove('hidden');
         }
@@ -706,7 +710,8 @@
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.add('hidden');
-            
+            const noticeInd = document.getElementById('noticeAdminIndicator');
+            if(noticeInd) noticeInd.classList.add('hidden');
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.add('hidden');
         }
@@ -2380,3 +2385,5 @@
     </script>
 </body>
 </html>
+
+<!-- Build Timestamp: 2026-11-10 13:33:35 -->
