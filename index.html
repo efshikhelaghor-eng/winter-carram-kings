@@ -864,8 +864,17 @@
             let p1Select = document.getElementById('tPlayer1Select');
             let p2Select = document.getElementById('tPlayer2Select');
 
-            let html = '<option value="">-- ১ম নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
-            globalPlayersData.forEach(p => {
+            let validPlayers = Array.isArray(globalPlayersData) ? globalPlayersData.filter(p => p && typeof p === 'object') : [];
+            let sortedPlayers = [...validPlayers].sort((a, b) => {
+                let rank = { 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
+                let rA = rank[safeUpper(a.cat || 'HIGH')] || 4;
+                let rB = rank[safeUpper(b.cat || 'HIGH')] || 4;
+                if (rA !== rB) return rA - rB;
+                return safeStr(a.name).localeCompare(safeStr(b.name), 'bn');
+            });
+
+            let html = '<option value="">-- নিবন্ধিত খেলোয়াড় বেছে নিন --</option>';
+            sortedPlayers.forEach(p => {
                 if(!p) return;
                 html += `<option value="${p.id}">👤 ${p.name} (${p.cat || 'HIGH'}) - ${p.phone || 'N/A'}</option>`;
             });
