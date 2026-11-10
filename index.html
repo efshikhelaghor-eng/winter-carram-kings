@@ -115,7 +115,6 @@
                     </span>
                 </div>
 
-                <div id="liveStreamWidgetContainer" class="space-y-4 hidden"></div>
                 <div id="liveMatchContent" class="space-y-4">
                     <p class="text-center text-gray-400 italic text-sm py-6">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
                 </div>
@@ -217,9 +216,6 @@
                     <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2">
                         <span>📢</span> অফিশিয়াল নোটিশ বোর্ড
                     </h2>
-                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">
-                        ⚙️ এডমিন মোড সক্রিয়
-                    </span>
                 </div>
                 <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
                     <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
@@ -319,38 +315,6 @@
         <!-- ==================== ADMIN DASHBOARD TAB ==================== -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
-            
-            <!-- ADMIN SECTION: LIVE STREAMING & SOCIAL LINKS MANAGER -->
-            <div class="bg-slate-900 p-6 rounded-3xl border border-red-500/50 space-y-4 shadow-xl">
-                <h3 class="text-base font-bold text-red-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-                    📺 ইউটিউব ও ফেসবুক লাইভ স্ট্রিমিং লিংক পোর্টালে পাবলিশ করুন (Live Stream)
-                </h3>
-                <form onsubmit="saveLiveStreamLinks(event)" class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">▶️ ইউটিউব লাইভ লিংক / Embed URL</label>
-                            <input type="text" id="adminYtLiveUrl" placeholder="যেমন: https://www.youtube.com/watch?v=XXXXXX বা Embed Code" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                        <div>
-                            <label class="text-xs text-yellow-400 block mb-1 font-bold">📘 ফেসবুক পেজ / লাইভ লিংক URL</label>
-                            <input type="text" id="adminFbLiveUrl" placeholder="যেমন: https://www.facebook.com/yourpage/live" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">ভিডিও প্লেয়ার ডিসপ্লে অপশন</label>
-                        <select id="adminStreamDisplayMode" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
-                            <option value="BUTTONS_AND_PLAYER">📺 ইউটিউব প্লেয়ার এবং বোথ লিংক বাটন দেখাবে</option>
-                            <option value="BUTTONS_ONLY">🔗 শুধুমাত্র সোশ্যাল লাইভ বাটনগুলো দেখাবে</option>
-                            <option value="OFF">🚫 লাইভ স্ট্রিমিং প্লেয়ার বন্ধ রাখুন</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="saveStreamBtn" class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 text-white font-extrabold py-3 rounded-xl text-xs transition shadow-lg">
-                        💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন
-                    </button>
-                </form>
-            </div>
-
-
             <!-- ADMIN SECTION: LIVE MATCH CONTROL -->
             <div class="bg-slate-900 p-6 rounded-3xl border-2 border-red-500/50 space-y-5 shadow-2xl">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
@@ -705,121 +669,6 @@
             return safeStr(val).trim().toUpperCase();
         }
 
-        
-        let globalStreamConfig = { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
-
-        function getYouTubeEmbedUrl(urlStr) {
-            if (!urlStr) return '';
-            let raw = safeStr(urlStr).trim();
-            if (raw.includes('iframe') && raw.includes('src=')) {
-                let match = raw.match(/src=["']([^"']+)["']/);
-                if (match && match[1]) return match[1];
-            }
-            if (raw.includes('youtu.be/')) {
-                let id = raw.split('youtu.be/')[1].split('?')[0].split('&')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('watch?v=')) {
-                let id = raw.split('watch?v=')[1].split('&')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('/live/')) {
-                let id = raw.split('/live/')[1].split('?')[0];
-                return `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-            if (raw.includes('youtube.com/embed/')) return raw;
-            return raw;
-        }
-
-        async function saveLiveStreamLinks(e) {
-            e.preventDefault();
-            if(!isAdmin) {
-                alert('শুধুমাত্র এডমিন লাইভ স্ট্রিমিং লিংক আপডেট করতে পারবেন!');
-                return;
-            }
-
-            let ytUrl = safeStr(document.getElementById('adminYtLiveUrl').value).trim();
-            let fbUrl = safeStr(document.getElementById('adminFbLiveUrl').value).trim();
-            let displayMode = safeStr(document.getElementById('adminStreamDisplayMode').value).trim();
-
-            let streamObj = { ytUrl: ytUrl, fbUrl: fbUrl, displayMode: displayMode };
-
-            let btn = document.getElementById('saveStreamBtn');
-            btn.innerText = "⏳ ডাটাবেজে সেভ হচ্ছে...";
-            btn.disabled = true;
-
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify({ id: 'LIVE_STREAM_CONFIG', group_name: 'LIVE_STREAM', data: streamObj })
-                });
-
-                alert('✅ ইউটিউব ও ফেসবুক লাইভ লিংক সফলভাবে ওয়েবসাইটে পাবলিশ করা হয়েছে!');
-                loadData();
-            } catch(err) {
-                alert('লাইভ লিংক সেভ করা হয়েছে।');
-            } finally {
-                btn.innerText = "💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন";
-                btn.disabled = false;
-            }
-        }
-
-
-        function renderLiveStreamWidget() {
-            let streamBox = document.getElementById('liveStreamWidgetContainer');
-            if (!streamBox) return;
-
-            if (!globalStreamConfig || globalStreamConfig.displayMode === 'OFF') {
-                streamBox.innerHTML = '';
-                streamBox.classList.add('hidden');
-                return;
-            }
-
-            let ytEmbed = getYouTubeEmbedUrl(globalStreamConfig.ytUrl);
-            let ytDirect = globalStreamConfig.ytUrl || '#';
-            let fbDirect = globalStreamConfig.fbUrl || '#';
-            let mode = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
-
-            let playerHtml = '';
-            if (mode === 'BUTTONS_AND_PLAYER' && ytEmbed) {
-                playerHtml = `
-                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-red-500/50 shadow-2xl bg-black mb-4">
-                        <iframe src="${ytEmbed}" title="YouTube Live Stream" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                    </div>
-                `;
-            }
-
-            let buttonsHtml = `
-                <div class="flex items-center justify-center gap-3 flex-wrap">
-                    ${globalStreamConfig.ytUrl ? `<a href="${ytDirect}" target="_blank" class="bg-red-600 hover:bg-red-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>▶️</span> ইউটিউবে সরাসরি লাইভ দেখুন</a>` : ''}
-                    ${globalStreamConfig.fbUrl ? `<a href="${fbDirect}" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>📘</span> ফেসবুক পেজে লাইভ দেখুন</a>` : ''}
-                </div>
-            `;
-
-            if (playerHtml || (globalStreamConfig.ytUrl || globalStreamConfig.fbUrl)) {
-                streamBox.innerHTML = `
-                    <div class="bg-slate-950/90 p-4 rounded-2xl border border-red-500/40 space-y-3">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="text-xs font-bold text-red-400 flex items-center gap-2"><span>📺</span> সোশ্যাল মিডিয়া সরাসরি ব্রডকাস্ট স্ট্রিম</span>
-                            <span class="text-[10px] bg-red-500/20 text-red-300 px-2.5 py-0.5 rounded-full font-bold animate-pulse">LIVE BROADCAST</span>
-                        </div>
-                        ${playerHtml}
-                        ${buttonsHtml}
-                    </div>
-                `;
-                streamBox.classList.remove('hidden');
-            } else {
-                streamBox.innerHTML = '';
-                streamBox.classList.add('hidden');
-            }
-        }
-
         function checkAdminSession() {
             try {
                 const session = localStorage.getItem('carrom_admin_session');
@@ -844,8 +693,7 @@
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.remove('hidden');
-            const noticeInd = document.getElementById('noticeAdminIndicator');
-            if(noticeInd) noticeInd.classList.remove('hidden');
+            
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.remove('hidden');
         }
@@ -858,8 +706,7 @@
             }
             const navDash = document.getElementById('navDashboard');
             if(navDash) navDash.classList.add('hidden');
-            const noticeInd = document.getElementById('noticeAdminIndicator');
-            if(noticeInd) noticeInd.classList.add('hidden');
+            
             const quickAdd = document.getElementById('quickAddPlayerBtn');
             if(quickAdd) quickAdd.classList.add('hidden');
         }
@@ -1034,8 +881,6 @@
                             globalMatchesData[t.id] = t.data || {};
                         } else if(gName === 'LIVE_MATCH') {
                             globalLiveMatchData = t.data || null;
-                        } else if(gName === 'LIVE_STREAM') {
-                            globalStreamConfig = t.data || { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
                         } else if(gName === 'UPCOMING_MATCHES') {
                             if(t.data) globalUpcomingMatchesData.push({ db_id: t.id, ...t.data });
                         } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!gName && t.data && t.data.phone)) {
@@ -1241,16 +1086,6 @@
                 }
             } else {
                 if(badge) badge.innerText = "টিম লকড ও স্ট্যান্ডবাই মোড ✅";
-
-            if (globalStreamConfig) {
-                let ytInput = document.getElementById('adminYtLiveUrl');
-                let fbInput = document.getElementById('adminFbLiveUrl');
-                let modeInput = document.getElementById('adminStreamDisplayMode');
-                if (ytInput && !ytInput.value) ytInput.value = globalStreamConfig.ytUrl || '';
-                if (fbInput && !fbInput.value) fbInput.value = globalStreamConfig.fbUrl || '';
-                if (modeInput) modeInput.value = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
-            }
-
             }
         }
 
@@ -1286,7 +1121,6 @@
 
             // RENDER HOMEPAGE LIVE MATCH WIDGET
             renderLiveMatchWidget();
-            renderLiveStreamWidget();
 
             // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES INSIDE DASHBOARD
             renderHomepageRecentAndUpcoming();
