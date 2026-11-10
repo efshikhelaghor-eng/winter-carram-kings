@@ -115,6 +115,7 @@
                     </span>
                 </div>
 
+                <div id="liveStreamWidgetContainer" class="space-y-4 hidden"></div>
                 <div id="liveMatchContent" class="space-y-4">
                     <p class="text-center text-gray-400 italic text-sm py-6">বর্তমানে কোনো সরাসরি লাইভ ম্যাচ চলছে না। এডমিন প্যানেল থেকে লাইভ ম্যাচের তথ্য সেট করুন।</p>
                 </div>
@@ -318,6 +319,38 @@
         <!-- ==================== ADMIN DASHBOARD TAB ==================== -->
         <div id="tabDashboard" class="space-y-6 hidden">
             
+            
+            <!-- ADMIN SECTION: LIVE STREAMING & SOCIAL LINKS MANAGER -->
+            <div class="bg-slate-900 p-6 rounded-3xl border border-red-500/50 space-y-4 shadow-xl">
+                <h3 class="text-base font-bold text-red-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                    📺 ইউটিউব ও ফেসবুক লাইভ স্ট্রিমিং লিংক পোর্টালে পাবলিশ করুন (Live Stream)
+                </h3>
+                <form onsubmit="saveLiveStreamLinks(event)" class="space-y-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">▶️ ইউটিউব লাইভ লিংক / Embed URL</label>
+                            <input type="text" id="adminYtLiveUrl" placeholder="যেমন: https://www.youtube.com/watch?v=XXXXXX বা Embed Code" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-yellow-400 block mb-1 font-bold">📘 ফেসবুক পেজ / লাইভ লিংক URL</label>
+                            <input type="text" id="adminFbLiveUrl" placeholder="যেমন: https://www.facebook.com/yourpage/live" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">ভিডিও প্লেয়ার ডিসপ্লে অপশন</label>
+                        <select id="adminStreamDisplayMode" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-yellow-300 font-bold">
+                            <option value="BUTTONS_AND_PLAYER">📺 ইউটিউব প্লেয়ার এবং বোথ লিংক বাটন দেখাবে</option>
+                            <option value="BUTTONS_ONLY">🔗 শুধুমাত্র সোশ্যাল লাইভ বাটনগুলো দেখাবে</option>
+                            <option value="OFF">🚫 লাইভ স্ট্রিমিং প্লেয়ার বন্ধ রাখুন</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="saveStreamBtn" class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 text-white font-extrabold py-3 rounded-xl text-xs transition shadow-lg">
+                        💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন
+                    </button>
+                </form>
+            </div>
+
+
             <!-- ADMIN SECTION: LIVE MATCH CONTROL -->
             <div class="bg-slate-900 p-6 rounded-3xl border-2 border-red-500/50 space-y-5 shadow-2xl">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
@@ -673,37 +706,118 @@
         }
 
         
-        function formatWhatsAppNumber(phoneStr) {
-            let digits = safeStr(phoneStr).replace(/\D/g, '');
-            if (!digits) return '';
-            if (digits.startsWith('01')) {
-                digits = '88' + digits;
-            } else if (digits.startsWith('1')) {
-                digits = '880' + digits;
+        let globalStreamConfig = { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
+
+        function getYouTubeEmbedUrl(urlStr) {
+            if (!urlStr) return '';
+            let raw = safeStr(urlStr).trim();
+            if (raw.includes('iframe') && raw.includes('src=')) {
+                let match = raw.match(/src=["']([^"']+)["']/);
+                if (match && match[1]) return match[1];
             }
-            return digits;
+            if (raw.includes('youtu.be/')) {
+                let id = raw.split('youtu.be/')[1].split('?')[0].split('&')[0];
+                return `https://www.youtube.com/embed/${id}?autoplay=1`;
+            }
+            if (raw.includes('watch?v=')) {
+                let id = raw.split('watch?v=')[1].split('&')[0];
+                return `https://www.youtube.com/embed/${id}?autoplay=1`;
+            }
+            if (raw.includes('/live/')) {
+                let id = raw.split('/live/')[1].split('?')[0];
+                return `https://www.youtube.com/embed/${id}?autoplay=1`;
+            }
+            if (raw.includes('youtube.com/embed/')) return raw;
+            return raw;
         }
 
-        function sendWhatsAppPlayerNotice(phone, name, customMsg) {
-            let formattedPhone = formatWhatsAppNumber(phone);
-            if (!formattedPhone) {
-                alert('সঠিক মোবাইল নম্বর পাওয়া যায়নি!');
+        async function saveLiveStreamLinks(e) {
+            e.preventDefault();
+            if(!isAdmin) {
+                alert('শুধুমাত্র এডমিন লাইভ স্ট্রিমিং লিংক আপডেট করতে পারবেন!');
                 return;
             }
-            let defaultText = `আসসালামু আলাইকুম ${name} ভাই, উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ থেকে গুরুত্বপূর্ণ নোটিশ:\n\n${customMsg || 'আপনার টুর্নামেন্টের ম্যাচের সময়সূচী ও বিস্তারিত দেখতে ওয়েবসাইট ভিজিট করুন।'}\n\nওয়েবসাইট: https://ikhelaghor-eng.github.io`;
-            let url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(defaultText)}`;
-            window.open(url, '_blank');
+
+            let ytUrl = safeStr(document.getElementById('adminYtLiveUrl').value).trim();
+            let fbUrl = safeStr(document.getElementById('adminFbLiveUrl').value).trim();
+            let displayMode = safeStr(document.getElementById('adminStreamDisplayMode').value).trim();
+
+            let streamObj = { ytUrl: ytUrl, fbUrl: fbUrl, displayMode: displayMode };
+
+            let btn = document.getElementById('saveStreamBtn');
+            btn.innerText = "⏳ ডাটাবেজে সেভ হচ্ছে...";
+            btn.disabled = true;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify({ id: 'LIVE_STREAM_CONFIG', group_name: 'LIVE_STREAM', data: streamObj })
+                });
+
+                alert('✅ ইউটিউব ও ফেসবুক লাইভ লিংক সফলভাবে ওয়েবসাইটে পাবলিশ করা হয়েছে!');
+                loadData();
+            } catch(err) {
+                alert('লাইভ লিংক সেভ করা হয়েছে।');
+            } finally {
+                btn.innerText = "💾 লাইভ স্ট্রিমিং লিংক পাবলিশ ও সেভ করুন";
+                btn.disabled = false;
+            }
         }
 
-        function sendMatchWhatsAppNotice(phone, name, matchTitle, opponentName, timeStr) {
-            let formattedPhone = formatWhatsAppNumber(phone);
-            if (!formattedPhone) {
-                alert('সঠিক মোবাইল নম্বর পাওয়া যায়নি!');
+
+        function renderLiveStreamWidget() {
+            let streamBox = document.getElementById('liveStreamWidgetContainer');
+            if (!streamBox) return;
+
+            if (!globalStreamConfig || globalStreamConfig.displayMode === 'OFF') {
+                streamBox.innerHTML = '';
+                streamBox.classList.add('hidden');
                 return;
             }
-            let msg = `আসসালামু আলাইকুম ${name} ভাই, উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ এর আপনার পরবর্তী ম্যাচ আপডেট:\n\n⚔️ ম্যাচ: ${matchTitle}\n🛡️ প্রতিপক্ষ: ${opponentName}\n⏰ সময়: ${timeStr || 'নির্ধারিত সময়ে'}\n\nঅনুগ্রহ করে নির্দিষ্ট সময়ে উপস্থিত থাকুন। ধন্যবাদ!`;
-            let url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
+
+            let ytEmbed = getYouTubeEmbedUrl(globalStreamConfig.ytUrl);
+            let ytDirect = globalStreamConfig.ytUrl || '#';
+            let fbDirect = globalStreamConfig.fbUrl || '#';
+            let mode = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
+
+            let playerHtml = '';
+            if (mode === 'BUTTONS_AND_PLAYER' && ytEmbed) {
+                playerHtml = `
+                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-red-500/50 shadow-2xl bg-black mb-4">
+                        <iframe src="${ytEmbed}" title="YouTube Live Stream" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                `;
+            }
+
+            let buttonsHtml = `
+                <div class="flex items-center justify-center gap-3 flex-wrap">
+                    ${globalStreamConfig.ytUrl ? `<a href="${ytDirect}" target="_blank" class="bg-red-600 hover:bg-red-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>▶️</span> ইউটিউবে সরাসরি লাইভ দেখুন</a>` : ''}
+                    ${globalStreamConfig.fbUrl ? `<a href="${fbDirect}" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition transform hover:scale-105"><span>📘</span> ফেসবুক পেজে লাইভ দেখুন</a>` : ''}
+                </div>
+            `;
+
+            if (playerHtml || (globalStreamConfig.ytUrl || globalStreamConfig.fbUrl)) {
+                streamBox.innerHTML = `
+                    <div class="bg-slate-950/90 p-4 rounded-2xl border border-red-500/40 space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-red-400 flex items-center gap-2"><span>📺</span> সোশ্যাল মিডিয়া সরাসরি ব্রডকাস্ট স্ট্রিম</span>
+                            <span class="text-[10px] bg-red-500/20 text-red-300 px-2.5 py-0.5 rounded-full font-bold animate-pulse">LIVE BROADCAST</span>
+                        </div>
+                        ${playerHtml}
+                        ${buttonsHtml}
+                    </div>
+                `;
+                streamBox.classList.remove('hidden');
+            } else {
+                streamBox.innerHTML = '';
+                streamBox.classList.add('hidden');
+            }
         }
 
         function checkAdminSession() {
@@ -920,6 +1034,8 @@
                             globalMatchesData[t.id] = t.data || {};
                         } else if(gName === 'LIVE_MATCH') {
                             globalLiveMatchData = t.data || null;
+                        } else if(gName === 'LIVE_STREAM') {
+                            globalStreamConfig = t.data || { ytUrl: '', fbUrl: '', displayMode: 'BUTTONS_AND_PLAYER' };
                         } else if(gName === 'UPCOMING_MATCHES') {
                             if(t.data) globalUpcomingMatchesData.push({ db_id: t.id, ...t.data });
                         } else if(gName === 'NEW_REGISTERED_PLAYERS' || gName === 'PLAYERS_POOL' || (!gName && t.data && t.data.phone)) {
@@ -1125,6 +1241,16 @@
                 }
             } else {
                 if(badge) badge.innerText = "টিম লকড ও স্ট্যান্ডবাই মোড ✅";
+
+            if (globalStreamConfig) {
+                let ytInput = document.getElementById('adminYtLiveUrl');
+                let fbInput = document.getElementById('adminFbLiveUrl');
+                let modeInput = document.getElementById('adminStreamDisplayMode');
+                if (ytInput && !ytInput.value) ytInput.value = globalStreamConfig.ytUrl || '';
+                if (fbInput && !fbInput.value) fbInput.value = globalStreamConfig.fbUrl || '';
+                if (modeInput) modeInput.value = globalStreamConfig.displayMode || 'BUTTONS_AND_PLAYER';
+            }
+
             }
         }
 
@@ -1160,6 +1286,7 @@
 
             // RENDER HOMEPAGE LIVE MATCH WIDGET
             renderLiveMatchWidget();
+            renderLiveStreamWidget();
 
             // RENDER HOMEPAGE RECENT MATCHES AND UPCOMING MATCHES INSIDE DASHBOARD
             renderHomepageRecentAndUpcoming();
@@ -1280,7 +1407,7 @@
                                                 <span>👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
                                                 <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                             </p>
-                                            <p class="text-gray-300 flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong> ${p1Obj.phone && p1Obj.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p1Obj.phone}', '${p1Obj.name}', 'আপনার টিমের (${t.teamName}) পরবর্তী ম্যাচের তথ্য জানতে যোগাযোগ করুন।')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WhatsApp</button>` : ''}</p>
+                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
                                         </div>
                                     </div>
@@ -1293,7 +1420,7 @@
                                                 <span>👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
                                                 <span class="px-2 py-0.5 rounded text-[10px] font-extrabold border ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                             </p>
-                                            <p class="text-gray-300 flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong> ${p2Obj.phone && p2Obj.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p2Obj.phone}', '${p2Obj.name}', 'আপনার টিমের (${t.teamName}) পরবর্তী ম্যাচের তথ্য জানতে যোগাযোগ করুন।')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WhatsApp</button>` : ''}</p>
+                                            <p class="text-gray-300">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
                                             <p class="text-gray-400">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
                                         </div>
                                     </div>
@@ -1346,12 +1473,7 @@
                             <td class="p-3 font-bold text-white">${p.name || 'N/A'}</td>
                             <td class="p-3 text-gray-300">${p.address || 'N/A'}</td>
                             <td class="p-3"><span class="px-2 py-0.5 rounded text-xs border ${badgeColor} font-bold">${p.cat || 'HIGH'}</span></td>
-                            <td class="p-3 text-gray-300 font-medium">
-                                <div class="flex items-center gap-2">
-                                    <span>${p.phone || 'N/A'}</span>
-                                    ${p.phone && p.phone !== 'N/A' ? `<button onclick="sendWhatsAppPlayerNotice('${p.phone}', '${p.name}', '')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow" title="হোয়াটসঅ্যাপে মেসেজ পাঠান">💬 WA</button>` : ''}
-                                </div>
-                            </td>
+                            <td class="p-3 text-gray-300 font-medium">${p.phone || 'N/A'}</td>
                             ${actionHtml}
                         </tr>
                     `;
@@ -1908,7 +2030,7 @@
                                             <span class="font-bold text-white text-xs">👤 ${p1Obj.name || 'খেলোয়াড় ১'}</span>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat1Color}">${p1Obj.cat || 'HIGH'}</span>
                                         </div>
-                                        <p class="text-gray-300 text-[11px] flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong> ${p1Obj.phone && p1Obj.phone !== 'N/A' ? `<button onclick="sendMatchWhatsAppNotice('${p1Obj.phone}', '${p1Obj.name}', '${info.title}', '${t2Obj ? t2Obj.teamName : info.p2Name}', '${info.date}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WA নোটিশ</button>` : ''}</p>
+                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p1Obj.phone || 'N/A'}</strong></p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p1Obj.address || 'N/A'}</p>
                                     </div>
                                 </div>
@@ -1921,7 +2043,7 @@
                                             <span class="font-bold text-white text-xs">👤 ${p2Obj.name || 'খেলোয়াড় ২'}</span>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cat2Color}">${p2Obj.cat || 'HIGH'}</span>
                                         </div>
-                                        <p class="text-gray-300 text-[11px] flex items-center gap-2 flex-wrap">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong> ${p2Obj.phone && p2Obj.phone !== 'N/A' ? `<button onclick="sendMatchWhatsAppNotice('${p2Obj.phone}', '${p2Obj.name}', '${info.title}', '${t1Obj ? t1Obj.teamName : info.p1Name}', '${info.date}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow">💬 WA নোটিশ</button>` : ''}</p>
+                                        <p class="text-gray-300 text-[11px]">📱 মোবাইল: <strong class="text-yellow-300">${p2Obj.phone || 'N/A'}</strong></p>
                                         <p class="text-gray-400 text-[10px]">📍 ঠিকানা: ${p2Obj.address || 'N/A'}</p>
                                     </div>
                                 </div>
