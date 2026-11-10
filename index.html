@@ -1439,8 +1439,13 @@
             let completedMatches = [];
             Object.keys(globalMatchesData).forEach(mCode => {
                 let m = globalMatchesData[mCode];
-                if(m && m.result && m.result !== 'ম্যাচ সেটআপ বাকি আছে' && m.result !== 'অপেক্ষমাণ') {
-                    completedMatches.push(m);
+                if(m && m.result) {
+                    let resLower = safeLower(m.result);
+                    let isSetupOrPending = resLower.includes('সেটআপ') || resLower.includes('অপেক্ষমাণ') || resLower.includes('নির্ধারিত হয়নি');
+                    // Ensure only finished or suspended match entries are included
+                    if(!isSetupOrPending) {
+                        completedMatches.push(m);
+                    }
                 }
             });
 
