@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
@@ -60,7 +60,26 @@
         .toast.ok { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
         .toast.err { background: #450a0a; color: #fca5a5; border: 1px solid #ef4444; }
         .toast.info { background: #1e293b; color: #fde68a; border: 1px solid #eab308; }
-        .toast.out { opacity: 0; }
+        .toast.out { opacity: 0; } /* ===== মোবাইল পারফরম্যান্স ফিক্স ===== */
+@media (max-width: 768px), (pointer: coarse) {
+    header, .glass-card, #loginModal, #imagePreviewModal {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+    }
+    header { background: rgba(15,23,42,.98) !important; }
+    body::before { display: none; }
+    body { background: #020617; }
+    .blur-3xl { display: none !important; }
+    .live-glow { animation: none !important; box-shadow: 0 0 18px rgba(239,68,68,.35); }
+    .shimmer { animation: none !important; }
+    .floaty { animation: none !important; }
+    .card-lift { transition: none !important; }
+    .animate-ping { animation: none !important; }
+}
+#groupCardsContainer > *, #recentMatchesList > *, #upcomingMatchesList > * {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 180px;
+}
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
     </style>
 </head>
