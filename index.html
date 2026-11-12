@@ -913,7 +913,7 @@
             const email = safeStr(document.getElementById('loginEmail').value).trim();
             const pass = document.getElementById('loginPass').value;
             const errElem = document.getElementById('loginError');
-            if (email === 'efshikhelaghor@gmail.com' && pass === 'admin123') {
+            if (email === 'efshikhelaghor@gmail.com' && pass === 'DISABLED_OLD_LOGIN_x9k2') {
                 isAdmin = true;
                 try { localStorage.setItem('carrom_admin_session', 'true'); } catch (e) {}
                 applyAdminUIState();
@@ -2137,6 +2137,6 @@
             if (isAdmin && dash && !dash.classList.contains('hidden')) return; // don't disturb admin while editing
             loadData({ poll: true });
         }, POLL_MS);
-    </script>
+    <script src="admin-auth-patch.js">
 </body>
 </html>
