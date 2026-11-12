@@ -618,38 +618,8 @@
         <p>© 2026 Winter Carrom Kings Battle Championship • All Rights Reserved</p>
         <p class="text-[10px] text-gray-500">Premium Responsive UI with Supabase Cloud Integration</p>
     </footer>
-
-    <const AUTH = SUPABASE_URL + '/auth/v1';
-const IDLE_LIMIT = 15 * 60 * 1000;          // ১৫ মিনিট নিষ্ক্রিয় থাকলে অটো লগআউট
-const AUTH_KEYS = ['carrom_admin_session', 'carrom_token', 'carrom_refresh', 'carrom_token_exp', 'carrom_last_active'];
-const LS = {
-    get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} },
-    del: k => { try { localStorage.removeItem(k); } catch (e) {} }
-};
-
-// লগইন করা থাকলে ইউজার টোকেন, নাহলে সাধারণ anon key
-function dbHeaders(extra) {
-    const token = (isAdmin && LS.get('carrom_token')) || SUPABASE_ANON_KEY;
-    return Object.assign({ 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, extra || {});
-}
-
-function saveAuthSession(d) {
-    LS.set('carrom_token', d.access_token);
-    if (d.refresh_token) LS.set('carrom_refresh', d.refresh_token);
-    LS.set('carrom_token_exp', Date.now() + (Number(d.expires_in) || 3600) * 1000);
-    LS.set('carrom_last_active', Date.now());
-    LS.set('carrom_admin_session', 'true');
-}
-
-function forceLogout(msg) {
-    isAdmin = false;
-    AUTH_KEYS.forEach(LS.del);
-    applyPublicUIState();
-    switchTab('home');
-    renderData();
-    if (msg) toast(msg, 'info');
->
+    <script>
+  
         // ======================= CONFIG =======================
         const SUPABASE_URL = "https://ksxzlwiyqullkpndffty.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_bJn8W57PKdo0owl6fV8wgQ_fhKM3XvZ";
