@@ -1,4 +1,261 @@
- text-yellow-400 flex items-center gap-2"><span>⚔️</span> গ্রুপপর্ব ফিকশ্চার ও পয়েন্ট টেবিল</h2>
+ <!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+    <meta name="description" content="উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ — লাইভ স্কোর, ফিকশ্চার, গ্রুপ ও নকআউট আপডেট">
+    <meta property="og:title" content="উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং">
+    <meta property="og:description" content="লাইভ স্কোর, ফিকশ্চার, গ্রুপ টেবিল ও ফাইনাল — সব এক জায়গায়">
+    <meta property="og:type" content="website">
+    <title>উইন্টার কিংস ক্যারাম ব্যাটল-২০২৬ইং</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%91%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { color-scheme: dark; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Hind Siliguri', sans-serif; background: #020617; }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 12% 0%, rgba(234,179,8,.13), transparent 50%),
+                radial-gradient(ellipse at 92% 18%, rgba(239,68,68,.10), transparent 45%),
+                radial-gradient(ellipse at 50% 100%, rgba(59,130,246,.09), transparent 50%);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eab308; }
+        :focus-visible { outline: 2px solid #eab308; outline-offset: 2px; }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239,68,68,.4), 0 0 40px rgba(234,179,8,.2); }
+            50% { box-shadow: 0 0 35px rgba(239,68,68,.8), 0 0 60px rgba(234,179,8,.5); }
+        }
+        @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .live-glow { animation: pulse-glow 2.5s infinite; }
+        .reveal { animation: reveal .45s ease both; }
+        .floaty { animation: floaty 3.5s ease-in-out infinite; }
+        .glass-card { background: rgba(15,23,42,.75); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,.08); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FDE047 0%, #EAB308 50%, #CA8A04 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .shimmer {
+            background: linear-gradient(110deg, #CA8A04, #FDE047, #EAB308, #FDE047, #CA8A04);
+            background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; animation: shimmer 5s linear infinite;
+        }
+        .gold-border-glow { box-shadow: 0 0 25px rgba(234,179,8,.15); }
+        .card-lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .card-lift:hover { transform: translateY(-3px); }
+        .stat-card { background: linear-gradient(160deg, rgba(30,41,59,.8), rgba(2,6,23,.9)); border: 1px solid rgba(234,179,8,.25); }
+        #toastBox { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: center; width: calc(100% - 32px); max-width: 420px; pointer-events: none; }
+        .toast { pointer-events: auto; padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.5); animation: reveal .3s ease both; transition: opacity .4s; }
+        .toast.ok { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
+        .toast.err { background: #450a0a; color: #fca5a5; border: 1px solid #ef4444; }
+        .toast.info { background: #1e293b; color: #fde68a; border: 1px solid #eab308; }
+        .toast.out { opacity: 0; } /* ===== মোবাইল পারফরম্যান্স ফিক্স ===== */
+@media (max-width: 768px), (pointer: coarse) {
+    header, .glass-card, #loginModal, #imagePreviewModal {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+    }
+    header { background: rgba(15,23,42,.98) !important; }
+    body::before { display: none; }
+    body { background: #020617; }
+    .blur-3xl { display: none !important; }
+    .live-glow { animation: none !important; box-shadow: 0 0 18px rgba(239,68,68,.35); }
+    .shimmer { animation: none !important; }
+    .floaty { animation: none !important; }
+    .card-lift { transition: none !important; }
+    .animate-ping { animation: none !important; }
+}
+#groupCardsContainer > *, #recentMatchesList > *, #upcomingMatchesList > * {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 180px;
+}
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col selection:bg-yellow-500 selection:text-gray-950">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-gray-950 font-bold text-xs py-1.5 px-4 text-center tracking-wide shadow-md flex justify-center items-center gap-2">
+        <span>🔥 অফিশিয়াল টুর্নামেন্ট পোর্টাল-২০২৬</span>
+        <span class="hidden md:inline">•</span>
+        <span class="hidden md:inline">সরাসরি ডাটাবেজ কানেক্টেড • স্বয়ংক্রিয় লাইভ আপডেট ✅</span>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="bg-slate-900/90 backdrop-blur-xl border-b border-yellow-500/30 sticky top-0 z-40 shadow-2xl">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-red-600 p-0.5 flex justify-center items-center shadow-lg shadow-yellow-500/20">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-xl md:text-2xl">👑</div>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-base md:text-xl font-black tracking-tight text-white flex items-center gap-2 truncate">
+                        উইন্টার কিংস <span class="gold-gradient-text font-black">ক্যারাম ব্যাটল</span>
+                    </h1>
+                    <p class="text-[11px] text-yellow-400/90 font-medium flex items-center gap-1.5 truncate">
+                        <span id="syncDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                        <span id="lastSyncLabel">লাইভ সিঙ্ক মোড সক্রিয়</span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="manualRefresh()" id="refreshBtn" title="ডাটা রিফ্রেশ করুন" aria-label="রিফ্রেশ" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-yellow-400 w-9 h-9 rounded-xl text-sm font-bold transition">⟳</button>
+                <button id="authBtn" onclick="toggleAdminModal()" class="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-950 px-4 py-2 rounded-xl text-xs font-extrabold shadow-lg shadow-yellow-500/20 transition transform hover:scale-105">
+                    এডমিন লগইন
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-[61px] md:top-[69px] z-30">
+        <div class="max-w-6xl mx-auto px-4 flex justify-start md:justify-center gap-2 overflow-x-auto py-2.5 no-scrollbar">
+            <button onclick="switchTab('home')" id="navHome" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-yellow-500 to-amber-500 text-gray-950 shadow-lg shadow-yellow-500/20"><span>🏠</span> হোম</button>
+            <button onclick="switchTab('fixtures')" id="navFixtures" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-700"><span>⚔️</span> গ্রুপ ফিকশ্চার ও টেবিল</button>
+            <button onclick="switchTab('knockout')" id="navKnockout" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-700"><span>🏆</span> নকআউট ও ফাইনাল</button>
+            <button onclick="switchTab('groups')" id="navGroups" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-slate-800 text-gray-300 hover:bg-slate-700"><span>📋</span> নিবন্ধিত খেলোয়াড়</button>
+            <button onclick="switchTab('dashboard')" id="navDashboard" class="px-5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-red-950/80 text-red-300 border border-red-500/30 hover:bg-red-900 hidden"><span>⚙️</span> এডমিন প্যানেল</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow p-4 md:p-6 max-w-6xl mx-auto w-full space-y-8">
+
+        <!-- ==================== HOME TAB ==================== -->
+        <div id="tabHome" class="space-y-8 reveal">
+
+            <!-- HERO -->
+            <section class="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-6 md:p-10 text-center shadow-2xl">
+                <div class="absolute -left-20 -top-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -right-20 -bottom-24 w-72 h-72 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative space-y-3">
+                    <div class="text-5xl floaty">👑</div>
+                    <p class="text-[11px] tracking-[0.3em] text-yellow-400/80 font-bold">OFFICIAL TOURNAMENT PORTAL • 2026</p>
+                    <h2 class="text-3xl md:text-5xl font-black leading-tight">
+                        <span class="text-white">উইন্টার কিংস</span> <span class="shimmer">ক্যারাম ব্যাটল</span>
+                    </h2>
+                    <p class="text-xs md:text-sm text-gray-300 font-medium">দ্বৈত (ডাবলস) ফরম্যাট • ৪টি গ্রুপ • প্রতি গ্রুপে ৩টি টিম • ২৯ পয়েন্টে ম্যাচ সমাপ্ত</p>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3">
+                        <div class="stat-card rounded-2xl p-4"><div id="statGroups" class="text-2xl md:text-3xl font-black text-yellow-400">৪</div><div class="text-[11px] text-gray-400 font-semibold mt-1">মোট গ্রুপ</div></div>
+                        <div class="stat-card rounded-2xl p-4"><div id="statTeams" class="text-2xl md:text-3xl font-black text-yellow-400">০</div><div class="text-[11px] text-gray-400 font-semibold mt-1">নিবন্ধিত টিম</div></div>
+                        <div class="stat-card rounded-2xl p-4"><div id="statPlayers" class="text-2xl md:text-3xl font-black text-yellow-400">০</div><div class="text-[11px] text-gray-400 font-semibold mt-1">নিবন্ধিত খেলোয়াড়</div></div>
+                        <div class="stat-card rounded-2xl p-4"><div id="statMatches" class="text-2xl md:text-3xl font-black text-yellow-400">০</div><div class="text-[11px] text-gray-400 font-semibold mt-1">সমাপ্ত ম্যাচ</div></div>
+                    </div>
+
+                    <div id="championBanner" class="hidden pt-3"></div>
+                </div>
+            </section>
+
+            <!-- LIVE SCORE CENTER -->
+            <div id="liveMatchSection" class="relative bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 p-6 md:p-8 rounded-3xl border-2 border-red-500/60 shadow-2xl live-glow space-y-5 overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex justify-between items-center border-b border-red-500/25 pb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="relative flex h-4 w-4">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-4 w-4 bg-red-600"></span>
+                        </span>
+                        <div>
+                            <h2 class="text-lg md:text-2xl font-black text-red-400 tracking-wide uppercase">🔴 সরাসরি লাইভ ব্রডকাস্ট স্কোর</h2>
+                            <p class="text-[11px] text-gray-400 font-medium">Winter Carrom Kings Championship Live Center</p>
+                        </div>
+                    </div>
+                    <span id="liveMatchStage" class="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/40 text-xs px-3.5 py-1.5 rounded-full font-bold shadow-inner">টুর্নামেন্ট লাইভ মোড</span>
+                </div>
+                <div id="liveStreamWidgetContainer" class="space-y-4 hidden"></div>
+                <div id="liveMatchContent" class="space-y-4">
+                    <p class="text-center text-gray-400 italic text-sm py-6">⏳ ডাটা লোড হচ্ছে...</p>
+                </div>
+            </div>
+
+            <!-- MATCH CENTER DASHBOARD -->
+            <div class="bg-slate-900/90 rounded-3xl border border-yellow-500/40 p-6 shadow-2xl gold-border-glow space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-xl">📊</div>
+                        <div>
+                            <h2 class="text-lg md:text-xl font-extrabold gold-gradient-text">ম্যাচ সেন্টার ড্যাশবোর্ড</h2>
+                            <p class="text-xs text-gray-400">সাম্প্রতিক ফলাফল ও আগামী সময়সূচী</p>
+                        </div>
+                    </div>
+                    <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button onclick="switchDashboardTab('recent')" id="dashBtnRecent" class="px-4 py-1.5 rounded-lg text-xs font-bold transition bg-yellow-500 text-gray-950 shadow">🏁 সমাপ্ত ম্যাচসমূহ</button>
+                        <button onclick="switchDashboardTab('upcoming')" id="dashBtnUpcoming" class="px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white">📅 আগামী ম্যাচসমূহ</button>
+                    </div>
+                </div>
+
+                <div id="dashContentRecent" class="space-y-4">
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
+                        <span class="font-semibold text-green-400 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500"></span>সাম্প্রতিক সমাপ্ত ম্যাচ (অটো-আপডেটেড)</span>
+                        <span class="text-[11px] bg-green-500/10 text-green-300 border border-green-500/30 px-2.5 py-0.5 rounded-full font-bold">ফলাফল তালিকা</span>
+                    </div>
+                    <div id="recentMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো সম্প্রতি সমাপ্ত ম্যাচের তথ্য নেই।</p>
+                    </div>
+                </div>
+
+                <div id="dashContentUpcoming" class="space-y-4 hidden">
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-slate-800/60 pb-2">
+                        <span class="font-semibold text-blue-400 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>আগামী ম্যাচ সময়সূচী</span>
+                        <span class="text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full font-bold">ফিকশ্চার শিডিউল</span>
+                    </div>
+                    <div id="upcomingMatchesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GROUPS HEADER -->
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-5 rounded-2xl border border-yellow-500/30 shadow-lg flex justify-between items-center flex-wrap gap-4">
+                <div class="space-y-1">
+                    <h2 class="text-lg md:text-xl font-black text-yellow-400">টুর্নামেন্টের গ্রুপসমূহ</h2>
+                    <p class="text-xs text-gray-300">প্রতিটি টিমে ২ জন করে নিবন্ধিত খেলোয়াড় • গ্রুপে ক্লিক করে বায়ো ও পয়েন্ট টেবিল দেখুন</p>
+                </div>
+                <span class="px-3.5 py-1.5 rounded-lg text-xs font-black bg-yellow-500 text-gray-950 shadow">প্রতি গ্রুপে ৩টি টিম</span>
+            </div>
+
+            <div id="groupsSelectionView" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="groupCardsContainer"></div>
+            </div>
+
+            <div id="singleGroupDetailView" class="space-y-4 hidden">
+                <div class="flex justify-between items-center bg-slate-900 p-4 rounded-2xl border border-yellow-500/40 shadow-lg gap-3 flex-wrap">
+                    <button onclick="backToGroupsList()" class="bg-slate-800 hover:bg-slate-700 text-yellow-400 text-xs px-4 py-2 rounded-xl font-bold border border-slate-700 transition">← সকল গ্রুপে ফিরে যান</button>
+                    <h3 id="detailGroupTitle" class="text-base font-extrabold text-yellow-400">গ্রুপ বিস্তারিত</h3>
+                </div>
+                <div id="detailGroupStandings"></div>
+                <div id="detailGroupTeamsContainer" class="space-y-5"></div>
+            </div>
+
+            <!-- OFFICIAL NOTICE BOARD -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-2">
+                    <h2 class="text-base md:text-lg font-extrabold text-yellow-400 flex items-center gap-2"><span>📢</span> অফিশিয়াল নোটিশ বোর্ড</h2>
+                    <span id="noticeAdminIndicator" class="text-[11px] bg-slate-800 text-yellow-300 px-3 py-1 rounded-full border border-slate-700 font-bold hidden">⚙️ এডমিন মোড সক্রিয়</span>
+                </div>
+                <div id="noticeBoardContent" class="space-y-2 text-xs md:text-sm text-gray-200">
+                    <p class="italic text-gray-400">কোনো নোটিশ প্রকাশ করা হয়নি।</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== FIXTURES TAB ==================== -->
+        <div id="tabFixtures" class="space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-yellow-500/40 shadow-2xl space-y-5">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
+                    <h2 class="text-xl font-extrabold text-yellow-400 flex items-center gap-2"><span>⚔️</span> গ্রুপপর্ব ফিকশ্চার ও পয়েন্ট টেবিল</h2>
                     <p class="text-xs text-gray-400">সমাপ্ত ম্যাচের ফলাফল থেকে টেবিল স্বয়ংক্রিয়ভাবে তৈরি হয়।</p>
                 </div>
                 <div id="fixturesContainer" class="space-y-6"></div>
