@@ -2131,14 +2131,11 @@
         // ======================= INIT =======================
         checkAdminSession();
         loadData();
-        setInterval(() => {
+                setInterval(() => {
             if (document.hidden) return;
             const dash = document.getElementById('tabDashboard');
-            if (isAdmin && dash && !dash.classList.contains('hidden')) return; // don't disturb admin while editing
+            if (isAdmin && dash && !dash.classList.contains('hidden')) return;
             loadData({ poll: true });
         }, POLL_MS);
-            }, POLL_MS);
     </script>
     <script src="admin-auth-patch.js"></script>
-</body>
-</html>
