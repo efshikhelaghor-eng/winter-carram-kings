@@ -127,27 +127,79 @@ function handleRecoveryHash() {
     if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// ---------- পাসওয়ার্ড পরিবর্তন ----------
+// ---------- পাসওয়ার্ড পরিবর্তন (ইমেইল কনফার্মেশন কোডসহ) ----------
+let _codeCooldownTimer = null;
+
+function pwValidate() {
+    const np = document.getElementById('pwNew').value;
+    const cp = document.getElementById('pwConfirm').value;
+    if (np.length < 8) { toast('⛔ পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে', 'err'); return null; }
+    if (np !== cp) { toast('⛔ দুটি পাসওয়ার্ড মিলছে না', 'err'); return null; }
+    return np;
+}
+
+// ধাপ ১: এডমিনের ইমেইলে কনফার্মেশন কোড পাঠানো
+async function sendPasswordCode() {
+    if (!isAdmin) return;
+    if (!pwValidate()) return;
+    const btn = document.getElementById('pwSendCodeBtn');
+    await withBusy(btn, '⏳ কোড পাঠানো হচ্ছে...', async () => {
+        try {
+            await refreshAuthSession();
+            const res = await fetch(AUTH + '/reauthenticate', { method: 'GET', headers: dbHeaders() });
+            if (!res.ok) {
+                let m = ''; try { m = (await res.json()).msg || ''; } catch (x) {}
+                throw new Error(m || ('HTTP ' + res.status));
+            }
+            document.getElementById('pwCodeWrap').classList.remove('hidden');
+            document.getElementById('pwCode').value = '';
+            document.getElementById('pwCode').focus();
+            toast('📧 ৬ সংখ্যার কনফার্মেশন কোড এডমিন ইমেইলে পাঠানো হয়েছে (স্প্যামও দেখুন)', 'ok');
+            startCodeCooldown();
+        } catch (err) { toast('❌ কোড পাঠানো যায়নি: ' + err.message, 'err'); }
+    });
+    if (_codeCooldownTimer) btn.disabled = true; // withBusy শেষে আবার চালু করে, তাই কুলডাউনে বন্ধ রাখা
+}
+
+function startCodeCooldown() {
+    const btn = document.getElementById('pwSendCodeBtn');
+    let left = 60;
+    clearInterval(_codeCooldownTimer);
+    btn.disabled = true;
+    _codeCooldownTimer = setInterval(() => {
+        left--;
+        if (left <= 0) {
+            clearInterval(_codeCooldownTimer); _codeCooldownTimer = null;
+            btn.disabled = false; btn.innerText = '🔁 আবার কোড পাঠান';
+        } else {
+            btn.innerText = '⏳ আবার পাঠাতে ' + left + ' সেকেন্ড';
+        }
+    }, 1000);
+    btn.innerText = '⏳ আবার পাঠাতে ' + left + ' সেকেন্ড';
+}
+
+// ধাপ ২: কোডসহ নতুন পাসওয়ার্ড সেভ
 async function changeAdminPassword(e) {
     e.preventDefault();
     if (!isAdmin) return;
-    const np = document.getElementById('pwNew').value;
-    const cp = document.getElementById('pwConfirm').value;
-    if (np.length < 8) { toast('⛔ পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে', 'err'); return; }
-    if (np !== cp) { toast('⛔ দুটি পাসওয়ার্ড মিলছে না', 'err'); return; }
+    const np = pwValidate();
+    if (!np) return;
+    const code = safeStr(document.getElementById('pwCode').value).trim();
+    if (!code) { toast('⛔ আগে ইমেইলে কোড পাঠান এবং কোডটি লিখুন', 'err'); return; }
     const btn = document.getElementById('pwSaveBtn');
     await withBusy(btn, '⏳ সেভ হচ্ছে...', async () => {
         try {
             await refreshAuthSession();
-            const res = await fetch(AUTH + '/user', { method: 'PUT', headers: dbHeaders(), body: JSON.stringify({ password: np }) });
+            const res = await fetch(AUTH + '/user', { method: 'PUT', headers: dbHeaders(), body: JSON.stringify({ password: np, nonce: code }) });
             if (!res.ok) {
                 let m = ''; try { m = (await res.json()).msg || ''; } catch (x) {}
                 throw new Error(m || ('HTTP ' + res.status));
             }
             document.getElementById('pwNew').value = '';
             document.getElementById('pwConfirm').value = '';
+            document.getElementById('pwCode').value = '';
             forceLogout('✅ পাসওয়ার্ড বদলেছে। নতুন পাসওয়ার্ড দিয়ে আবার লগইন করুন');
-        } catch (err) { toast('❌ পাসওয়ার্ড বদলানো যায়নি: ' + err.message, 'err'); }
+        } catch (err) { toast('❌ পাসওয়ার্ড বদলানো যায়নি (কোড ভুল বা মেয়াদোত্তীর্ণ হতে পারে): ' + err.message, 'err'); }
     });
 }
 
@@ -184,8 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <form onsubmit="changeAdminPassword(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <input type="password" id="pwNew" autocomplete="new-password" minlength="8" required placeholder="নতুন পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
                 <input type="password" id="pwConfirm" autocomplete="new-password" minlength="8" required placeholder="নতুন পাসওয়ার্ড আবার লিখুন" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                <button type="submit" id="pwSaveBtn" class="md:col-span-2 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">💾 পাসওয়ার্ড পরিবর্তন করুন</button>
+                <button type="button" id="pwSendCodeBtn" onclick="sendPasswordCode()" class="md:col-span-2 bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">📧 এডমিন ইমেইলে কনফার্মেশন কোড পাঠান</button>
+                <div id="pwCodeWrap" class="md:col-span-2 space-y-3 hidden">
+                    <input type="text" id="pwCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="ইমেইলে পাওয়া কোডটি লিখুন" class="w-full bg-slate-950 border border-yellow-500/50 rounded-xl p-2.5 text-sm text-yellow-300 font-bold tracking-widest text-center">
+                    <button type="submit" id="pwSaveBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl text-sm transition shadow-lg">💾 পাসওয়ার্ড পরিবর্তন করুন</button>
+                </div>
             </form>
+            <p class="text-[11px] text-gray-400">📧 পাসওয়ার্ড বদলাতে এডমিনের ইমেইলে পাঠানো কোড লাগবে। শুধু প্যানেলে লগইন থাকলেই পাসওয়ার্ড বদলানো যাবে না।</p>
             <p class="text-[11px] text-gray-400">⏱️ ১৫ মিনিট নিষ্ক্রিয় থাকলে এডমিন অটো লগআউট হবে।</p>
         </div>`);
 
@@ -223,4 +280,3 @@ window.addEventListener('storage', e => {
 
 // আলাদা ফাইল হিসেবে লোড হলে: পুরনো সেশন চেক নতুন নিয়মে আবার চালানো
 checkAdminSession();
-
