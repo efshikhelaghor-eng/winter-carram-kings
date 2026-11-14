@@ -1,0 +1,212 @@
+:root {
+    --gold-1: #FDE047;
+    --gold-2: #EAB308;
+    --gold-3: #CA8A04;
+    --ink-0: #04070f;
+    --ink-1: #0a1022;
+    --ink-2: #101a33;
+    --line: rgba(148, 163, 184, .14);
+}
+
+/* ---------- ভিত্তি ---------- */
+html body {
+    background-color: var(--ink-0);
+    background-image: radial-gradient(rgba(255, 255, 255, .028) 1px, transparent 1px); /* ক্যারাম-বোর্ড ডট টেক্সচার */
+    background-size: 24px 24px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+::selection { background: var(--gold-2); color: #0b1020; }
+html { -webkit-tap-highlight-color: transparent; }
+
+/* ---------- উপরের ঘোষণা বার ও হেডার ---------- */
+html body > div.bg-gradient-to-r {
+    letter-spacing: .02em;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);
+}
+html body header {
+    background: linear-gradient(180deg, rgba(17, 26, 48, .97), rgba(8, 12, 24, .97)) !important;
+    border-bottom: 1px solid rgba(234, 179, 8, .3) !important;
+    box-shadow: 0 14px 30px -20px rgba(0, 0, 0, .95);
+}
+/* শিরোনাম ছোট স্ক্রিনে কেটে না গিয়ে দুই লাইনে সুন্দরভাবে সাজবে */
+html body header h1 {
+    flex-wrap: wrap;
+    column-gap: .35rem;
+    row-gap: 0;
+    line-height: 1.15;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+@media (max-width: 767px) {
+    html body header h1 { font-size: 1rem; }
+}
+
+/* ---------- নেভিগেশন (ডেস্কটপে উপরে, মোবাইলে অ্যাপের মতো নিচে) ---------- */
+html body nav.sticky {
+    background: linear-gradient(180deg, #0b1224, #080d1a) !important;
+    border-bottom: 1px solid var(--line) !important;
+}
+html body nav.sticky button {
+    letter-spacing: .01em;
+    transition: background .2s ease, color .2s ease, transform .15s ease, box-shadow .2s ease;
+}
+html body nav.sticky button.from-yellow-500 { box-shadow: 0 8px 22px -8px rgba(234, 179, 8, .55); }
+
+@media (max-width: 767px) {
+    html body nav.sticky {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 45;
+        border-bottom: 0 !important;
+        border-top: 1px solid rgba(234, 179, 8, .28) !important;
+        background: rgba(8, 12, 24, .98) !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -12px 28px -16px rgba(0, 0, 0, .95);
+    }
+    html body nav.sticky > div {
+        justify-content: space-around !important;
+        gap: 4px !important;
+        padding: 6px 8px !important;
+        overflow: visible !important;
+    }
+    html body nav.sticky button {
+        flex: 1 1 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px !important;
+        padding: 7px 4px !important;
+        font-size: 10px !important;
+        line-height: 1.2;
+        text-align: center;
+        white-space: normal !important;
+        border-radius: 14px !important;
+        min-width: 0;
+    }
+    html body nav.sticky button > span:first-child { font-size: 19px; line-height: 1; }
+    html body { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+    html body #toastBox { bottom: calc(94px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ---------- কার্ড: একই ভাষার গভীরতা ও সূক্ষ্ম আলো ---------- */
+html body [class*="bg-slate-900"][class*="rounded-3xl"] {
+    background: linear-gradient(180deg, #0e1730 0%, #09101f 100%) !important;
+    box-shadow: 0 18px 40px -26px rgba(0, 0, 0, .95), inset 0 1px 0 rgba(255, 255, 255, .045);
+}
+html body [class*="bg-slate-950"][class*="rounded-2xl"][class*="border"] {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+
+/* ---------- হিরো ---------- */
+html body #tabHome > section {
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(234, 179, 8, .15), transparent 55%),
+        linear-gradient(160deg, #0b1224, #050914 60%, #0b1224) !important;
+    border-color: rgba(234, 179, 8, .38) !important;
+    box-shadow: 0 30px 60px -34px rgba(0, 0, 0, .9), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+html body #tabHome > section h2 {
+    font-size: clamp(1.9rem, 7vw, 3.4rem);
+    letter-spacing: -.01em;
+}
+html body .stat-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(30, 41, 59, .7), rgba(2, 6, 23, .95)) !important;
+    border: 1px solid rgba(234, 179, 8, .3);
+    border-radius: 1.25rem;
+    transition: border-color .2s ease, transform .15s ease;
+}
+html body .stat-card::before {
+    content: "";
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-2), transparent);
+    opacity: .75;
+}
+html body .stat-card > div:first-child {
+    font-size: clamp(1.8rem, 7.5vw, 2.7rem);
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--gold-1), var(--gold-2) 55%, var(--gold-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent !important;
+}
+html body .stat-card[role="button"]:active { transform: scale(.97); }
+html body .stat-card[role="button"]:hover { border-color: rgba(253, 224, 71, .7); }
+
+/* ---------- গ্রুপ কার্ড ---------- */
+html body #groupCardsContainer > div {
+    position: relative;
+    overflow: hidden;
+}
+html body #groupCardsContainer > div::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(closest-side, rgba(234, 179, 8, .12), transparent);
+    pointer-events: none;
+}
+
+/* ---------- বাটন ও ইনপুট ---------- */
+html body button { transition: background .2s ease, transform .15s ease, box-shadow .2s ease, opacity .2s ease; }
+html body button:active:not(:disabled) { transform: scale(.97); }
+html body button:disabled { opacity: .55; cursor: not-allowed; }
+html body input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html body select,
+html body textarea { border-radius: .9rem; transition: border-color .2s ease, box-shadow .2s ease; }
+html body input:focus,
+html body select:focus,
+html body textarea:focus {
+    outline: none;
+    border-color: var(--gold-2) !important;
+    box-shadow: 0 0 0 3px rgba(234, 179, 8, .18);
+}
+html body button:focus-visible,
+html body a:focus-visible { outline: 2px solid var(--gold-2); outline-offset: 2px; }
+
+/* ---------- টেবিল ---------- */
+html body table thead tr {
+    background: linear-gradient(180deg, #1a2540, #121a30) !important;
+}
+html body table tbody tr:nth-child(even) { background-color: rgba(255, 255, 255, .018); }
+html body table th { letter-spacing: .02em; }
+
+/* ---------- ছবি (অবতার) ---------- */
+html body img.rounded-full {
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, .22), 0 8px 16px -8px rgba(0, 0, 0, .9);
+}
+
+/* ---------- টোস্ট ও ফুটার ---------- */
+html body .toast { border-radius: 16px; letter-spacing: .01em; }
+html body footer {
+    background: linear-gradient(180deg, #0a1022, #060913) !important;
+    border-top: 1px solid rgba(234, 179, 8, .22) !important;
+}
+
+/* ---------- শুধু ডেস্কটপ/মাউসে: হালকা হোভার ইফেক্ট ---------- */
+@media (min-width: 769px) and (pointer: fine) {
+    html body .card-lift:hover { box-shadow: 0 20px 44px -16px rgba(234, 179, 8, .28); }
+    html body nav.sticky button:hover { transform: translateY(-1px); }
+}
+
+/* ---------- প্রিন্ট ও কম অ্যানিমেশন ---------- */
+@media print {
+    header, nav, footer, #toastBox { display: none !important; }
+    body { background: #fff; color: #000; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
