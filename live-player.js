@@ -19,17 +19,17 @@
 .yt-facade:active .yt-play{transform:scale(.94)}
 .yt-hint{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 6px #000}
 .wck-fsbtn{position:absolute;top:2.5%;right:2.5%;z-index:7;width:34px;height:34px;border-radius:10px;background:rgba(0,0,0,.6);color:#fff;border:1px solid rgba(255,255,255,.28);font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
-.wck-bug{position:absolute;top:3.2%;left:2.4%;z-index:6;pointer-events:none;color:#fff;line-height:1;font-size:9px;font-size:clamp(9px,2.7cqw,24px)}
-.wck-row{display:flex;align-items:stretch;height:2.3em;border-radius:.45em;overflow:hidden;background:#0b1224;border:.08em solid rgba(234,179,8,.9);box-shadow:0 .2em .8em rgba(0,0,0,.6)}
-.wck-team{display:flex;align-items:center;gap:.4em;padding:0 .6em;min-width:0;font-weight:800;background:linear-gradient(180deg,#14213f,#0b1224)}
-.wck-name{max-width:7.5em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.wck-logo{width:1.7em;height:1.7em;border-radius:50%;object-fit:cover;flex:none;display:inline-flex;align-items:center;justify-content:center;background:#1e293b;font-size:1em}
-.wck-score{min-width:1.9em;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.25em;background:linear-gradient(180deg,#2563eb,#1e3a8a);padding:0 .25em}
+.wck-bug{position:absolute;top:3%;left:2.2%;z-index:6;pointer-events:none;color:#fff;line-height:1;font-size:8px;font-size:clamp(8px,2.1cqw,19px)}
+.wck-row{display:flex;align-items:stretch;height:2.1em;border-radius:.4em;overflow:hidden;background:#0b1224;border:.08em solid rgba(234,179,8,.9);box-shadow:0 .2em .8em rgba(0,0,0,.6)}
+.wck-team{display:flex;align-items:center;gap:.35em;padding:0 .5em;min-width:0;font-weight:800;background:linear-gradient(180deg,#14213f,#0b1224)}
+.wck-name{max-width:6em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wck-logo{width:1.45em;height:1.45em;border-radius:50%;object-fit:cover;flex:none;display:inline-flex;align-items:center;justify-content:center;background:#1e293b;font-size:1em}
+.wck-score{min-width:1.75em;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.15em;background:linear-gradient(180deg,#2563eb,#1e3a8a);padding:0 .25em}
 .wck-win{background:linear-gradient(180deg,#facc15,#ca8a04);color:#0b1224}
-.wck-mid{width:1.9em;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fde047,#ca8a04);color:#0b1224;font-size:1.05em}
-.wck-foot{margin:.25em auto 0;width:max-content;max-width:100%;display:flex;gap:.55em;align-items:center;background:rgba(0,0,0,.8);border-radius:.3em;padding:.32em .75em;font-weight:700;font-size:.9em}
+.wck-mid{width:1.6em;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fde047,#ca8a04);color:#0b1224;font-size:1.05em}
+.wck-foot{margin:.2em auto 0;width:max-content;max-width:100%;display:flex;gap:.5em;align-items:center;background:rgba(0,0,0,.78);border-radius:.3em;padding:.25em .6em;font-weight:700;font-size:.8em}
 .wck-dot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#ef4444;margin-right:.3em}
-.wck-title{max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;
+.wck-title{max-width:12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;
     document.head.appendChild(st);
 
     // ---------- ১) স্কোর ভিডিওর উপরের সেকশনে ----------
@@ -50,10 +50,10 @@
     function bugHtml(live) {
         if (!live || !live.p1Name || !live.p2Name) return '';
         const state = live.state || (live.active ? 'RUNNING' : 'FINISHED');
+        if (state !== 'RUNNING') return ''; // সমাপ্ত/স্থগিত ম্যাচ ভিডিওর উপরে দেখানো হবে না
         const s1 = Number(live.p1Score) || 0, s2 = Number(live.p2Score) || 0;
-        const w1 = state === 'FINISHED' && s1 > s2, w2 = state === 'FINISHED' && s2 > s1;
-        const tag = state === 'RUNNING' ? '<span><span class="wck-dot"></span>LIVE</span>'
-            : state === 'FINISHED' ? '<span>✅ সমাপ্ত</span>' : '<span>⏸️ স্থগিত</span>';
+        const w1 = false, w2 = false;
+        const tag = '<span><span class="wck-dot"></span>LIVE</span>';
         return '<div class="wck-row">' +
             '<div class="wck-team">' + teamLogo(live.p1Name) + '<span class="wck-name">' + escHtml(live.p1Name) + '</span></div>' +
             '<div class="wck-score' + (w1 ? ' wck-win' : '') + '">' + bn(s1) + '</div>' +
@@ -67,7 +67,8 @@
 
     function updateOverlay() {
         if (!bugEl) return;
-        const h = bugHtml(globalLiveMatchData);
+        const hide = !!(globalStreamConfig && globalStreamConfig.hideBug); // স্ট্রিমেই স্কোর বসানো থাকলে সাইটের বার বন্ধ
+        const h = hide ? '' : bugHtml(globalLiveMatchData);
         if (h === lastBugHtml) return;
         lastBugHtml = h;
         bugEl.innerHTML = h;
@@ -224,6 +225,35 @@
         const streaming = cfg.displayMode !== 'OFF' && !!(cfg.ytUrl || cfg.fbUrl);
         if (running || (streaming && tick % 3 === 0)) pollLive();
     }, 8000);
+
+    // ---------- এডমিন: "স্ট্রিমে স্কোর বসানো আছে" চেকবক্স ----------
+    // OBS দিয়ে স্কোর ভিডিওতেই বসালে সাইটের দ্বিতীয় স্কোরবার বন্ধ রাখতে এটি টিক দিন।
+    const saveBtn = $('saveStreamBtn');
+    if (saveBtn && !$('adminHideBug')) {
+        saveBtn.insertAdjacentHTML('beforebegin',
+            '<label class="flex items-start gap-2 text-xs text-gray-300 bg-slate-950 border border-slate-800 rounded-xl p-3 cursor-pointer">' +
+            '<input type="checkbox" id="adminHideBug" class="mt-0.5">' +
+            '<span><strong class="text-yellow-400">স্ট্রিমে স্কোর বসানো আছে (OBS ওভারলে)</strong><br>' +
+            'টিক দিলে ওয়েবসাইটের ভিডিওর উপরের স্কোরবার বন্ধ থাকবে, যাতে দুটি স্কোরবার একসাথে না আসে।</span></label>');
+    }
+    if (typeof window.populateStreamForm === 'function') {
+        const _psf = window.populateStreamForm;
+        window.populateStreamForm = function () {
+            _psf.apply(this, arguments);
+            const c = $('adminHideBug');
+            if (c && !streamFormDirty) c.checked = !!(globalStreamConfig && globalStreamConfig.hideBug);
+        };
+    }
+    if (typeof window.dbUpsert === 'function') {
+        const _dbu = window.dbUpsert;
+        window.dbUpsert = function (id, group, data) {
+            if (id === 'LIVE_STREAM_CONFIG' && data && typeof data === 'object') {
+                const c = $('adminHideBug');
+                if (c) data = Object.assign({}, data, { hideBug: c.checked });
+            }
+            return _dbu.call(this, id, group, data);
+        };
+    }
 
     window.renderLiveStreamWidget(); // এখনকার ডাটা দিয়ে একবার প্রয়োগ
 })();
