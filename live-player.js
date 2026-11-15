@@ -257,3 +257,210 @@
 
     window.renderLiveStreamWidget(); // এখনকার ডাটা দিয়ে একবার প্রয়োগ
 })();
+
+
+/* ===== লাইভ ম্যাচ কন্ট্রোল: ম্যাচ সিলেক্ট ড্রপডাউন (গ্রুপ পর্ব → তৃতীয় স্থান → ফাইনাল) =====
+   • "ম্যাচ পর্যায় / শিরোনাম" এখন ড্রপডাউন: ১২টি গ্রুপ ম্যাচ + QF-1..4 + SF-1..2 + ৩য় স্থান + ফাইনাল
+   • ম্যাচ বাছলে দুই টিম অটো বসে (গ্রুপে ফিকশ্চার থেকে, নকআউটে ফলাফল থেকে অটো-নির্ধারিত টিম)
+   • ভুল টিম/অন্য গ্রুপ/২ ম্যাচের বেশি ইত্যাদি সেভের আগেই আটকানো হয়
+   • "সমাপ্ত/স্থগিত" সেভ করলে ফলাফল সেই ম্যাচের আসল কোডে (G1_M1, QF-1...) সেভ হয় — তাই গ্রুপ টেবিল ও
+     নকআউট ব্র্যাকেট নিজে থেকে আপডেট হয়; আলাদা নকল এন্ট্রি তৈরি হয় না
+   • সব সেভ আগের মতোই Supabase-এ (LIVE_CURRENT_MATCH ও MATCH_SCORES রো) */
+(function () {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    if (typeof GROUPS === 'undefined' || typeof window.saveLiveMatchInfo !== 'function' || typeof window.dbUpsert !== 'function') return;
+
+    const KO_CODES = ['QF-1', 'QF-2', 'QF-3', 'QF-4', 'SF-1', 'SF-2', '3P-Match', 'FINAL'];
+
+    function allMatches() {
+        const a = [];
+        GROUPS.forEach(g => g.matches.forEach((c, i) => a.push({ code: c, title: g.name + ' - ম্যাচ ' + bn(i + 1), group: g.name })));
+        KO_CODES.forEach(c => a.push({ code: c, title: defaultTitleFor(c), ko: true }));
+        return a;
+    }
+    const regNames = () => {
+        const s = new Set();
+        (globalTeamsData || []).forEach(t => { if (t && t.data && t.data.teamName) s.add(safeLower(t.data.teamName)); });
+        return s;
+    };
+    const infoOf = code => { try { return getMatchInfo(code, defaultTitleFor(code)); } catch (e) { return null; } };
+    function resolvedPair(code) {
+        const i = infoOf(code);
+        if (!i) return null;
+        const r = regNames();
+        return (r.has(safeLower(i.p1Name)) && r.has(safeLower(i.p2Name))) ? [i.p1Name, i.p2Name] : null;
+    }
+    const isDone = code => { const m = (globalMatchesData || {})[code]; return !!(m && isCompletedMatch(m)); };
+
+    function label(m) {
+        const pair = resolvedPair(m.code);
+        let s = m.title + ' (' + m.code + ')' + (pair ? ' — ' + pair[0] + ' vs ' + pair[1] : ' — টিম অপেক্ষমাণ');
+        if (isDone(m.code)) s = '✅ ' + s;
+        return s;
+    }
+    function optionsHtml() {
+        const opt = m => '<option value="' + escHtml(m.title) + '" data-code="' + m.code + '">' + escHtml(label(m)) + '</option>';
+        let html = '<option value="">-- ম্যাচ সিলেক্ট করুন --</option>';
+        GROUPS.forEach(g => {
+            html += '<optgroup label="গ্রুপপর্ব — ' + escHtml(g.name) + '">' + allMatches().filter(m => m.group === g.name).map(opt).join('') + '</optgroup>';
+        });
+        html += '<optgroup label="নকআউট ও ফাইনাল">' + allMatches().filter(m => m.ko).map(opt).join('') + '</optgroup>';
+        return html;
+    }
+    function selCode() {
+        const s = $('adminLiveTitle');
+        const o = s && s.selectedOptions && s.selectedOptions[0];
+        return (o && o.dataset && o.dataset.code) || '';
+    }
+
+    // ---------- যাচাই (গ্রুপ নিয়ম + নকআউটে অটো-নির্ধারিত টিম) ----------
+    function validateLive(code, p1, p2) {
+        const a = safeLower(p1), b = safeLower(p2);
+        const reg = regNames();
+        if (!a || !b) return '⛔ দুটি টিমই সিলেক্ট করুন!';
+        if (a === b) return '⛔ একই টিম নিজের বিরুদ্ধে খেলতে পারে না!';
+        if (!reg.has(a) || !reg.has(b)) return '⛔ শুধু নিবন্ধিত টিম দেওয়া যাবে।';
+        const g = GROUPS.find(x => x.matches.includes(code));
+        if (g) {
+            const gTeams = ((getGroups()[g.name]) || []).map(t => safeLower(t.teamName));
+            if (!gTeams.includes(a) || !gTeams.includes(b)) return '⛔ ' + g.name + '-এর ম্যাচে শুধু ' + g.name + '-এর টিম দেওয়া যাবে। অন্য গ্রুপের টিম নেওয়া হবে না।';
+            const st = (globalMatchesData || {})[code];
+            const sx = safeLower(st && st.p1Name), sy = safeLower(st && st.p2Name);
+            if (reg.has(sx) && reg.has(sy)) {
+                if (!((sx === a && sy === b) || (sx === b && sy === a))) return '⛔ ফিকশ্চার অনুযায়ী এই ম্যাচে "' + st.p1Name + '" বনাম "' + st.p2Name + '" খেলবে।';
+                return '';
+            }
+            let ca = 0, cb = 0;
+            for (const c of g.matches) {
+                if (c === code) continue;
+                const m = (globalMatchesData || {})[c];
+                if (!m) continue;
+                const x = safeLower(m.p1Name), y = safeLower(m.p2Name);
+                if ((x === a && y === b) || (x === b && y === a)) return '⛔ এই দুই টিমের ম্যাচ (' + c + ') আগেই নির্ধারিত আছে। গ্রুপে প্রতি জোড়া একবারই খেলবে।';
+                if (x === a || y === a) ca++;
+                if (x === b || y === b) cb++;
+            }
+            if (ca >= 2 || cb >= 2) return '⛔ একটি টিম গ্রুপ পর্বে সর্বোচ্চ ২টি ম্যাচ খেলবে।';
+            return '';
+        }
+        if (KO_CODES.includes(code)) {
+            const pair = resolvedPair(code);
+            if (!pair) return '⛔ এই ম্যাচের টিম এখনো নির্ধারিত হয়নি। আগের ধাপের ম্যাচ শেষ হলে অটো বসবে।';
+            const x = safeLower(pair[0]), y = safeLower(pair[1]);
+            if (!((x === a && y === b) || (x === b && y === a))) return '⛔ এই ম্যাচে অটো-নির্ধারিত টিম: "' + pair[0] + '" বনাম "' + pair[1] + '"। অন্য টিম দেওয়া যাবে না।';
+        }
+        return '';
+    }
+
+    // ---------- সেভ: নিয়ম যাচাই ----------
+    const _slm = window.saveLiveMatchInfo;
+    window.saveLiveMatchInfo = function (e) {
+        if (isAdmin) {
+            const code = selCode();
+            if (code) {
+                const err = validateLive(code, safeStr($('adminLiveP1Select').value).trim(), safeStr($('adminLiveP2Select').value).trim());
+                if (err) { e.preventDefault(); toast(err, 'err'); return; }
+            }
+        }
+        return _slm.apply(this, arguments);
+    };
+
+    // ---------- সেভ: Supabase রো-এর রূপান্তর (পুরনো ফাংশনের ভেতরের নকল LIVE_RES_ এন্ট্রি → আসল ম্যাচ কোড) ----------
+    function mapUpsert(id, group, data, code) {
+        if (!code || !data || typeof data !== 'object') return [id, data];
+        if (typeof id === 'string' && id.indexOf('LIVE_RES_') === 0 && group === 'MATCH_SCORES') {
+            const ex = (globalMatchesData || {})[code] || {};
+            const merged = Object.assign({}, ex, data, {
+                id: code, matchCode: code,
+                title: ex.title || data.title,
+                date: ex.date || data.date,
+                ts: Date.now()
+            });
+            return [code, merged];
+        }
+        if (id === 'LIVE_CURRENT_MATCH' && data.p1Name) return [id, Object.assign({}, data, { matchCode: code })];
+        return [id, data];
+    }
+    const _dbu = window.dbUpsert;
+    window.dbUpsert = function (id, group, data) {
+        const r = isAdmin ? mapUpsert(id, group, data, selCode()) : [id, data];
+        return _dbu.call(this, r[0], group, r[1]);
+    };
+
+    // ---------- ড্রপডাউন তৈরি ও হালনাগাদ ----------
+    function build() {
+        const inp = $('adminLiveTitle');
+        if (!inp || inp.tagName === 'SELECT') return;
+        const sel = document.createElement('select');
+        sel.id = 'adminLiveTitle';
+        sel.required = true;
+        sel.className = 'w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold';
+        sel.innerHTML = optionsHtml();
+        inp.replaceWith(sel);
+        sel.addEventListener('change', onPick);
+    }
+    function refreshLabels() {
+        const sel = $('adminLiveTitle');
+        if (!sel || !sel.options) return;
+        const byCode = {};
+        allMatches().forEach(m => { byCode[m.code] = m; });
+        Array.prototype.forEach.call(sel.options, o => {
+            const c = o.dataset && o.dataset.code;
+            if (c && byCode[c]) o.textContent = label(byCode[c]);
+        });
+    }
+
+    function onPick() {
+        const code = selCode();
+        if (!code) return;
+        const p1 = $('adminLiveP1Select'), p2 = $('adminLiveP2Select');
+        const s1 = $('adminLiveP1Score'), s2 = $('adminLiveP2Score'), st = $('adminLiveStateDropdown');
+        const live = globalLiveMatchData;
+        if (live && live.matchCode === code && live.p1Name) { // এটাই এখনকার লাইভ ম্যাচ → আগের মান
+            setSelectValue(p1, live.p1Name); setSelectValue(p2, live.p2Name);
+            s1.value = live.p1Score !== undefined ? live.p1Score : 0;
+            s2.value = live.p2Score !== undefined ? live.p2Score : 0;
+            st.value = live.state || 'RUNNING';
+            return;
+        }
+        const pair = resolvedPair(code);
+        if (pair) {
+            setSelectValue(p1, pair[0]); setSelectValue(p2, pair[1]);
+            s1.value = 0; s2.value = 0; st.value = 'RUNNING';
+            if (isDone(code)) toast('⚠️ এই ম্যাচের ফলাফল আগেই সেভ আছে। আবার "সমাপ্ত" করলে তা বদলে যাবে।', 'info');
+        } else {
+            p1.value = ''; p2.value = '';
+            toast('ℹ️ এই ম্যাচের টিম এখনো নির্ধারিত নয়। গ্রুপ ম্যাচে ফিকশ্চার ট্যাব থেকে টিম সেট করুন; নকআউটে আগের ধাপ শেষ হলে অটো বসবে।', 'info');
+        }
+    }
+
+    // সেভ করা লাইভ ম্যাচ ফর্মে ফিরে এলে (এমনকি পুরনো ফ্রি-টেক্সট শিরোনামও) ঠিকভাবে দেখানো
+    if (typeof window.populateLiveMatchFormStandby === 'function') {
+        const _pl = window.populateLiveMatchFormStandby;
+        window.populateLiveMatchFormStandby = function () {
+            _pl.apply(this, arguments);
+            try {
+                const sel = $('adminLiveTitle'), live = globalLiveMatchData;
+                if (sel && sel.options && live && live.title && sel.value !== live.title && !liveFormDirty) {
+                    const o = document.createElement('option');
+                    o.value = live.title; o.textContent = live.title;
+                    sel.appendChild(o);
+                    sel.value = live.title;
+                }
+            } catch (e) { console.error(e); }
+        };
+    }
+
+    const _rd2 = window.renderData;
+    if (typeof _rd2 === 'function') {
+        window.renderData = function () {
+            _rd2.apply(this, arguments);
+            try { refreshLabels(); } catch (e) {}
+        };
+    }
+
+    window.__liveSel = { validateLive, optionsHtml, mapUpsert, allMatches };
+    build();
+    refreshLabels();
+})();
