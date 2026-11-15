@@ -464,3 +464,229 @@
     build();
     refreshLabels();
 })();
+
+
+/* ===== এডমিন "সকল ম্যাচ ... ম্যানেজমেন্ট" ফর্ম: ড্রপডাউন সিস্টেম =====
+   • ম্যাচ আইডি/কোড → ড্রপডাউন (G1_M1 … G4_M3, QF-1…4, SF-1…2, 3P-Match, FINAL); বাছলেই ম্যাচের সব তথ্য ফর্মে আসে
+   • ম্যাচের নাম/টাইটেল → ড্রপডাউন (গ্রুপ পর্ব থেকে ৩য় স্থান ও ফাইনাল পর্যন্ত ২০টি ম্যাচ); কোডের সাথে মিলিয়ে চলে
+   • তারিখ ও সময় → ড্রপডাউন (দিন / মাস / বছর / ঘণ্টা / মিনিট / AM-PM); আগের লেখা তারিখ অক্ষত থাকে
+   সেভ আগের মতোই Supabase-এর MATCH_SCORES রো-তে (মূল সেভ ফাংশন অপরিবর্তিত; ফর্মের মান একই আইডি থেকে পড়ে)। */
+(function () {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    if (typeof GROUPS === 'undefined' || typeof window.editMatchScore !== 'function' || typeof window.resetMatchForm !== 'function') return;
+    const codeInp = $('mCode'), titleInp = $('mTitle'), dateInp = $('mDate');
+    if (!codeInp || !titleInp || !dateInp || codeInp.tagName === 'SELECT') return;
+
+    const KO_CODES = ['QF-1', 'QF-2', 'QF-3', 'QF-4', 'SF-1', 'SF-2', '3P-Match', 'FINAL'];
+    const MONTHS = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+    const YEARS = [2026, 2027, 2028];
+    const bn2en = s => String(s == null ? '' : s).replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+    const pad = n => (n < 10 ? '0' : '') + n;
+
+    // ---------- ম্যাচ তালিকা ও লেবেল ----------
+    function allMatches() {
+        const a = [];
+        GROUPS.forEach(g => g.matches.forEach(c => a.push({ code: c, title: defaultTitleFor(c), group: g.name })));
+        KO_CODES.forEach(c => a.push({ code: c, title: defaultTitleFor(c), ko: true }));
+        return a;
+    }
+    const regNames = () => {
+        const s = new Set();
+        (globalTeamsData || []).forEach(t => { if (t && t.data && t.data.teamName) s.add(safeLower(t.data.teamName)); });
+        return s;
+    };
+    function pairOf(code) {
+        let i = null;
+        try { i = getMatchInfo(code, defaultTitleFor(code)); } catch (e) {}
+        if (!i) return null;
+        const r = regNames();
+        return (r.has(safeLower(i.p1Name)) && r.has(safeLower(i.p2Name))) ? [i.p1Name, i.p2Name] : null;
+    }
+    const doneOf = code => { const m = (globalMatchesData || {})[code]; return !!(m && isCompletedMatch(m)); };
+    const codeLabel = m => (doneOf(m.code) ? '✅ ' : '') + m.code + (pairOf(m.code) ? ' — ' + pairOf(m.code).join(' vs ') : ' — টিম অপেক্ষমাণ');
+    const titleLabel = m => (doneOf(m.code) ? '✅ ' : '') + m.title + ' (' + m.code + ')';
+
+    function opt(value, text, code) {
+        const o = document.createElement('option');
+        o.value = value; o.textContent = text;
+        if (code) o.dataset.code = code;
+        return o;
+    }
+    function fillMatchSelect(sel, valueFn, labelFn) {
+        sel.appendChild(opt('', '-- ম্যাচ সিলেক্ট করুন --'));
+        const list = allMatches();
+        GROUPS.forEach(g => {
+            const og = document.createElement('optgroup');
+            og.label = 'গ্রুপপর্ব — ' + g.name;
+            list.filter(m => m.group === g.name).forEach(m => og.appendChild(opt(valueFn(m), labelFn(m), m.code)));
+            sel.appendChild(og);
+        });
+        const ko = document.createElement('optgroup');
+        ko.label = 'নকআউট ও ফাইনাল';
+        list.filter(m => m.ko).forEach(m => ko.appendChild(opt(valueFn(m), labelFn(m), m.code)));
+        sel.appendChild(ko);
+    }
+    function ensureOption(sel, value, code) {
+        if (!value) return;
+        const has = Array.prototype.some.call(sel.options, o => o.value === value);
+        if (!has) sel.appendChild(opt(value, value, code));
+    }
+
+    // ---------- তারিখ: পার্স ও তৈরি ----------
+    function parseDate(v) {
+        const s = bn2en(v).replace(/\s+/g, ' ').trim();
+        const r = {};
+        if (!s) return r;
+        const sl = /(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/.exec(s);
+        if (sl) { r.day = +sl[1]; r.mon = +sl[2] - 1; r.year = +sl[3]; }
+        else {
+            const dm = /(^|[^\d])(\d{1,2})(?!\d)/.exec(s);
+            if (dm) r.day = +dm[2];
+            for (let i = 0; i < 12; i++) {
+                const p = MONTHS[i].slice(0, Math.min(3, MONTHS[i].length));
+                if (s.indexOf(p) >= 0) { r.mon = i; break; }
+            }
+            const ym = /(20\d{2})/.exec(s);
+            if (ym) r.year = +ym[1];
+        }
+        let h, mi;
+        let tm = /(\d{1,2})\s*[:ঃ]\s*(\d{1,2})/.exec(s);
+        if (tm) { h = +tm[1]; mi = +tm[2]; }
+        else { tm = /(\d{1,2})\s*টা/.exec(s); if (tm) { h = +tm[1]; mi = 0; } }
+        if (h !== undefined) {
+            let ap = '';
+            if (/\bAM\b/i.test(s)) ap = 'AM';
+            else if (/\bPM\b/i.test(s)) ap = 'PM';
+            else if (/সকাল|ভোর/.test(s)) ap = 'AM';
+            else if (/দুপুর|বিকাল|সন্ধ্যা/.test(s)) ap = 'PM';
+            else if (/রাত/.test(s)) ap = (h >= 6 && h < 12) ? 'PM' : 'AM';
+            if (h > 12) { h -= 12; ap = 'PM'; } else if (h === 0) { h = 12; ap = 'AM'; }
+            r.h = h; r.mi = mi; r.ap = ap;
+        }
+        return r;
+    }
+
+    // ---------- ফর্মের ফিল্ড বদলানো ----------
+    const CLS = 'w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white';
+    const CLS_Y = 'w-full bg-slate-900 border border-yellow-500/50 rounded-xl p-2.5 text-xs text-yellow-300 font-bold';
+
+    const codeSel = document.createElement('select');
+    codeSel.id = 'mCode'; codeSel.required = true; codeSel.className = CLS_Y;
+    fillMatchSelect(codeSel, m => m.code, codeLabel);
+    codeInp.replaceWith(codeSel);
+
+    const titleSel = document.createElement('select');
+    titleSel.id = 'mTitle'; titleSel.required = true; titleSel.className = CLS_Y;
+    fillMatchSelect(titleSel, m => m.title, titleLabel);
+    titleInp.replaceWith(titleSel);
+
+    // তারিখ: আসল ফিল্ড (id=mDate) লুকানো থাকে — মূল সেভ ফাংশন এখান থেকেই পড়ে
+    const dateParent = dateInp.parentElement;
+    const hid = document.createElement('input');
+    hid.type = 'hidden'; hid.id = 'mDate'; hid.value = dateInp.value || '';
+    dateInp.replaceWith(hid);
+
+    function mkPart(id, firstLabel, options) {
+        const s = document.createElement('select');
+        s.id = id; s.className = CLS;
+        s.appendChild(opt('', firstLabel));
+        options.forEach(x => s.appendChild(opt(x[0], x[1])));
+        return s;
+    }
+    const range = (a, b) => { const r = []; for (let i = a; i <= b; i++) r.push([String(i), bn(i)]); return r; };
+    const daySel = mkPart('mDateDay', 'দিন', range(1, 31));
+    const monSel = mkPart('mDateMonth', 'মাস', MONTHS.map((m, i) => [String(i), m]));
+    const yearSel = mkPart('mDateYear', 'বছর', YEARS.map(y => [String(y), bn(y)]));
+    const hourSel = mkPart('mDateHour', 'ঘণ্টা', range(1, 12));
+    const minSel = mkPart('mDateMin', 'মিনিট', Array.from({ length: 12 }, (_, i) => [pad(i * 5), bn(pad(i * 5))]));
+    const ampSel = mkPart('mDateAmPm', 'AM/PM', [['AM', 'AM'], ['PM', 'PM']]);
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-3 gap-2';
+    [daySel, monSel, yearSel, hourSel, minSel, ampSel].forEach(s => grid.appendChild(s));
+    const note = document.createElement('p');
+    note.id = 'mDateNote';
+    note.className = 'text-[11px] text-amber-300 mt-1 hidden';
+    if (dateParent) { dateParent.appendChild(grid); dateParent.appendChild(note); }
+
+    function compose() {
+        const d = daySel.value, m = monSel.value, y = yearSel.value, h = hourSel.value;
+        if (!(d && m !== '' && y)) return '';
+        let s = bn(d) + ' ' + MONTHS[Number(m)] + ', ' + bn(y);
+        if (h) s += ' - ' + bn(h) + ':' + bn(minSel.value || '00') + (ampSel.value ? ' ' + ampSel.value : '');
+        return s;
+    }
+    function syncDate() {
+        const v = safeStr(hid.value).trim();
+        [daySel, monSel, yearSel, hourSel, minSel, ampSel].forEach(s => { s.value = ''; });
+        if (!v) { note.classList.add('hidden'); return; }
+        const p = parseDate(v);
+        if (p.day) daySel.value = String(p.day);
+        if (p.mon !== undefined) monSel.value = String(p.mon);
+        if (p.year) yearSel.value = String(p.year);
+        if (p.h) {
+            hourSel.value = String(p.h);
+            if (p.mi !== undefined) minSel.value = pad(p.mi);
+            if (p.ap) ampSel.value = p.ap;
+        }
+        if (compose() !== v) {
+            note.textContent = 'ℹ️ বর্তমানে সেভ করা: "' + v + '" — নিচের ড্রপডাউন বদলালে এটি নতুন ফরম্যাটে বদলে যাবে, না বদলালে হুবহু থাকবে।';
+            note.classList.remove('hidden');
+        } else { note.classList.add('hidden'); }
+    }
+    [daySel, monSel, yearSel, hourSel, minSel, ampSel].forEach(s => s.addEventListener('change', () => {
+        hid.value = compose();
+        note.classList.add('hidden');
+    }));
+
+    // ---------- ম্যাচ বাছলে ফর্ম ভরা (মূল editMatchScore দিয়ে) ----------
+    function pick(code) { if (code) window.editMatchScore(code); }
+    codeSel.addEventListener('change', () => pick(codeSel.value));
+    titleSel.addEventListener('change', () => {
+        const o = titleSel.selectedOptions && titleSel.selectedOptions[0];
+        pick(o && o.dataset ? o.dataset.code : '');
+    });
+
+    const _em = window.editMatchScore;
+    window.editMatchScore = function (code) {
+        const r = _em.apply(this, arguments);
+        if (!isAdmin) return r;
+        try {
+            const info = getMatchInfo(code, defaultTitleFor(code));
+            ensureOption(codeSel, code, code);
+            codeSel.disabled = false;   // ড্রপডাউনে ম্যাচ বদলানো যাবে
+            codeSel.value = code;
+            const t = (info && info.title) || defaultTitleFor(code);
+            ensureOption(titleSel, t, code);
+            titleSel.value = t;
+            hid.value = (globalMatchesData && globalMatchesData[code]) ? ((info && info.date) || '') : '';
+            syncDate();
+        } catch (e) { console.error(e); }
+        return r;
+    };
+    const _rm = window.resetMatchForm;
+    window.resetMatchForm = function () {
+        const r = _rm.apply(this, arguments);
+        try { codeSel.disabled = false; codeSel.value = ''; titleSel.value = ''; hid.value = ''; syncDate(); } catch (e) {}
+        return r;
+    };
+
+    // ---------- লেবেল হালনাগাদ (টিম/✅ বদলালে) ----------
+    function refreshLabels() {
+        const byCode = {};
+        allMatches().forEach(m => { byCode[m.code] = m; });
+        Array.prototype.forEach.call(codeSel.options, o => { const c = o.dataset && o.dataset.code; if (c && byCode[c] && o.value === c) o.textContent = codeLabel(byCode[c]); });
+        Array.prototype.forEach.call(titleSel.options, o => { const c = o.dataset && o.dataset.code; if (c && byCode[c] && o.value === byCode[c].title) o.textContent = titleLabel(byCode[c]); });
+    }
+    const _rd3 = window.renderData;
+    if (typeof _rd3 === 'function') {
+        window.renderData = function () {
+            _rd3.apply(this, arguments);
+            try { refreshLabels(); } catch (e) {}
+        };
+    }
+
+    window.__matchForm = { parseDate, compose, syncDate, allMatches };
+    refreshLabels();
+    syncDate();
+})();
