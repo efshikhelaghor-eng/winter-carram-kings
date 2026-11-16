@@ -2145,6 +2145,14 @@
 <script src="perf-patch.js"></script>
 <script src="image-storage.js"></script>
 <script src="tournament-auto.js"></script>
-<script src="live-player.js?v=8"></script>
+<script src="live-player.js?v=8"></script> 
+     <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .then(() => console.log("PWA Service Worker Registered!"))
+          .catch((err) => console.log("PWA Registration Failed", err));
+      }
+    </script>
+
 </body>
 </html>
