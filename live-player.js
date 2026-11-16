@@ -1443,3 +1443,37 @@
     window.__finishedAdmin = { validateEdit: validateEdit, cardHtml: cardHtml, sortedDone: sortedDone };
     if (isAdmin) renderFinished();
 })();
+
+
+/* ===== লাইভ ম্যাচ কন্ট্রোল: টিম ১/২ পয়েন্ট ড্রপডাউন (০ – ২৯, বাংলা অঙ্কে) =====
+   • পয়েন্টের ঘর দুটি ড্রপডাউন; তালিকায় ০, ১, ২ … ২৯ (বাংলা অঙ্ক)
+   • ভেতরে মান ইংরেজি সংখ্যা ("29") থাকে, তাই মূল সেভ ফাংশন, যাচাই (২৯ লাগবে/সমান নয়), গ্রুপ টেবিল ও
+     নকআউট হিসাব আগের মতোই ঠিক চলে; Supabase-এ সেভ আগের মতোই (LIVE_CURRENT_MATCH ও ফলাফল রো)
+   • অন্য কোড যখন ঘরে মান বসায় (সেভ করা লাইভ ম্যাচ ফিরে আসা, ম্যাচ বাছলে ০, রিসেট) সেটাও ঠিকভাবে দেখায় */
+(function () {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const a = $('adminLiveP1Score'), b = $('adminLiveP2Score');
+    if (!a || !b || a.tagName === 'SELECT') return;
+    const MAXP = (typeof WINNING_SCORE === 'number') ? WINNING_SCORE : 29;
+
+    function toSelect(inp, labelText) {
+        const sel = document.createElement('select');
+        sel.id = inp.id;
+        sel.className = 'w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-yellow-300 font-extrabold';
+        for (let i = 0; i <= MAXP; i++) {
+            const o = document.createElement('option');
+            o.value = String(i);
+            o.textContent = bn(i);
+            sel.appendChild(o);
+        }
+        const cur = parseInt(inp.value, 10);
+        sel.value = String(isNaN(cur) ? 0 : Math.min(Math.max(cur, 0), MAXP));
+        inp.insertAdjacentHTML('beforebegin', '<label class="text-[11px] text-gray-400 block">' + labelText + '</label>');
+        inp.replaceWith(sel);
+        return sel;
+    }
+    const s1 = toSelect(a, 'টিম ১ পয়েন্ট (০ – ' + bn(MAXP) + ')');
+    const s2 = toSelect(b, 'টিম ২ পয়েন্ট (০ – ' + bn(MAXP) + ')');
+    window.__liveScoreSel = { s1: s1, s2: s2 };
+})();
