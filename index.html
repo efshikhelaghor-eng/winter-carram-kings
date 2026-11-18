@@ -1574,7 +1574,11 @@
         function renderHomepageRecentAndUpcoming() {
             const recentElem = document.getElementById('recentMatchesList');
             const upcomingElem = document.getElementById('upcomingMatchesList');
-
+if (Array.isArray(globalUpcomingMatchesData)) {
+        globalUpcomingMatchesData.sort((a, b) => {
+            const timeA = new Date(a.scheduled_at || a.match_time || 0);
+            const timeB = new Date(b.scheduled_at || b.match_time || 0);
+            return timeA - timeB;
             const done = [];
             Object.keys(globalMatchesData).forEach((k, i) => {
                 const m = globalMatchesData[k];
