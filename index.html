@@ -1606,23 +1606,18 @@
                 if (!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
                     upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
                 } else {
-                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(m => `
-    <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/85 text-xs space-y-2">
-        <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1">
-            <span>${escHtml(m.title || m.match_title || '')}</span>
-            <span class="text-yellow-300 text-[10px] font-normal text-right">${escHtml(m.time || m.match_time || '')}</span>
-        </div>
-        <p class="text-white font-extrabold text-center py-1 break-words">${escHtml(m.team1 || m.team_one || 'টিম ১')} vs ${escHtml(m.team2 || m.team_two || 'টিম ২')}</p>
-        
-        ${isAdmin ? `
-        <div class="flex justify-end gap-2 pt-1 border-t border-slate-900">
-            <button data-code="${escHtml(m.match_code || m.id)}" onclick="editUpcomingMatch(this.dataset.code)" class="text-amber-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">✏️ এডিট</button>
-            <button data-id="${escHtml(m.match_code || m.id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">🗑️ মুছে ফেলুন</button>
-        </div>
-        ` : ''}
-    </div>
-`).join('');
-
+                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(u => {
+                        const del = isAdmin ? `<button data-id="${escHtml(u.db_id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
+                        return `
+                            <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-blue-500/40 shadow-lg">
+                                <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1.5">
+                                    <span>${escHtml(u.title)}</span>
+                                    <span class="text-yellow-300 text-[10px] font-bold text-right">${escHtml(u.time)} ${del}</span>
+                                </div>
+                                <p class="text-white font-extrabold text-sm py-1 text-center break-words">${escHtml(u.teams)}</p>
+                                <div class="text-[10px] text-gray-400 text-center font-medium">⏰ নির্ধারিত সময় অনুযায়ী লাইভ শুরু হবে</div>
+                            </div>`;
+                    }).join('');
                 }
             }
         }
@@ -1871,24 +1866,6 @@
             try { await dbDelete(dbId); toast('🗑️ মুছে ফেলা হয়েছে'); await loadData({ force: true }); }
             catch (err) { toast('❌ মুছতে সমস্যা: ' + err.message, 'err'); }
         }
-// আপকামিং ম্যাচ এডিট করার ফাংশন
-function editUpcomingMatch(matchCode) {
-    if (!isAdmin) {
-        toast('❌ অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।', 'err');
-        return;
-    }
-    const info = globalUpcomingMatchesData ? globalUpcomingMatchesData.find(m => m.match_code === matchCode || m.id === matchCode) : null;
-    if (!info) return;
-
-    // ফর্মের ফিল্ডগুলোতে সঠিক ডাটা বসানো (প্রয়োজনীয় প্রপার্টি চেক করে)
-    document.getElementById('upTitle').value = info.title || info.match_title || '';
-    document.getElementById('upTeamSelect').value = info.team1 || info.team_one || '';
-    document.getElementById('upTeam2Select').value = info.team2 || info.team_two || '';
-    document.getElementById('upTime').value = info.time || info.match_time || '';
-
-    document.getElementById('adminUpcomingSec').scrollIntoView({ behavior: 'smooth' });
-    toast('✏️ ম্যাচটি এডিট করার জন্য লোড করা হয়েছে।', 'success');
-}
 
         // ======================= ADMIN: PLAYERS =======================
         function compressImageToBase64(file) {
@@ -2176,93 +2153,6 @@ function editUpcomingMatch(matchCode) {
           .catch((err) => console.log("PWA Registration Failed", err));
       }
     </script>
-<script>
-  // ১. ম্যাচ ডিলিট বা রিমুভ করার ফাংশন (Supabase থেকে)
-  async function removeMatch(matchCode) {
-    if (!isadmin) {
-      toast('এই কাজটি করার জন্য অ্যাডমিন অনুমতি প্রয়োজন।', 'err');
-      return;
-    }
-
-    if (!confirm('আপনি কি নিশ্চিতভাবে এই ম্যাচের সময়সূচী মুছে ফেলতে চান?')) {
-      return;
-    }
-
-    await withBusy(document.body, async () => {
-      try {
-        const { error } = await supabase
-          .from('upcoming_matches') // আপনার সুপাবেস টেবিলের নাম
-          .delete()
-          .eq('match_code', matchCode);
-
-        if (error) throw error;
-
-        toast('ম্যাচ সফলভাবে মুছে ফেলা হয়েছে!', 'success');
-        loadData({ force: true });
-        
-      } catch (err) {
-        console.error(err);
-        toast(`মুছে ফেলতে সমস্যা হয়েছে: ${err.message}`, 'err');
-      }
-    });
-  }
-
-  // ২. আগামী ম্যাচের সময়সূচী সুপাবেসে সেভ বা আপডেট করার ফাংশন
-  async function saveUpcomingMatch(matchData) {
-    if (!isadmin) {
-      toast('শুধুমাত্র অ্যাডমিন ম্যাচ শিডিউল সেট করতে পারবেন।', 'err');
-      return;
-    }
-
-    await withBusy(document.getElementById('SubmitBtn'), async () => {
-      try {
-        const { error } = await supabase
-          .from('upcoming_matches')
-          .upsert([
-            {
-              match_code: matchData.matchCode,
-              match_title: matchData.title,
-              team_one: matchData.team1,
-              team_two: matchData.team2,
-              match_time: matchData.time,
-              updated_at: new Date()
-            }
-          ], { onConflict: ['match_code'] });
-
-        if (error) throw error;
-
-        toast('আগামী ম্যাচের সময়সূচী সফলভাবে সেভ হয়েছে!', 'success');
-        resetMatchForm();
-        loadData({ force: true });
-
-      } catch (err) {
-        console.error(err);
-        toast(`সেভ করতে ব্যর্থ হয়েছে: ${err.message}`, 'err');
-      }
-    });
-  }
-
-  // ৩. হোমপেজে ড্যাশবোর্ড রেন্ডার এবং মুছুন (Delete) বাটন যুক্ত করা
-  function renderMatchDashboard(matches) {
-    const container = document.getElementById('match-dashboard-container');
-    if (!container) return;
-
-    container.innerHTML = matches.map(m => `
-      <div class="match-card">
-        <div class="match-info">
-          <span>${m.match_title} (${m.match_code})</span>
-          <p>${m.match_time}</p>
-          <h4>${m.team_one} vs ${m.team_two}</h4>
-        </div>
-        ${isadmin ? `
-          <button class="delete-btn" onclick="removeMatch('${m.match_code}')" style="background:#ff4d4d; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-top:5px;">
-            🗑️ মুছুন
-          </button>
-        ` : ''}
-      </div>
-    `).join('');
-  }
-</script>
 
 </body>
 </html>
