@@ -1606,18 +1606,24 @@
                 if (!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
                     upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
                 } else {
-                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(u => {
-                        const del = isAdmin ? `<button data-id="${escHtml(u.db_id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
-                        return `
-                            <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-blue-500/40 shadow-lg">
-                                <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1.5">
-                                    <span>${escHtml(u.title)}</span>
-                                    <span class="text-yellow-300 text-[10px] font-bold text-right">${escHtml(u.time)} ${del}</span>
-                                </div>
-                                <p class="text-white font-extrabold text-sm py-1 text-center break-words">${escHtml(u.teams)}</p>
-                                <div class="text-[10px] text-gray-400 text-center font-medium">⏰ নির্ধারিত সময় অনুযায়ী লাইভ শুরু হবে</div>
-                            </div>`;
-                    }).join('');
+                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(m => `
+    <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/85 text-xs space-y-2">
+        <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1">
+            <span>${escHtml(m.title)}</span>
+            <span class="text-yellow-300 text-[10px] font-normal text-right">${escHtml(m.time)}</span>
+        </div>
+        <p class="text-white font-extrabold text-center py-1 break-words">${escHtml(m.team1)} vs ${escHtml(m.team2)}</p>
+        
+        <!-- এডমিন লগইন থাকলে এডিট ও ডিলিট দুটি বাটন দেখাবে -->
+        ${isAdmin ? `
+        <div class="flex justify-end gap-2 pt-1 border-t border-slate-900">
+            <button data-code="${escHtml(m.match_code)}" onclick="editUpcomingMatch(this.dataset.code)" class="text-amber-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">✏️ এডিট</button>
+            <button data-id="${escHtml(m.match_code)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">🗑️ মুছে ফেলুন</button>
+        </div>
+        ` : ''}
+    </div>
+`).join('');
+
                 }
             }
         }
