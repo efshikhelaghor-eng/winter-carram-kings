@@ -1866,6 +1866,25 @@
             try { await dbDelete(dbId); toast('🗑️ মুছে ফেলা হয়েছে'); await loadData({ force: true }); }
             catch (err) { toast('❌ মুছতে সমস্যা: ' + err.message, 'err'); }
         }
+// আপকামিং ম্যাচ এডিট করার ফাংশন
+function editUpcomingMatch(matchCode) {
+    if (!isAdmin) {
+        toast('❌ অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।', 'err');
+        return;
+    }
+    const info = globalUpcomingMatchesData ? globalUpcomingMatchesData.find(m => m.match_code === matchCode) : null;
+    if (!info) return;
+
+    // ফর্মের ফিল্ডগুলোতে পুরোনো ডেটা বসিয়ে দেওয়া
+    document.getElementById('upTitle').value = info.title || '';
+    document.getElementById('upTeamSelect').value = info.team1 || '';
+    document.getElementById('upTeam2Select').value = info.team2 || '';
+    document.getElementById('upTime').value = info.time || '';
+
+    // অ্যাডমিন প্যানেলের আপকামিং সেকশনে স্ক্রোল করে নিয়ে যাওয়া
+    document.getElementById('adminUpcomingSec').scrollIntoView({ behavior: 'smooth' });
+    toast('✏️ ম্যাচটি এডিট করার জন্য লোড করা হয়েছে।', 'success');
+}
 
         // ======================= ADMIN: PLAYERS =======================
         function compressImageToBase64(file) {
