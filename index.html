@@ -1609,16 +1609,15 @@
                     upcomingElem.innerHTML = globalUpcomingMatchesData.map(m => `
     <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/85 text-xs space-y-2">
         <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1">
-            <span>${escHtml(m.title)}</span>
-            <span class="text-yellow-300 text-[10px] font-normal text-right">${escHtml(m.time)}</span>
+            <span>${escHtml(m.title || m.match_title || '')}</span>
+            <span class="text-yellow-300 text-[10px] font-normal text-right">${escHtml(m.time || m.match_time || '')}</span>
         </div>
-        <p class="text-white font-extrabold text-center py-1 break-words">${escHtml(m.team1)} vs ${escHtml(m.team2)}</p>
+        <p class="text-white font-extrabold text-center py-1 break-words">${escHtml(m.team1 || m.team_one || 'টিম ১')} vs ${escHtml(m.team2 || m.team_two || 'টিম ২')}</p>
         
-        <!-- এডমিন লগইন থাকলে এডিট ও ডিলিট দুটি বাটন দেখাবে -->
         ${isAdmin ? `
         <div class="flex justify-end gap-2 pt-1 border-t border-slate-900">
-            <button data-code="${escHtml(m.match_code)}" onclick="editUpcomingMatch(this.dataset.code)" class="text-amber-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">✏️ এডিট</button>
-            <button data-id="${escHtml(m.match_code)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">🗑️ মুছে ফেলুন</button>
+            <button data-code="${escHtml(m.match_code || m.id)}" onclick="editUpcomingMatch(this.dataset.code)" class="text-amber-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">✏️ এডিট</button>
+            <button data-id="${escHtml(m.match_code || m.id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">🗑️ মুছে ফেলুন</button>
         </div>
         ` : ''}
     </div>
@@ -1878,16 +1877,15 @@ function editUpcomingMatch(matchCode) {
         toast('❌ অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।', 'err');
         return;
     }
-    const info = globalUpcomingMatchesData ? globalUpcomingMatchesData.find(m => m.match_code === matchCode) : null;
+    const info = globalUpcomingMatchesData ? globalUpcomingMatchesData.find(m => m.match_code === matchCode || m.id === matchCode) : null;
     if (!info) return;
 
-    // ফর্মের ফিল্ডগুলোতে পুরোনো ডেটা বসিয়ে দেওয়া
-    document.getElementById('upTitle').value = info.title || '';
-    document.getElementById('upTeamSelect').value = info.team1 || '';
-    document.getElementById('upTeam2Select').value = info.team2 || '';
-    document.getElementById('upTime').value = info.time || '';
+    // ফর্মের ফিল্ডগুলোতে সঠিক ডাটা বসানো (প্রয়োজনীয় প্রপার্টি চেক করে)
+    document.getElementById('upTitle').value = info.title || info.match_title || '';
+    document.getElementById('upTeamSelect').value = info.team1 || info.team_one || '';
+    document.getElementById('upTeam2Select').value = info.team2 || info.team_two || '';
+    document.getElementById('upTime').value = info.time || info.match_time || '';
 
-    // অ্যাডমিন প্যানেলের আপকামিং সেকশনে স্ক্রোল করে নিয়ে যাওয়া
     document.getElementById('adminUpcomingSec').scrollIntoView({ behavior: 'smooth' });
     toast('✏️ ম্যাচটি এডিট করার জন্য লোড করা হয়েছে।', 'success');
 }
