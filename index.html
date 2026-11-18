@@ -2153,6 +2153,93 @@
           .catch((err) => console.log("PWA Registration Failed", err));
       }
     </script>
+<script>
+  // ১. ম্যাচ ডিলিট বা রিমুভ করার ফাংশন (Supabase থেকে)
+  async function removeMatch(matchCode) {
+    if (!isadmin) {
+      toast('এই কাজটি করার জন্য অ্যাডমিন অনুমতি প্রয়োজন।', 'err');
+      return;
+    }
+
+    if (!confirm('আপনি কি নিশ্চিতভাবে এই ম্যাচের সময়সূচী মুছে ফেলতে চান?')) {
+      return;
+    }
+
+    await withBusy(document.body, async () => {
+      try {
+        const { error } = await supabase
+          .from('upcoming_matches') // আপনার সুপাবেস টেবিলের নাম
+          .delete()
+          .eq('match_code', matchCode);
+
+        if (error) throw error;
+
+        toast('ম্যাচ সফলভাবে মুছে ফেলা হয়েছে!', 'success');
+        loadData({ force: true });
+        
+      } catch (err) {
+        console.error(err);
+        toast(`মুছে ফেলতে সমস্যা হয়েছে: ${err.message}`, 'err');
+      }
+    });
+  }
+
+  // ২. আগামী ম্যাচের সময়সূচী সুপাবেসে সেভ বা আপডেট করার ফাংশন
+  async function saveUpcomingMatch(matchData) {
+    if (!isadmin) {
+      toast('শুধুমাত্র অ্যাডমিন ম্যাচ শিডিউল সেট করতে পারবেন।', 'err');
+      return;
+    }
+
+    await withBusy(document.getElementById('SubmitBtn'), async () => {
+      try {
+        const { error } = await supabase
+          .from('upcoming_matches')
+          .upsert([
+            {
+              match_code: matchData.matchCode,
+              match_title: matchData.title,
+              team_one: matchData.team1,
+              team_two: matchData.team2,
+              match_time: matchData.time,
+              updated_at: new Date()
+            }
+          ], { onConflict: ['match_code'] });
+
+        if (error) throw error;
+
+        toast('আগামী ম্যাচের সময়সূচী সফলভাবে সেভ হয়েছে!', 'success');
+        resetMatchForm();
+        loadData({ force: true });
+
+      } catch (err) {
+        console.error(err);
+        toast(`সেভ করতে ব্যর্থ হয়েছে: ${err.message}`, 'err');
+      }
+    });
+  }
+
+  // ৩. হোমপেজে ড্যাশবোর্ড রেন্ডার এবং মুছুন (Delete) বাটন যুক্ত করা
+  function renderMatchDashboard(matches) {
+    const container = document.getElementById('match-dashboard-container');
+    if (!container) return;
+
+    container.innerHTML = matches.map(m => `
+      <div class="match-card">
+        <div class="match-info">
+          <span>${m.match_title} (${m.match_code})</span>
+          <p>${m.match_time}</p>
+          <h4>${m.team_one} vs ${m.team_two}</h4>
+        </div>
+        ${isadmin ? `
+          <button class="delete-btn" onclick="removeMatch('${m.match_code}')" style="background:#ff4d4d; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-top:5px;">
+            🗑️ মুছুন
+          </button>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+</script>
 
 </body>
 </html>
