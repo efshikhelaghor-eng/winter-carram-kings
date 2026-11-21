@@ -796,116 +796,49 @@
             return map[code] || code;
         }
         function computeStandings(teamList, codes) {
-  const rows = {};
-  (teamList || []).forEach(t => {
-    const rawName = safeStr(t && t.teamName).trim();
-    const key = safeLower(rawName);
-    if (!key) return;
-    rows[key] = {
-      name: rawName,
-      p: 0,
-      w: 0,
-      l: 0,
-      pf: 0,
-      pa: 0,
-      diff: 0,
-      qualifiedDirect: false
-    };
-  });
-
-  (codes || []).forEach(code => {
-    const m = globalMatchesData && globalMatchesData[code];
-    if (!m || !isCompletedMatch(m)) return;
-
-    const k1 = safeLower(m.p1Name);
-    const k2 = safeLower(m.p2Name);
-    const s1 = Number(m.p1Points) || 0;
-    const s2 = Number(m.p2Points) || 0;
-    const side = getWinnerSide(m);
-
-    if (rows[k1]) {
-      rows[k1].p += 1;
-      rows[k1].pf += s1;
-      rows[k1].pa += s2;
-      if (side === 1) rows[k1].w += 1;
-      else if (side === 2) rows[k1].l += 1;
-    }
-
-    if (rows[k2]) {
-      rows[k2].p += 1;
-      rows[k2].pf += s2;
-      rows[k2].pa += s1;
-      if (side === 2) rows[k2].w += 1;
-      else if (side === 1) rows[k2].l += 1;
-    }
-  });
-
-  const list = Object.values(rows).map(r => {
-    r.diff = r.pf - r.pa;
-    r.qualifiedDirect = r.w >= 2;
-    return r;
-  });
-
-  return list.sort((a, b) => {
-    if (b.diff !== a.diff) return b.diff - a.diff;
-    if (b.w !== a.w) return b.w - a.w;
-    return b.pf - a.pf;
-  });
-}
-
-function standingHtml(groupName, teamList, codes) {
-  if (!teamList || !teamList.length) return '';
-  const rows = computeStandings(teamList, codes);
-  let body = '';
-
-  rows.forEach((r, idx) => {
-    const isEliminated = (rows.length >= 3 && idx === rows.length - 1 && r.p >= 2);
-    const isQualified = (!isEliminated && (r.qualifiedDirect || idx < 2));
-
-    let badge = '';
-    if (r.qualifiedDirect) {
-      badge = ' <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">সরাসরি কোয়ালিফাই</span>';
-    } else if (isQualified && r.p > 0) {
-      badge = ' <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">কোয়ার্টার ফাইনাল</span>';
-    } else if (isEliminated) {
-      badge = ' <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40">এলিমিনেটেড</span>';
-    }
-
-    const rowCls = isEliminated
-      ? 'bg-red-950/20 text-gray-400'
-      : (idx < 2 && r.p > 0 ? 'bg-yellow-500/10' : '');
-
-    const diffStr = r.diff > 0 ? '+' + r.diff : '' + r.diff;
-    const diffCls = r.diff > 0 ? 'text-emerald-400' : (r.diff < 0 ? 'text-red-400' : 'text-gray-300');
-
-    body += '<tr class="' + rowCls + '">'
-      + '<td class="p-2.5 font-black ' + (idx < 2 ? 'text-yellow-400' : 'text-gray-400') + '">' + bn(idx + 1) + '</td>'
-      + '<td class="p-2.5 font-bold text-white">' + escHtml(r.name) + badge + '</td>'
-      + '<td class="p-2.5 text-center text-gray-300">' + bn(r.p) + '</td>'
-      + '<td class="p-2.5 text-center text-emerald-400 font-bold">' + bn(r.w) + '</td>'
-      + '<td class="p-2.5 text-center text-red-400 font-bold">' + bn(r.l) + '</td>'
-      + '<td class="p-2.5 text-center font-extrabold ' + diffCls + '">' + bn(diffStr) + '</td>'
-      + '</tr>';
-  });
-
-  return '<div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/70">'
-    + '<div class="px-4 py-2.5 border-b border-slate-800 text-xs font-extrabold text-yellow-400">' + escHtml(groupName) + ' - পয়েন্ট টেবিল</div>'
-    + '<table class="w-full text-xs">'
-    + '<thead>'
-    + '<tr class="text-gray-400 bg-slate-900 border-b border-slate-800">'
-    + '<th class="p-2.5 text-left">#</th>'
-    + '<th class="p-2.5 text-left">টিম</th>'
-    + '<th class="p-2.5 text-center">ম্যাচ</th>'
-    + '<th class="p-2.5 text-center">জয়</th>'
-    + '<th class="p-2.5 text-center">হার</th>'
-    + '<th class="p-2.5 text-center">ব্যবধান</th>'
-    + '</tr>'
-    + '</thead>'
-    + '<tbody class="divide-y divide-slate-800">' + body + '</tbody>'
-    + '</table>'
-    + '</div>';
-}
-
+            const rows = {};
+            teamList.forEach(t => { rows[safeLower(t.teamName)] = { name: t.teamName, p: 0, w: 0, l: 0, pf: 0, pa: 0 }; });
+            codes.forEach(code => {
+                const m = globalMatchesData[code];
+                if (!m || !isCompletedMatch(m)) return;
+                const side = getWinnerSide(m);
+                if (!side) return;
+                const r1 = rows[safeLower(m.p1Name)], r2 = rows[safeLower(m.p2Name)];
+                const a = Number(m.p1Points) || 0, b = Number(m.p2Points) || 0;
+                if (r1) { r1.p++; r1.pf += a; r1.pa += b; }
+                if (r2) { r2.p++; r2.pf += b; r2.pa += a; }
+                if (side === 1) { if (r1) r1.w++; if (r2) r2.l++; } else { if (r2) r2.w++; if (r1) r1.l++; }
+            });
+            return Object.values(rows).sort((x, y) => (y.w - x.w) || ((y.pf - y.pa) - (x.pf - x.pa)) || (y.pf - x.pf));
+        }
+        function standingsHtml(groupName, teamList, codes) {
+            if (!teamList.length) return '';
+            const rows = computeStandings(teamList, codes);
+            let body = '';
+            rows.forEach((r, i) => {
+                const diff = r.pf - r.pa;
+                const lead = i === 0 && r.p > 0;
+                body += `<tr class="${lead ? 'bg-yellow-500/10' : ''}">
+                    <td class="p-2.5 font-black ${lead ? 'text-yellow-400' : 'text-gray-400'}">${bn(i + 1)}</td>
+                    <td class="p-2.5 font-bold text-white">${lead ? '👑 ' : ''}${escHtml(r.name)}</td>
+                    <td class="p-2.5 text-center text-gray-300">${bn(r.p)}</td>
+                    <td class="p-2.5 text-center text-emerald-400 font-bold">${bn(r.w)}</td>
+                    <td class="p-2.5 text-center text-red-400 font-bold">${bn(r.l)}</td>
+                    <td class="p-2.5 text-center text-gray-300">${bn(r.pf)}-${bn(r.pa)}</td>
+                    <td class="p-2.5 text-center font-extrabold ${diff >= 0 ? 'text-yellow-300' : 'text-red-300'}">${diff > 0 ? '+' : ''}${bn(diff)}</td>
+                </tr>`;
+            });
+            return `
+                <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/70">
+                    <div class="px-4 py-2.5 border-b border-slate-800 text-xs font-extrabold text-yellow-400">📊 ${escHtml(groupName)} - পয়েন্ট টেবিল</div>
+                    <table class="w-full text-xs">
+                        <thead><tr class="text-gray-400 bg-slate-900">
+                            <th class="p-2.5 text-left">#</th><th class="p-2.5 text-left">টিম</th><th class="p-2.5">খেলা</th><th class="p-2.5">জয়</th><th class="p-2.5">হার</th><th class="p-2.5">পয়েন্ট</th><th class="p-2.5">ব্যবধান</th>
+                        </tr></thead>
+                        <tbody class="divide-y divide-slate-800">${body}</tbody>
+                    </table>
+                </div>`;
+        }
 
         // ======================= SESSION / UI STATE =======================
         function checkAdminSession() {
@@ -1673,18 +1606,23 @@ function standingHtml(groupName, teamList, codes) {
                 if (!globalUpcomingMatchesData || globalUpcomingMatchesData.length === 0) {
                     upcomingElem.innerHTML = `<p class="text-xs text-gray-400 italic col-span-2 text-center py-4">কোনো আগামী ম্যাচের সময়সূচী যোগ করা হয়নি।</p>`;
                 } else {
-                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(u => {
-                        const del = isAdmin ? `<button data-id="${escHtml(u.db_id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 hover:text-red-300 font-bold text-[10px] ml-2">🗑️ মুছুন</button>` : '';
-                        return `
-                            <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-xs space-y-2 hover:border-blue-500/40 shadow-lg">
-                                <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1.5">
-                                    <span>${escHtml(u.title)}</span>
-                                    <span class="text-yellow-300 text-[10px] font-bold text-right">${escHtml(u.time)} ${del}</span>
-                                </div>
-                                <p class="text-white font-extrabold text-sm py-1 text-center break-words">${escHtml(u.teams)}</p>
-                                <div class="text-[10px] text-gray-400 text-center font-medium">⏰ নির্ধারিত সময় অনুযায়ী লাইভ শুরু হবে</div>
-                            </div>`;
-                    }).join('');
+                    upcomingElem.innerHTML = globalUpcomingMatchesData.map(m => `
+    <div class="card-lift bg-slate-950 p-4 rounded-2xl border border-slate-800/85 text-xs space-y-2">
+        <div class="flex justify-between gap-2 text-blue-400 font-extrabold border-b border-slate-800 pb-1">
+            <span>${escHtml(m.title || m.match_title || '')}</span>
+            <span class="text-yellow-300 text-[10px] font-normal text-right">${escHtml(m.time || m.match_time || '')}</span>
+        </div>
+        <p class="text-white font-extrabold text-center py-1 break-words">${escHtml(m.team1 || m.team_one || 'টিম ১')} vs ${escHtml(m.team2 || m.team_two || 'টিম ২')}</p>
+        
+        ${isAdmin ? `
+        <div class="flex justify-end gap-2 pt-1 border-t border-slate-900">
+            <button data-code="${escHtml(m.match_code || m.id)}" onclick="editUpcomingMatch(this.dataset.code)" class="text-amber-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">✏️ এডিট</button>
+            <button data-id="${escHtml(m.match_code || m.id)}" onclick="deleteUpcomingMatch(this.dataset.id)" class="text-red-400 text-xs font-bold px-2 py-1 bg-slate-900 rounded">🗑️ মুছে ফেলুন</button>
+        </div>
+        ` : ''}
+    </div>
+`).join('');
+
                 }
             }
         }
@@ -1933,6 +1871,24 @@ function standingHtml(groupName, teamList, codes) {
             try { await dbDelete(dbId); toast('🗑️ মুছে ফেলা হয়েছে'); await loadData({ force: true }); }
             catch (err) { toast('❌ মুছতে সমস্যা: ' + err.message, 'err'); }
         }
+// আপকামিং ম্যাচ এডিট করার ফাংশন
+function editUpcomingMatch(matchCode) {
+    if (!isAdmin) {
+        toast('❌ অনুগ্রহ করে এডমিন হিসেবে লগইন করুন।', 'err');
+        return;
+    }
+    const info = globalUpcomingMatchesData ? globalUpcomingMatchesData.find(m => m.match_code === matchCode || m.id === matchCode) : null;
+    if (!info) return;
+
+    // ফর্মের ফিল্ডগুলোতে সঠিক ডাটা বসানো (প্রয়োজনীয় প্রপার্টি চেক করে)
+    document.getElementById('upTitle').value = info.title || info.match_title || '';
+    document.getElementById('upTeamSelect').value = info.team1 || info.team_one || '';
+    document.getElementById('upTeam2Select').value = info.team2 || info.team_two || '';
+    document.getElementById('upTime').value = info.time || info.match_time || '';
+
+    document.getElementById('adminUpcomingSec').scrollIntoView({ behavior: 'smooth' });
+    toast('✏️ ম্যাচটি এডিট করার জন্য লোড করা হয়েছে।', 'success');
+}
 
         // ======================= ADMIN: PLAYERS =======================
         function compressImageToBase64(file) {
@@ -2220,6 +2176,93 @@ function standingHtml(groupName, teamList, codes) {
           .catch((err) => console.log("PWA Registration Failed", err));
       }
     </script>
+<script>
+  // ১. ম্যাচ ডিলিট বা রিমুভ করার ফাংশন (Supabase থেকে)
+  async function removeMatch(matchCode) {
+    if (!isadmin) {
+      toast('এই কাজটি করার জন্য অ্যাডমিন অনুমতি প্রয়োজন।', 'err');
+      return;
+    }
+
+    if (!confirm('আপনি কি নিশ্চিতভাবে এই ম্যাচের সময়সূচী মুছে ফেলতে চান?')) {
+      return;
+    }
+
+    await withBusy(document.body, async () => {
+      try {
+        const { error } = await supabase
+          .from('upcoming_matches') // আপনার সুপাবেস টেবিলের নাম
+          .delete()
+          .eq('match_code', matchCode);
+
+        if (error) throw error;
+
+        toast('ম্যাচ সফলভাবে মুছে ফেলা হয়েছে!', 'success');
+        loadData({ force: true });
+        
+      } catch (err) {
+        console.error(err);
+        toast(`মুছে ফেলতে সমস্যা হয়েছে: ${err.message}`, 'err');
+      }
+    });
+  }
+
+  // ২. আগামী ম্যাচের সময়সূচী সুপাবেসে সেভ বা আপডেট করার ফাংশন
+  async function saveUpcomingMatch(matchData) {
+    if (!isadmin) {
+      toast('শুধুমাত্র অ্যাডমিন ম্যাচ শিডিউল সেট করতে পারবেন।', 'err');
+      return;
+    }
+
+    await withBusy(document.getElementById('SubmitBtn'), async () => {
+      try {
+        const { error } = await supabase
+          .from('upcoming_matches')
+          .upsert([
+            {
+              match_code: matchData.matchCode,
+              match_title: matchData.title,
+              team_one: matchData.team1,
+              team_two: matchData.team2,
+              match_time: matchData.time,
+              updated_at: new Date()
+            }
+          ], { onConflict: ['match_code'] });
+
+        if (error) throw error;
+
+        toast('আগামী ম্যাচের সময়সূচী সফলভাবে সেভ হয়েছে!', 'success');
+        resetMatchForm();
+        loadData({ force: true });
+
+      } catch (err) {
+        console.error(err);
+        toast(`সেভ করতে ব্যর্থ হয়েছে: ${err.message}`, 'err');
+      }
+    });
+  }
+
+  // ৩. হোমপেজে ড্যাশবোর্ড রেন্ডার এবং মুছুন (Delete) বাটন যুক্ত করা
+  function renderMatchDashboard(matches) {
+    const container = document.getElementById('match-dashboard-container');
+    if (!container) return;
+
+    container.innerHTML = matches.map(m => `
+      <div class="match-card">
+        <div class="match-info">
+          <span>${m.match_title} (${m.match_code})</span>
+          <p>${m.match_time}</p>
+          <h4>${m.team_one} vs ${m.team_two}</h4>
+        </div>
+        ${isadmin ? `
+          <button class="delete-btn" onclick="removeMatch('${m.match_code}')" style="background:#ff4d4d; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-top:5px;">
+            🗑️ মুছুন
+          </button>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+</script>
 
 </body>
 </html>
